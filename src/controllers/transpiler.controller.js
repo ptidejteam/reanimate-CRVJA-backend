@@ -13,14 +13,14 @@ export const transpileCode = (req, res) => {
   }
 
   // 3. Call the service to do the actual work
-  const charCount = processCode(code);
+  const jsTranspiledCode = processCode(code);
 
   // 4. Send the successful HTTP response
   return res.status(200).json({
     success: true,
-    message: 'Code processed successfully',
+    message: '(AMOS -> JavaScript) Successfully transpiled.',
     data: {
-      originalLength: charCount
+      jsTranspiledCode: jsTranspiledCode
     }
   });
 };
