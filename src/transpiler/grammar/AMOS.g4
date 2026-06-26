@@ -163,7 +163,7 @@ statement:
     ;
 
 rndFunction:
-    'Rnd' '(' expression1 ')'
+    'Rnd' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression1) ROUND_BRACKET_CLOSE
     ;
 
 screen_swap:

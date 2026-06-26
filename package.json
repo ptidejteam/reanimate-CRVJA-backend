@@ -22,6 +22,7 @@
   "homepage": "https://github.com/ptidejteam/reanimate-CRVJA-backend#readme",
   "dependencies": {
     "antlr4": "^4.13.2",
+    "cors": "^2.8.6",
     "express": "^5.2.1"
   },
   "devDependencies": {

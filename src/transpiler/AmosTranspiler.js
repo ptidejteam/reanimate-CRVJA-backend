@@ -1,6 +1,6 @@
 import AMOSListener from "./grammar/generated/AMOSListener.js";
 
-class AmosTranspiler extends AMOSListener {
+class AmosToJavaScriptTranslator extends AMOSListener {
   constructor() {
     super();
 
@@ -473,12 +473,6 @@ function soundPlayer(noteId, cooldown) {
 // Dictionary to hold file streams based on channels (0-10)
 const channels = {};
 
-function randomInt(max) {
-	const random = Math.floor(Math.random() * (max - 0 + 1)) + 0
-
-	return random
-}
-
 // Function to open a file and assign it to a channel
 function openFile(fileName, channel, mode = 'w') {
 	if (channel < 0 || channel > 10) {
@@ -523,6 +517,7 @@ function closeChannel(channel) {
 	delete channels[channel];
 }
 
+// [QUESTION] Gambiarras?
 function Cos(angle) {
 	return Math.cos(angle * Math.PI / 180);
 }
@@ -542,6 +537,11 @@ function Qsin(angle, radius) {
 
 function Qcos(angle, radius) {
 	return Math.round(radius * Math.cos(angle * Math.PI / 512));
+}
+
+function Rnd(maxValue) {
+	const random = Math.floor(Math.random() * (maxValue - 0 + 1)) + 0
+	return random;
 }
 
 let bankData = {
@@ -1630,6 +1630,7 @@ document.getElementById('amos-screen').appendChild(${varName});`;
 	*/
   handleFactor(accumulator, factorContext) {
     const children = factorContext.children;
+// console.log(children);
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
       const childName = child.constructor.name;
@@ -1641,6 +1642,7 @@ document.getElementById('amos-screen').appendChild(${varName});`;
       } else if (childName === "Expression1Context") {
         this.handleExpr(accumulator, child);
       } else if (typeof factorContext.expression1() === "function") {
+        // [QUESTION] Should we have one for each function: Rnd, Cos, Sin, etc.?
         accumulator.push("(");
         this.handleExpression(accumulator, factorContext.expression());
         accumulator.push(")");
@@ -1812,11 +1814,9 @@ document.getElementById('amos-screen').appendChild(${varName});`;
       this.functionDeclarationSupport +
       this.output;
 
-    // TODO: Functions, like Rnd(), should be treated properly in the corresponding semantic actions
-    result = result.replace(/Rnd\s*\(([^)]+)\)/gi, "randomInt($1)");
 // console.log(result);
     return result;
   }
 }
 
-export default AmosTranspiler;
+export default AmosToJavaScriptTranslator;
