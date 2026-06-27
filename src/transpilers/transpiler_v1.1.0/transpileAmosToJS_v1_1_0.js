@@ -1,14 +1,14 @@
 import antlr4 from "antlr4";
-import AmosTranslator from "#root/src/transpiler/AmosTranslator.js";
-import AMOSParser from "#root/src/transpiler/grammar/generated/AMOSParser.js";
-import AMOSLexer from "#root/src/transpiler/grammar/generated/AMOSLexer.js";
-import CollectingErrorListener from "#root/src/transpiler/ErrorListener.js";
+import AmosTranslator from "#root/src/transpilers/transpiler_v1.1.0/AmosTranslator.js";
+import AMOSParser from "#root/src/transpilers/transpiler_v1.1.0/grammar/generated/AMOSParser.js";
+import AMOSLexer from "#root/src/transpilers/transpiler_v1.1.0/grammar/generated/AMOSLexer.js";
+import CollectingErrorListener from "#root/src/transpilers/transpiler_v1.1.0/ErrorListener.js";
 
 // import prettier from "prettier/standalone";
 // import babelPlugin from "prettier/plugins/babel";
 // import estreePlugin from "prettier/plugins/estree";
 
-export default function transpileAmosToJS(amosCode) {
+export default function transpileAmosToJS_v1_1_0(amosCode) {
   const chars = new antlr4.InputStream(amosCode);
   const lexer = new AMOSLexer(chars);
 

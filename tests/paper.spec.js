@@ -1,12 +1,12 @@
 import fs from "fs";
-import transpileAmosToJS from "#root/src/transpiler/transpileAmosToJS.js";
+import transpileAmosToJS from "#root/src/transpilers/transpiler_v2.0.0/transpileAmosToJS.js";
 
 function translate(code) {
     const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
-  } = useAMOSParser(code);
+  } = transpileAmosToJS(code);
  
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
