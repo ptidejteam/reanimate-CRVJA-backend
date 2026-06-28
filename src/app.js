@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import transpilerRoutes from '#root/src/routes/transpiler.routes.js';
+import transpilerRoutes from './routes/transpiler.routes.js';
 
 const app = express();
 

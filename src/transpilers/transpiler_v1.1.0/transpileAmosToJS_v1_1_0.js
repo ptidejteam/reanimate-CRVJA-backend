@@ -1,8 +1,8 @@
 import antlr4 from "antlr4";
-import AmosTranslator from "#root/src/transpilers/transpiler_v1.1.0/AmosTranslator.js";
-import AMOSParser from "#root/src/transpilers/transpiler_v1.1.0/grammar/generated/AMOSParser.js";
-import AMOSLexer from "#root/src/transpilers/transpiler_v1.1.0/grammar/generated/AMOSLexer.js";
-import CollectingErrorListener from "#root/src/transpilers/transpiler_v1.1.0/ErrorListener.js";
+import AmosTranslator from "./AmosTranslator.js";
+import AMOSParser from "./grammar/generated/AMOSParser.js";
+import AMOSLexer from "./grammar/generated/AMOSLexer.js";
+import CollectingErrorListener from "./ErrorListener.js";
 
 // import prettier from "prettier/standalone";
 // import babelPlugin from "prettier/plugins/babel";

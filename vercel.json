@@ -5,10 +5,5 @@
       "source": "/(.*)",
       "destination": "/src/app.js"
     }
-  ],
-  "functions": {
-    "src/app.js": {
-      "includeFiles": "src/**"
-    }
-  }
+  ]
 }

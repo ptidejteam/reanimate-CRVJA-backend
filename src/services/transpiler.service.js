@@ -1,5 +1,5 @@
-import transpileAmosToJS from "#root/src/transpilers/transpiler_v2.0.0/transpileAmosToJS.js"
-import transpileAmosToJS_v1_1_0 from "#root/src/transpilers/transpiler_v1.1.0/transpileAmosToJS_v1_1_0.js";
+import transpileAmosToJS from "../transpilers/transpiler_v2.0.0/transpileAmosToJS.js"
+import transpileAmosToJS_v1_1_0 from "../transpilers/transpiler_v1.1.0/transpileAmosToJS_v1_1_0.js";
       
 /**
  * Processes the dummy "AMOS" code by returning its length.

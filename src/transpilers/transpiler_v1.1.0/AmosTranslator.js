@@ -1,4 +1,4 @@
-import AMOSListener from "#root/src/transpilers/transpiler_v1.1.0/grammar/generated/AMOSListener.js";
+import AMOSListener from "./grammar/generated/AMOSListener.js";
 
 class AmosTranslator extends AMOSListener {
 	constructor() {

@@ -1,4 +1,4 @@
-import { transpileCode } from '#root/src/services/transpiler.service.js';
+import { transpileCode } from '../services/transpiler.service.js';
 
 export const handleTranspile = (req, res) => {
   // 1. Extract data from the request body
