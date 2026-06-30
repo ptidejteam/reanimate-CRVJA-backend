@@ -1416,13 +1416,13 @@ function ${name}(${props}) {
 
   enterText(ctx) {
     const text = (ctx.STRING() || ctx.IDENTIFIER())?.getText();
-	const cleanText = text.replace(/ /g, " "); // Replace all occurrences of <Space> with <Em Dash>
+    const cleanText = text.replace(/ /g, " "); // Replace all occurrences of <Space> with <Em Dash>
 
-    const x       = ctx.expression1(0)?.getText();
-    const cleanX  = x.replace(/[^a-zA-Z0-9]/g, "");
-    const y       = ctx.expression1(1)?.getText();
-    const cleanY  = y.replace(/[^a-zA-Z0-9]/g, "");
-	const randomS = (Math.random() + 1).toString(36).substring(7);
+    const x = ctx.expression1(0)?.getText();
+    const cleanX = x.replace(/[^a-zA-Z0-9]/g, "");
+    const y = ctx.expression1(1)?.getText();
+    const cleanY = y.replace(/[^a-zA-Z0-9]/g, "");
+    const randomS = (Math.random() + 1).toString(36).substring(7);
     const varName = `textDiv${cleanX}${cleanY}${randomS}`;
 
     const isNumeric = (str) => /^\d+$/.test(str);
@@ -1575,7 +1575,7 @@ document.getElementById('amos-screen').appendChild(${varName});`;
         const childName = child.constructor.name;
 
         // TODO: AMOS should report an error if dataMatrixPointer > dataMatrix.length
-        if (childName === "Me") {
+        if (childName === "Me" || childName === "Fe") {
           this.output += child.getText();
           this.output += ` = dataMatrix[dataMatrixPointer++];`;
         } else if (childName === "Array_structureContext") {
@@ -1617,26 +1617,26 @@ document.getElementById('amos-screen').appendChild(${varName});`;
   }
 
   /*
-	NUMBER
-	| STRING
-	| array_structure
-	| sin_function
-	| cos_function
-	| qsin_function
-	| qcos_function
-	| rndFunction
-	| IDENTIFIER
-	| '(' expression1 ')'
-	| HEX_NUMBER
-	*/
+	  NUMBER
+	  | STRING
+	  | array_structure
+	  | sin_function
+	  | cos_function
+	  | qsin_function
+	  | qcos_function
+	  | rndFunction
+	  | IDENTIFIER
+	  | '(' expression1 ')'
+	  | HEX_NUMBER
+	  */
   handleFactor(accumulator, factorContext) {
     const children = factorContext.children;
-// console.log(children);
+    console.log(children);
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
       const childName = child.constructor.name;
 
-      if (childName === "Me") {
+      if (childName === "Me" || childName === "Fe") {
         this.handleSymbol(accumulator, child);
       } else if (childName === "Array_structureContext") {
         this.handleArrayAccess(accumulator, child);
@@ -1649,6 +1649,7 @@ document.getElementById('amos-screen').appendChild(${varName});`;
         accumulator.push(")");
       } else {
         console.log("XXX, I don't know what to do with " + childName);
+		console.log(child.getText());
         accumulator.push(child.getText());
       }
     }
@@ -1677,13 +1678,13 @@ document.getElementById('amos-screen').appendChild(${varName});`;
       for (let i = 0; i < children.length; i++) {
         const child = children[i];
         const childName = child.constructor.name;
-        if (childName === "Me") {
+        if (childName === "Me" || childName === "Fe") {
           this.handleSymbol(accumulator, child);
         } else if (childName === "FactorContext") {
           this.handleFactor(accumulator, child);
         } else {
           console.log("ZZZ, I don't know what to do with " + childName);
-          accumulator.push("ZZZ");
+        //   accumulator.push("ZZZ");
         }
       }
     }
@@ -1816,7 +1817,7 @@ document.getElementById('amos-screen').appendChild(${varName});`;
       this.functionDeclarationSupport +
       this.output;
 
-// console.log(result);
+    // console.log(result);
     return result;
   }
 }
