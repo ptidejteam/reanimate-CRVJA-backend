@@ -8,7 +8,7 @@ import CollectingErrorListener from "./ErrorListener.js";
 // import babelPlugin from "prettier/plugins/babel";
 // import estreePlugin from "prettier/plugins/estree";
 
-export default function transpileAmosToJS(amosCode) {
+export default function transpileAmosToJS_v2_0_0(amosCode) {
   const chars = new antlr4.InputStream(amosCode);
   const lexer = new AMOSLexer(chars);
 

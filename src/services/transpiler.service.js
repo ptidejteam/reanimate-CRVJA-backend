@@ -1,4 +1,4 @@
-import transpileAmosToJS from "../transpilers/transpiler_v2.0.0/transpileAmosToJS.js"
+import transpileAmosToJS_v2_0_0 from "../transpilers/transpiler_v2.0.0/transpileAmosToJS_v2_0_0.js"
 import transpileAmosToJS_v1_1_0 from "../transpilers/transpiler_v1.1.0/transpileAmosToJS_v1_1_0.js";
       
 /**
@@ -13,8 +13,8 @@ export const transpileCode = (amosCode, version) => {
     case '1.1.0':
       return transpileAmosToJS_v1_1_0(amosCode);
     case '2.0.0':
-      return transpileAmosToJS(amosCode);
+      return transpileAmosToJS_v2_0_0(amosCode);
     default:
-      return transpileAmosToJS(amosCode);
+      return transpileAmosToJS_v2_0_0(amosCode);
   }
 };
