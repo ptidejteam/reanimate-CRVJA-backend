@@ -1677,7 +1677,7 @@ setInterval(() => {
 			const child = children[i];
 			const childName = child.constructor.name;
 
-			if (childName === 'Me') {
+			if (childName === 'Me' || childName === "Fe") {
 				this.handleSymbol(accumulator, child);
 			} else if (childName === 'Array_structureContext') {
 				this.handleArrayAccess(accumulator, child);
@@ -1716,7 +1716,7 @@ setInterval(() => {
 		for (let i = 0; i < children.length; i++) {
 			const child = children[i];
 			const childName = child.constructor.name;
-			if (childName === 'Me') {
+			if (childName === 'Me' || childName === "Fe") {
 				this.handleSymbol(accumulator, child);
 			} else if (childName === 'FactorContext') {
 				this.handleFactor(accumulator, child);
