@@ -19,13 +19,6 @@ app.get('/', (req, res) => {
   res.status(200).send('CRVJA 🍺');
 });
 
-app.get('/api', (req, res) => {
-  return res.status(200).json({
-    success: true,
-    message: 'API is Live!',
-  });
-});
-
 // Mount the transpiler routes
 app.use('/api/transpile', transpilerRoutes); 
 

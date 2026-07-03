@@ -1,12 +1,9 @@
 import antlr4 from "antlr4";
-import AmosTranslator from "./AmosTranslator.js";
+import AmosTranslator from "./amos-translator.js";
 import AMOSParser from "./grammar/generated/AMOSParser.js";
 import AMOSLexer from "./grammar/generated/AMOSLexer.js";
-import CollectingErrorListener from "./ErrorListener.js";
+import CollectingErrorListener from "./error-listener.js";
 
-// import prettier from "prettier/standalone";
-// import babelPlugin from "prettier/plugins/babel";
-// import estreePlugin from "prettier/plugins/estree";
 
 export default function transpileAmosToJS_v1_1_0(amosCode) {
   const chars = new antlr4.InputStream(amosCode);
