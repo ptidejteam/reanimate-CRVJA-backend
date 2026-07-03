@@ -1116,7 +1116,6 @@ soundPlayer(${soundIndex}, ${duration}*1000);
 			this.colorMapping[index + 1] = `rgb(${red}, ${green}, ${blue})`;
 		});
 		this.pallette = `const colorMapping = ${JSON.stringify(this.colorMapping, null, 2)};`;
-console.log(this.colorMapping);
 	}
 
 	enterTurbo_draw(ctx) {

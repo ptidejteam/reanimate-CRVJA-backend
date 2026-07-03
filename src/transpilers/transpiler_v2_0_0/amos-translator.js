@@ -1631,7 +1631,6 @@ document.getElementById('amos-screen').appendChild(${varName});`;
 	  */
   handleFactor(accumulator, factorContext) {
     const children = factorContext.children;
-    console.log(children);
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
       const childName = child.constructor.name;
@@ -1649,7 +1648,7 @@ document.getElementById('amos-screen').appendChild(${varName});`;
         accumulator.push(")");
       } else {
         console.log("XXX, I don't know what to do with " + childName);
-		console.log(child.getText());
+		// console.log(child.getText());
         accumulator.push(child.getText());
       }
     }
