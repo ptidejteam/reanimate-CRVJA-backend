@@ -1,5 +1,5 @@
 import transpileAmosToJS_v2_0_0 from "../transpilers/transpiler_v2_0_0/transpile-amos-to-js-v2-0-0.js"
-import transpileAmosToJS_v1_1_0 from "../transpilers/transpiler_v1_1_0/transpile-amos-to-v1-1-0.js";
+import transpileAmosToJS_v1_1_0 from "../transpilers/transpiler_v1_1_0/transpile-amos-to-js-v1-1-0.js";
 
 const DEFAULT_VERSION = '2.0.0';
 
