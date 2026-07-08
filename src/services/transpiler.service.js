@@ -1,21 +1,23 @@
-import transpileAmosToJS_v2_0_0 from "../transpilers/transpiler_v2_0_0/transpile-amos-to-js-v2-0-0.js"
-import transpileAmosToJS_v1_1_0 from "../transpilers/transpiler_v1_1_0/transpile-amos-to-js-v1-1-0.js";
-
-const DEFAULT_VERSION = '2.0.0';
-
-const transpilers = {
-  '1.1.0': transpileAmosToJS_v1_1_0,
-  '2.0.0': transpileAmosToJS_v2_0_0
-};
+import { readFile } from "fs/promises";
 
 /**
  * Transpile the AMOS code
  * @param {string} amosCode - The AMOS Basic code to transpile.
- * @param {string} [version='2.0.0'] - The version of the transpiler to use.
+ * @param {string} version - The version of the transpiler to use.
  * @returns {transpileResult} - The lexicalErrors, syntaxErrors, and translatedCode (JS).
  */
-export const transpileCode = (amosCode, version = DEFAULT_VERSION) => {
-  const transpilerFunction = transpilers[version] || transpilers[DEFAULT_VERSION];
+export async function transpileCode(amosCode, version) {
+  // get the defaultVersion of the `transpiler` from "package.json" 
+  const packageData = await readFile(
+    new URL("../../package.json", import.meta.url),
+    "utf-8",
+  );
+  const { version: defaultVersion } = JSON.parse(packageData);
 
-  return transpilerFunction(amosCode);
-};
+  const transpilerPromise = import(`../transpilers/${version}/transpiler.js`);
+
+  return transpilerPromise.then((transpiler) => {
+    const results = transpiler.default(amosCode);
+    return results;
+  });
+}

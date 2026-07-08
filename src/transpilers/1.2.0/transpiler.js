@@ -5,7 +5,7 @@ import AMOSLexer from "./grammar/generated/AMOSLexer.js";
 import CollectingErrorListener from "./error-listener.js";
 
 
-export default function transpileAmosToJS_v1_1_0(amosCode) {
+export default function transpile(amosCode) {
   const chars = new antlr4.InputStream(amosCode);
   const lexer = new AMOSLexer(chars);
 
