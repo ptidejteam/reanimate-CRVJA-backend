@@ -1,4 +1,5 @@
 import { readFile } from 'fs/promises';
+import { getAvailableVersions } from './versions.service.js';
 
 /**
  * Transpile the AMOS code
@@ -11,7 +12,18 @@ export async function transpileCode(amosCode, version) {
   const packageData = await readFile(new URL('../../package.json', import.meta.url), 'utf-8');
   const { version: defaultVersion } = JSON.parse(packageData);
 
-  const transpilerPromise = import(`../transpilers/${version}/transpiler.js`);
+  const availableVersions = await getAvailableVersions();
+
+  let selectedVersion = version;
+  if (
+    !selectedVersion ||
+    typeof selectedVersion !== 'string' ||
+    !availableVersions.includes(selectedVersion)
+  ) {
+    selectedVersion = defaultVersion;
+  }
+
+  const transpilerPromise = import(`../transpilers/${selectedVersion}/transpiler.js`);
 
   return transpilerPromise.then((transpiler) => {
     const results = transpiler.default(amosCode);
