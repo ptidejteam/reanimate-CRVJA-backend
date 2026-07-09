@@ -1,4 +1,4 @@
-import { readFile } from "fs/promises";
+import { readFile } from 'fs/promises';
 
 /**
  * Transpile the AMOS code
@@ -7,11 +7,8 @@ import { readFile } from "fs/promises";
  * @returns {transpileResult} - The lexicalErrors, syntaxErrors, and translatedCode (JS).
  */
 export async function transpileCode(amosCode, version) {
-  // get the defaultVersion of the `transpiler` from "package.json" 
-  const packageData = await readFile(
-    new URL("../../package.json", import.meta.url),
-    "utf-8",
-  );
+  // get the defaultVersion of the `transpiler` from "package.json"
+  const packageData = await readFile(new URL('../../package.json', import.meta.url), 'utf-8');
   const { version: defaultVersion } = JSON.parse(packageData);
 
   const transpilerPromise = import(`../transpilers/${version}/transpiler.js`);

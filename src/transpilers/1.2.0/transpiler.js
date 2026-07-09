@@ -1,9 +1,8 @@
-import antlr4 from "antlr4";
-import AmosTranslator from "./amos-translator.js";
-import AMOSParser from "./grammar/generated/AMOSParser.js";
-import AMOSLexer from "./grammar/generated/AMOSLexer.js";
-import CollectingErrorListener from "./error-listener.js";
-
+import antlr4 from 'antlr4';
+import AmosTranslator from './amos-translator.js';
+import AMOSParser from './grammar/generated/AMOSParser.js';
+import AMOSLexer from './grammar/generated/AMOSLexer.js';
+import CollectingErrorListener from './error-listener.js';
 
 export default function transpile(amosCode) {
   const chars = new antlr4.InputStream(amosCode);
@@ -33,7 +32,6 @@ export default function transpile(amosCode) {
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
   };
-
 
   return response;
 }

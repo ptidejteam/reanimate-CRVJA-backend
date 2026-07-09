@@ -1,6 +1,6 @@
 {
   "name": "reanimate-CRVJA-backend",
-  "version": "2.0.0",
+  "version": "2.0.0-beta",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -33,6 +33,7 @@
     "babel-jest": "^30.4.1",
     "esm": "^3.2.25",
     "jest": "^30.4.2",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "prettier": "^3.9.5"
   }
 }

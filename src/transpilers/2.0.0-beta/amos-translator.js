@@ -1,37 +1,36 @@
-// import AMOSListener from "./grammar/generated/AMOSListener.js";
-import AMOSListener from "./grammar/generated/AMOSListener.js";
+import AMOSListener from './grammar/generated/AMOSListener.js';
 
 class AmosTranslator extends AMOSListener {
   constructor() {
     super();
 
-    this.imports = "";
-    this.output = "";
+    this.imports = '';
+    this.output = '';
     this.id = 0;
     // https://www.rapidtables.com/web/color/RGB_Color.html
     this.colorMapping = {
-      0: "rgb(0,0,0)",
-      1: "rgb(255,255,255)",
-      2: "rgb(255,0,0)",
-      3: "rgb(0,255,0)",
-      4: "rgb(0,0,255)",
-      5: "rgb(255,255,0)",
-      6: "rgb(0,255,255)",
-      7: "rgb(255,0,255)",
-      8: "rgb(192,192,192)",
-      9: "rgb(128,128,128)",
-      10: "rgb(128,0,0)",
-      11: "rgb(128,128,0)",
-      12: "rgb(0,128,0)",
-      13: "rgb(128,0,128)",
-      14: "rgb(0,128,128)",
-      15: "rgb(0,0,128)",
+      0: 'rgb(0,0,0)',
+      1: 'rgb(255,255,255)',
+      2: 'rgb(255,0,0)',
+      3: 'rgb(0,255,0)',
+      4: 'rgb(0,0,255)',
+      5: 'rgb(255,255,0)',
+      6: 'rgb(0,255,255)',
+      7: 'rgb(255,0,255)',
+      8: 'rgb(192,192,192)',
+      9: 'rgb(128,128,128)',
+      10: 'rgb(128,0,0)',
+      11: 'rgb(128,128,0)',
+      12: 'rgb(0,128,0)',
+      13: 'rgb(128,0,128)',
+      14: 'rgb(0,128,128)',
+      15: 'rgb(0,0,128)',
     };
-    this.pallette = `const colorMapping = ${JSON.stringify(this.colorMapping, null, 2)};`;
+    this.palette = `const colorMapping = ${JSON.stringify(this.colorMapping, null, 2)};`;
     this.lineData = this.lineData || [];
-    this.globalVariables = "";
+    this.globalVariables = '';
     this.globalVariablesStorage = {};
-    this.functionDeclarationSupport = "";
+    this.functionDeclarationSupport = '';
     this.scopes = [{}];
     this.globalVariablesSet = new Set();
     this.output += `
@@ -518,7 +517,6 @@ function closeChannel(channel) {
 	delete channels[channel];
 }
 
-// [QUESTION] Gambiarras?
 function Cos(angle) {
 	return Math.cos(angle * Math.PI / 180);
 }
@@ -868,7 +866,7 @@ document.getElementById('amos-screen').style.backgroundColor = 'black';`;
 
   enterLoadBankImgToSprite(ctx) {
     const option = ctx.children[1]?.getText();
-    if (option === "Off") {
+    if (option === 'Off') {
       this.output += `
 {
 	const screen = document.getElementById('amos-screen');
@@ -901,10 +899,10 @@ document.getElementById('amos-screen').style.backgroundColor = 'black';`;
   }
 
   enterInput_variable(ctx) {
-    let channel = ctx.children[1]?.getText() || "";
+    let channel = ctx.children[1]?.getText() || '';
     if (ctx.children[2]) channel += ctx.children[2].getText();
 
-    let variable = ctx.children[4]?.getText() || "";
+    let variable = ctx.children[4]?.getText() || '';
     if (ctx.children[5]) variable += ctx.children[5].getText();
 
     this.output += `
@@ -922,7 +920,7 @@ readFromChannel(${channel}, (data) => {
 
   enterPrint_something(ctx) {
     const printConfig = ctx.print_options(0)?.getText();
-    if (printConfig.includes("#")) {
+    if (printConfig.includes('#')) {
       /* WRITE TO FILE */
       let channel = ctx.print_options(0)?.getText();
       let content = ctx.print_options(1)?.getText();
@@ -933,11 +931,7 @@ readFromChannel(${channel}, (data) => {
       let text = ctx.print_options(i)?.getText();
 
       if (!text.includes('"')) {
-        text = ctx
-          .print_options(i)
-          ?.expression1(0)
-          ?.getText()
-          .replace(/["']/g, "");
+        text = ctx.print_options(i)?.expression1(0)?.getText().replace(/["']/g, '');
         this.output += `
 const finder_printDiv${i} = document.getElementById('printDiv${i}' + '${text}');
 if (finder_printDiv${i}) { finder_printDiv${i}.remove(); }
@@ -1029,8 +1023,7 @@ if (amosScreen) {
   }
 
   enterCurs_off(ctx) {
-    this.output +=
-      "document.getElementById('amos-screen').style.cursor = 'none';";
+    this.output += "document.getElementById('amos-screen').style.cursor = 'none';";
   }
 
   enterPaper(ctx) {
@@ -1039,8 +1032,7 @@ if (amosScreen) {
   }
 
   enterCurs_on(ctx) {
-    this.output +=
-      "document.getElementById('amos-screen').style.cursor = 'auto';";
+    this.output += "document.getElementById('amos-screen').style.cursor = 'auto';";
   }
 
   enterPlay_sound(ctx) {
@@ -1065,21 +1057,21 @@ if (amosScreen) {
   enterPalette(ctx) {
     // Array to collect complete hex colour values from the Palette
     const hexColors = [];
-    let currentHex = "";
+    let currentHex = '';
 
     // Loop through each child in `ctx` to gather colors
     for (const child of ctx.children) {
       const text = child.getText().trim();
 
-      if (text.toLowerCase() === "palette") continue;
-      if (text === "$") {
+      if (text.toLowerCase() === 'palette') continue;
+      if (text === '$') {
         // Start of a new hex color, initialize currentHex
-        currentHex = "$";
-      } else if (text === ",") {
+        currentHex = '$';
+      } else if (text === ',') {
         // End of a hex color, parse it if currentHex has a complete hex value
         if (currentHex.length > 1) {
           hexColors.push(currentHex);
-          currentHex = ""; // Reset for the next hex color
+          currentHex = ''; // Reset for the next hex color
         }
       } else {
         // Append hex digits to currentHex
@@ -1105,14 +1097,13 @@ if (amosScreen) {
       // Map color in `rgb` format
       this.colorMapping[index] = `rgb(${red}, ${green}, ${blue})`;
     });
-    this.pallette = `const colorMapping = ${JSON.stringify(this.colorMapping, null, 2)};`;
+    this.palette = `const colorMapping = ${JSON.stringify(this.colorMapping, null, 2)};`;
   }
 
   enterTurbo_draw(ctx) {
     function generateRandomID() {
-      let characters =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      let id = "";
+      let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let id = '';
       for (let i = 0; i < 9; i++) {
         let randomIndex = Math.floor(Math.random() * characters.length);
         id += characters[randomIndex];
@@ -1286,7 +1277,7 @@ circleDiv.style.backgroundColor = getColour(Ink);`;
   }
 
   exitWhile_wend(ctx) {
-    this.output += "}";
+    this.output += '}';
   }
 
   enterGlobal(ctx) {
@@ -1294,9 +1285,7 @@ circleDiv.style.backgroundColor = getColour(Ink);`;
       this.globalVariablesSet.add(ctx.IDENTIFIER(i).getText());
     }
     for (let i = 0; i < ctx.array_structure().length; i++) {
-      this.globalVariablesSet.add(
-        ctx.array_structure(i).IDENTIFIER(0).getText(),
-      );
+      this.globalVariablesSet.add(ctx.array_structure(i).IDENTIFIER(0).getText());
     }
   }
 
@@ -1305,7 +1294,7 @@ circleDiv.style.backgroundColor = getColour(Ink);`;
     let value = this.handleExpression(ctx.children[2]);
 
     let lineNumber = ctx.start.line;
-    if (name !== "Timer") {
+    if (name !== 'Timer') {
       if (value > 2147483647) {
         throw new Error(
           `ERROR: Amos code line ${lineNumber}: Value for variable "${name}" exceeds the allowed limit of 2,147,483,647.`,
@@ -1313,15 +1302,14 @@ circleDiv.style.backgroundColor = getColour(Ink);`;
       }
 
       let currentScope = this.scopes[this.scopes.length - 1];
-      let isDeclared =
-        currentScope[name] !== undefined || this.globalVariablesSet.has(name);
+      let isDeclared = currentScope[name] !== undefined || this.globalVariablesSet.has(name);
 
       if (isDeclared) {
         // Variable already exists at this level
         this.output += `${name} = ${value};`;
       } else {
         // Variable doesn't exist at this level, so create it
-        let defaultValue = name.endsWith("$") ? '""' : 0;
+        let defaultValue = name.endsWith('$') ? '""' : 0;
         if (this.scopes.length === 1) {
           this.globalVariables += `let ${name} = ${defaultValue};\n`;
           this.output += `${name} = ${value};`;
@@ -1340,12 +1328,10 @@ circleDiv.style.backgroundColor = getColour(Ink);`;
     let valueExpression = ctx.children[3]?.getText();
 
     let currentScope = this.scopes[this.scopes.length - 1];
-    let isDeclared =
-      currentScope[variable] !== undefined ||
-      this.globalVariablesSet.has(variable);
+    let isDeclared = currentScope[variable] !== undefined || this.globalVariablesSet.has(variable);
 
     if (!isDeclared) {
-      let defaultValue = variable.endsWith("$") ? '""' : 0;
+      let defaultValue = variable.endsWith('$') ? '""' : 0;
       if (this.scopes.length === 1) {
         this.globalVariables += `let ${variable} = ${defaultValue};`;
       } else {
@@ -1380,13 +1366,13 @@ if (${variable} < ${valueStarter}) {
     for (let i = 1; i < ctx.IDENTIFIER().length; i++) {
       params.push(ctx.IDENTIFIER(i).getText());
     }
-    let props = params.join(", ");
+    let props = params.join(', ');
 
     this.scopes.push({});
-    let localDeclarations = "";
+    let localDeclarations = '';
     for (let varName of Object.keys(this.scopes[0])) {
       if (!this.globalVariablesSet.has(varName) && !params.includes(varName)) {
-        let defaultValue = varName.endsWith("$") ? '""' : 0;
+        let defaultValue = varName.endsWith('$') ? '""' : 0;
         localDeclarations += `\n  let ${varName} = ${defaultValue};`;
         this.scopes[this.scopes.length - 1][varName] = defaultValue;
       }
@@ -1411,17 +1397,17 @@ function ${name}(${props}) {
 
   exitProcedure(ctx) {
     this.scopes.pop();
-    this.output += "}";
+    this.output += '}';
   }
 
   enterText(ctx) {
     const text = (ctx.STRING() || ctx.IDENTIFIER())?.getText();
-    const cleanText = text.replace(/ /g, " "); // Replace all occurrences of <Space> with <Em Dash>
+    const cleanText = text.replace(/ /g, ' '); // Replace all occurrences of <Space> with <Em Dash>
 
     const x = ctx.expression1(0)?.getText();
-    const cleanX = x.replace(/[^a-zA-Z0-9]/g, "");
+    const cleanX = x.replace(/[^a-zA-Z0-9]/g, '');
     const y = ctx.expression1(1)?.getText();
-    const cleanY = y.replace(/[^a-zA-Z0-9]/g, "");
+    const cleanY = y.replace(/[^a-zA-Z0-9]/g, '');
     const randomS = (Math.random() + 1).toString(36).substring(7);
     const varName = `textDiv${cleanX}${cleanY}${randomS}`;
 
@@ -1452,19 +1438,19 @@ document.getElementById('amos-screen').appendChild(${varName});`;
   }
 
   enterDo_loop(ctx) {
-    this.output += "while(true) {";
+    this.output += 'while(true) {';
   }
 
   enterRepeat_key(ctx) {
-    this.output += "setInterval(() => { currentTimer = Date.now(); Timer++;";
+    this.output += 'setInterval(() => { currentTimer = Date.now(); Timer++;';
   }
 
   exitRepeat_key(ctx) {
-    this.output += "Timer = 9; }, 16);";
+    this.output += 'Timer = 9; }, 16);';
   }
 
   exitDo_loop(ctx) {
-    this.output += "await new Promise(r => setTimeout(r, 16));}";
+    this.output += 'await new Promise(r => setTimeout(r, 16));}';
   }
 
   enterFor_loop(ctx) {
@@ -1473,12 +1459,10 @@ document.getElementById('amos-screen').appendChild(${varName});`;
     let end = ctx.children[5]?.getText();
 
     let currentScope = this.scopes[this.scopes.length - 1];
-    let isDeclared =
-      currentScope[variable] !== undefined ||
-      this.globalVariablesSet.has(variable);
+    let isDeclared = currentScope[variable] !== undefined || this.globalVariablesSet.has(variable);
 
     if (!isDeclared) {
-      let defaultValue = variable.endsWith("$") ? '""' : 0;
+      let defaultValue = variable.endsWith('$') ? '""' : 0;
       if (this.scopes.length === 1) {
         this.globalVariables += `let ${variable} = ${defaultValue};\n`;
       } else {
@@ -1509,16 +1493,15 @@ document.getElementById('amos-screen').appendChild(${varName});`;
       or_and.push(ctx.or_and(i).getText());
     }
 
-    let finalIfStatement = "";
+    let finalIfStatement = '';
 
     for (let i = 0; i < expressions1.length; i++) {
-      finalIfStatement +=
-        expressions1[i] + " " + comparators[i] + " " + expressions2[i];
-      if (or_and[i] && or_and[i] === "AND") {
-        finalIfStatement += " && ";
+      finalIfStatement += expressions1[i] + ' ' + comparators[i] + ' ' + expressions2[i];
+      if (or_and[i] && or_and[i] === 'AND') {
+        finalIfStatement += ' && ';
       }
-      if (or_and[i] && or_and[i] === "OR") {
-        finalIfStatement += " || ";
+      if (or_and[i] && or_and[i] === 'OR') {
+        finalIfStatement += ' || ';
       }
     }
   }
@@ -1527,8 +1510,6 @@ document.getElementById('amos-screen').appendChild(${varName});`;
     for (let i = 0; i < ctx.array_structure().length; i++) {
       const struct = ctx.array_structure(i);
       const name = struct.IDENTIFIER(0)?.getText();
-
-      // Cf. https://stackoverflow.com/questions/966225/how-can-i-create-a-two-dimensional-array-in-javascript
 
       const numberOfDimensions = struct.expression1().length;
       let dimension = struct.expression1()[0].getText();
@@ -1539,32 +1520,32 @@ document.getElementById('amos-screen').appendChild(${varName});`;
         this.output += `.map(x => Array(${dimension}).fill(0)`;
       }
       for (let i = 1; i < numberOfDimensions; i++) {
-        this.output += ")";
+        this.output += ')';
       }
 
-      this.output += ";";
+      this.output += ';';
     }
   }
 
   exitFor_loop(ctx) {
-    this.output += "}";
+    this.output += '}';
   }
 
   enterData_statement(ctx) {
     if (!this.hasDataMatrix) {
       this.hasDataMatrix = true;
-      this.output += "const dataMatrix = [];";
+      this.output += 'const dataMatrix = [];';
     }
 
     // Data values are "contiguous" and should be read one after the other until no more
     const values = ctx.expression1().map((e) => e.getText());
-    const row = `${values.join(", ")}`;
+    const row = `${values.join(', ')}`;
     this.output += `dataMatrix.push(${row});`;
   }
 
   enterRead_statement(ctx) {
     const targets = ctx.children.filter(
-      (child) => child.getText() !== "Read" && child.getText() !== ",",
+      (child) => child.getText() !== 'Read' && child.getText() !== ',',
     );
 
     for (let i = 0; i < targets.length; i++) {
@@ -1575,10 +1556,10 @@ document.getElementById('amos-screen').appendChild(${varName});`;
         const childName = child.constructor.name;
 
         // TODO: AMOS should report an error if dataMatrixPointer > dataMatrix.length
-        if (childName === "Me" || childName === "Fe") {
+        if (childName === 'Me' || childName === 'Fe') {
           this.output += child.getText();
           this.output += ` = dataMatrix[dataMatrixPointer++];`;
-        } else if (childName === "Array_structureContext") {
+        } else if (childName === 'Array_structureContext') {
           const name = child.IDENTIFIER(0).getText();
           this.output += `${name}`;
 
@@ -1589,7 +1570,7 @@ document.getElementById('amos-screen').appendChild(${varName});`;
           }
 
           // Reading dataMatrix should be independent of x and y
-          this.output += " = dataMatrix[dataMatrixPointer++];";
+          this.output += ' = dataMatrix[dataMatrixPointer++];';
         } else {
           console.log("WWW, I don't know what to do with " + childName);
           accumulator.push(child.getText());
@@ -1635,20 +1616,19 @@ document.getElementById('amos-screen').appendChild(${varName});`;
       const child = children[i];
       const childName = child.constructor.name;
 
-      if (childName === "Me" || childName === "Fe") {
+      if (childName === 'Me' || childName === 'Fe') {
         this.handleSymbol(accumulator, child);
-      } else if (childName === "Array_structureContext") {
+      } else if (childName === 'Array_structureContext') {
         this.handleArrayAccess(accumulator, child);
-      } else if (childName === "Expression1Context") {
+      } else if (childName === 'Expression1Context') {
         this.handleExpr(accumulator, child);
-      } else if (typeof factorContext.expression1() === "function") {
-        // [QUESTION] Should we have one for each function: Rnd, Cos, Sin, etc.?
-        accumulator.push("(");
+      } else if (typeof factorContext.expression1() === 'function') {
+        accumulator.push('(');
         this.handleExpression(accumulator, factorContext.expression());
-        accumulator.push(")");
+        accumulator.push(')');
       } else {
         console.log("XXX, I don't know what to do with " + childName);
-		// console.log(child.getText());
+        // console.log(child.getText());
         accumulator.push(child.getText());
       }
     }
@@ -1677,13 +1657,13 @@ document.getElementById('amos-screen').appendChild(${varName});`;
       for (let i = 0; i < children.length; i++) {
         const child = children[i];
         const childName = child.constructor.name;
-        if (childName === "Me" || childName === "Fe") {
+        if (childName === 'Me' || childName === 'Fe') {
           this.handleSymbol(accumulator, child);
-        } else if (childName === "FactorContext") {
+        } else if (childName === 'FactorContext') {
           this.handleFactor(accumulator, child);
         } else {
           console.log("ZZZ, I don't know what to do with " + childName);
-        //   accumulator.push("ZZZ");
+          //   accumulator.push("ZZZ");
         }
       }
     }
@@ -1704,37 +1684,35 @@ document.getElementById('amos-screen').appendChild(${varName});`;
       this.handleSymbol(accumulator, expressionContext.children[1]);
       this.handleTerm(accumulator, expressionContext.term(1));
     }
-    return accumulator.join("");
+    return accumulator.join('');
   }
 
   enterIf_statement(ctx) {
-    let statement = "";
-    let logicalOperator = "";
-    let comparator = "";
+    let statement = '';
+    let logicalOperator = '';
+    let comparator = '';
 
     for (let i = 0; i < ctx.children.length; i++) {
-      if (ctx.children[i].constructor.name == "Expression1Context") {
+      if (ctx.children[i].constructor.name == 'Expression1Context') {
         statement += this.handleExpression(ctx.children[i]);
-      } else if (ctx.children[i].constructor.name == "Or_andContext") {
+      } else if (ctx.children[i].constructor.name == 'Or_andContext') {
         logicalOperator = ctx.children[i].getText();
-        if (logicalOperator == "and") {
-          statement += " && ";
-        } else if (logicalOperator == "or") {
-          statement += " || ";
+        if (logicalOperator == 'and') {
+          statement += ' && ';
+        } else if (logicalOperator == 'or') {
+          statement += ' || ';
         } else {
-          console.log("Unrecognized logicalOperator in IF Statement");
+          console.log('Unrecognized logicalOperator in IF Statement');
         }
-      } else if (ctx.children[i].constructor.name == "Expression2Context") {
+      } else if (ctx.children[i].constructor.name == 'Expression2Context') {
         statement += this.handleExpression(ctx.children[i]);
-      } else if (
-        ctx.children[i].constructor.name == "Expressions_comparatorsContext"
-      ) {
+      } else if (ctx.children[i].constructor.name == 'Expressions_comparatorsContext') {
         comparator = ctx.children[i].getText();
         // Special cases for = and <>
-        if (comparator === "=") {
-          comparator = "==";
-        } else if (comparator === "<>") {
-          comparator = "!=";
+        if (comparator === '=') {
+          comparator = '==';
+        } else if (comparator === '<>') {
+          comparator = '!=';
         } else {
           // Nothing to do here
         }
@@ -1745,12 +1723,12 @@ document.getElementById('amos-screen').appendChild(${varName});`;
   }
 
   exitIf_statement(ctx) {
-    this.output += "}";
+    this.output += '}';
   }
 
   enterProcedure_call(ctx) {
     const name = ctx.IDENTIFIER().getText();
-    let callCode = "";
+    let callCode = '';
 
     if (!ctx.SQUARE_BRACKET_OPEN()) {
       // Case 1: Calling a procedure with just its name
@@ -1760,7 +1738,7 @@ document.getElementById('amos-screen').appendChild(${varName});`;
       const args = ctx
         .expression1()
         .map((expr) => expr.getText())
-        .join(", ");
+        .join(', ');
       callCode = `${name}(${args});`;
     }
 
@@ -1770,25 +1748,22 @@ document.getElementById('amos-screen').appendChild(${varName});`;
   enterIf_statement_key_state(ctx) {
     let leftExpression = ctx.current_Key_State(0)?.expression1(0)?.getText();
 
-    if (leftExpression.includes("$")) {
+    if (leftExpression.includes('$')) {
       // Extract the hexadecimal value from the expression
       let hexValueMatch = leftExpression.match(/\$[0-9A-Fa-f]+/);
 
       if (hexValueMatch) {
-        let hexValue = parseInt(hexValueMatch[0].replace("$", ""), 16);
+        let hexValue = parseInt(hexValueMatch[0].replace('$', ''), 16);
 
         // Check if the leftExpression is just a hexadecimal value
         if (hexValueMatch[0] === leftExpression) {
           // If it's only a hex value, convert it to a key mapping lookup
           leftExpression = `keyMapping[${hexValue}`;
         } else {
-          let variable = leftExpression.split("$")[0];
+          let variable = leftExpression.split('$')[0];
 
           // If it's a variable or expression with a hex part, construct it accordingly
-          leftExpression = leftExpression.replace(
-            /\$[0-9A-Fa-f]+/,
-            `keyMapping[${hexValue}`,
-          );
+          leftExpression = leftExpression.replace(/\$[0-9A-Fa-f]+/, `keyMapping[${hexValue}`);
         }
       }
     }
@@ -1796,22 +1771,22 @@ document.getElementById('amos-screen').appendChild(${varName});`;
   }
 
   exitIf_statement_key_state(ctx) {
-    this.output += "}";
+    this.output += '}';
   }
 
   enterElse_statement(ctx) {
-    this.output += "} else {";
+    this.output += '} else {';
   }
 
   exitElse_statement(ctx) {
-    this.output += "";
+    this.output += '';
   }
 
   getJavaScript() {
     let result =
-	  "// Using Version 2.0.0 of the AMOS to JavaScript Transpiler\n" +
+      '// Using Version 2.0.0 of the AMOS to JavaScript Transpiler\n' +
       this.imports +
-      this.pallette +
+      this.palette +
       this.globalVariables +
       this.functionDeclarationSupport +
       this.output;

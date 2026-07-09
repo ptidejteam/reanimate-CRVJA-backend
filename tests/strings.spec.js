@@ -1,7 +1,7 @@
-import transpileAmosToJS_v2_0_0 from "#root/src/transpilers/transpiler_v2_0_0/transpileAmosToJS_v2_0_0.js";
+import transpileAmosToJS_v2_0_0 from '#root/src/transpilers/transpiler_v2_0_0/transpileAmosToJS_v2_0_0.js';
 
 function translate(code) {
-    const {
+  const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
@@ -9,13 +9,12 @@ function translate(code) {
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
-  
-  const normalizedJS = translatedCode.replace(/\s+/g, " ").trim();
+
+  const normalizedJS = translatedCode.replace(/\s+/g, ' ').trim();
   return normalizedJS;
 }
 
-
-test("string assignments", () => {
+test('string assignments', () => {
   const amosBasicCode = `
 A$ = "Hello, World!"
   `;
@@ -23,10 +22,9 @@ A$ = "Hello, World!"
   const normalizedJS = translate(amosBasicCode);
 
   expect(normalizedJS).toContain('A$ = "Hello, World!";');
-
 });
 
-test("string assignments and text", () => {
+test('string assignments and text', () => {
   const amosBasicCode = `
 A$ = "Hello, World!"
 Text 10,10,A$
@@ -37,7 +35,7 @@ Text 10,10,A$
   // Find the name of the div (the transpiler uses a random identifier)
   const match = normalizedJS.match(/const (textDiv1010[a-z0-9]+)/);
   if (!match) {
-    throw new Error("Could not find generated variable name for textDiv1010");
+    throw new Error('Could not find generated variable name for textDiv1010');
   }
   const varName = match[1];
 

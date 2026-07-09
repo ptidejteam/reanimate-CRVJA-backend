@@ -1,21 +1,20 @@
-import transpileAmosToJS_v2_0_0 from "#root/src/transpilers/transpiler_v2_0_0/transpileAmosToJS_v2_0_0.js";
+import transpileAmosToJS_v2_0_0 from '#root/src/transpilers/transpiler_v2_0_0/transpileAmosToJS_v2_0_0.js';
 
 function translate(code) {
-    const {
+  const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
   } = transpileAmosToJS_v2_0_0(code);
- 
+
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
-  
-  const normalizedJS = translatedCode.replace(/\s+/g, " ").trim();
+
+  const normalizedJS = translatedCode.replace(/\s+/g, ' ').trim();
   return normalizedJS;
 }
 
-
-test("max_int_size", () => {
+test('max_int_size', () => {
   const amosBasicCode = `
    XW=2147483648
   `;
@@ -24,7 +23,8 @@ test("max_int_size", () => {
     translate(amosBasicCode);
   } catch (error) {
     // Verify that the error message is as expected
-    expect(error.message).toBe(`ERROR: Amos code line 2: Value for variable "XW" exceeds the allowed limit of 2,147,483,647.`);
+    expect(error.message).toBe(
+      `ERROR: Amos code line 2: Value for variable "XW" exceeds the allowed limit of 2,147,483,647.`,
+    );
   }
 });
-

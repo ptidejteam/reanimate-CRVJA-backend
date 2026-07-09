@@ -1,7 +1,7 @@
-import transpileAmosToJS_v2_0_0 from "#root/src/transpilers/transpiler_v2_0_0/transpileAmosToJS_v2_0_0.js";
+import transpileAmosToJS_v2_0_0 from '#root/src/transpilers/transpiler_v2_0_0/transpileAmosToJS_v2_0_0.js';
 
 function translate(code) {
-    const {
+  const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
@@ -9,20 +9,18 @@ function translate(code) {
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
-  
-  const normalizedJS = translatedCode.replace(/\s+/g, " ").trim();
+
+  const normalizedJS = translatedCode.replace(/\s+/g, ' ').trim();
   return normalizedJS;
 }
 
-
-test("screen_open", () => {
-
+test('screen_open', () => {
   const amosBasicCode = `
         Screen Open 1,600,400,8,Hires
     `;
 
   const normalizedJS = translate(amosBasicCode);
-  
+
   const expectedJsCode = `
   const screenDiv = document.createElement('div');
   screenDiv.style.width = '600px';
@@ -41,4 +39,3 @@ test("screen_open", () => {
 
   expect(normalizedJS).toContain(normalizedExpectedJsCode);
 });
-

@@ -1,7 +1,7 @@
-import transpileAmosToJS_v2_0_0 from "#root/src/transpilers/transpiler_v2_0_0/transpileAmosToJS_v2_0_0.js";
+import transpileAmosToJS_v2_0_0 from '#root/src/transpilers/transpiler_v2_0_0/transpileAmosToJS_v2_0_0.js';
 
 function translate(code) {
-    const {
+  const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
@@ -9,13 +9,12 @@ function translate(code) {
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
-  
-  const normalizedJS = translatedCode.replace(/\s+/g, " ").trim();
+
+  const normalizedJS = translatedCode.replace(/\s+/g, ' ').trim();
   return normalizedJS;
 }
 
-
-test("do_loop", () => {
+test('do_loop', () => {
   const amosBasicCode = `
   Do 
 
@@ -25,6 +24,5 @@ test("do_loop", () => {
   const normalizedJS = translate(amosBasicCode);
 
   // Assert against current translator output containing loop guard and setInterval
-  expect(normalizedJS).toContain("while(true) {await new Promise(r => setTimeout(r, 16));}");
+  expect(normalizedJS).toContain('while(true) {await new Promise(r => setTimeout(r, 16));}');
 });
-
