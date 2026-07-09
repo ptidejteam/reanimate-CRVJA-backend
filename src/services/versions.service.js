@@ -5,5 +5,5 @@ import { readFile } from "fs/promises";
  * @returns {transpilerVersions} - List.
  */
 export async function fetchAvailableVersions(amosCode, version) {
-  return ["1.1.0", "1.2.0", "2.0.0-beta"];
+  return ["2.0.0-beta", "1.2.0", "1.1.0",];
 }

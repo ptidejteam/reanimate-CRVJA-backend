@@ -5,6 +5,6 @@ export async function handleVersions(req, res) {
 
   return res.status(200).json({
     message: 'Available versions fetched.',
-    data: availableVersions
+    versions: availableVersions
   });
 };
