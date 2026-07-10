@@ -13,7 +13,6 @@ export async function getAvailableVersions() {
 
     // Filter and map out only the directory names
     directories = entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name);
-
   } catch (error) {
     console.error('Error reading path:', error);
   }

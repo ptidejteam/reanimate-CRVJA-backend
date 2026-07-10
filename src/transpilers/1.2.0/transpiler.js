@@ -3,8 +3,9 @@ import AmosTranslator from './amos-translator.js';
 import AMOSParser from './grammar/generated/AMOSParser.js';
 import AMOSLexer from './grammar/generated/AMOSLexer.js';
 import CollectingErrorListener from './error-listener.js';
+import prettier from 'prettier';
 
-export default function transpile(amosCode) {
+export default async function transpile(amosCode) {
   const chars = new antlr4.InputStream(amosCode);
   const lexer = new AMOSLexer(chars);
 
@@ -25,7 +26,9 @@ export default function transpile(amosCode) {
   const walker = new antlr4.tree.ParseTreeWalker();
   walker.walk(translator, tree);
 
-  const translatedCode = translator.getJavaScript();
+  const translatedCode = await prettier.format(translator.getJavaScript(), {
+    parser: 'babel',
+  });
 
   const response = {
     lexicalErrors: lexicalErrors,
