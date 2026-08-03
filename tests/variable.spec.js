@@ -26,16 +26,16 @@ test('create a local variable', async () => {
 
 test('create a global variable', async () => {
   const amosCode = `
-    Global TEMP_GLOBAL_VAR
-    TEMP_GLOBAL_VAR = 10
+    Global MY_GLOBAL_VAR
+    MY_GLOBAL_VAR = 10
     Procedure P_MYPROC  
-      TEMP_GLOBAL_VAR = 20
+      MY_GLOBAL_VAR = 20
     End Proc
   `;
   const normalizedJS = await translate(amosCode);
-  expect(normalizedJS).toContain('TEMP_GLOBAL_VAR = 10;');
-  expect(normalizedJS).toContain('TEMP_GLOBAL_VAR = 20;');
-  expect(normalizedJS).not.toContain('let TEMP_GLOBAL_VAR');
+  expect(normalizedJS).toContain('MY_GLOBAL_VAR = 10;');
+  expect(normalizedJS).toContain('MY_GLOBAL_VAR = 20;');
+  expect(normalizedJS).not.toContain('let MY_GLOBAL_VAR');
 });
 
 test('attribute a value to a variable (number)', async () => {

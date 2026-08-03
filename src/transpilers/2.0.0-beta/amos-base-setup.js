@@ -1,4 +1,4 @@
-export function setupAmosTranslatorBase(translator) {
+export default function setupAmosTranslatorBase(translator) {
   translator.imports = '';
   translator.output = '';
   translator.id = 0;
@@ -24,11 +24,10 @@ export function setupAmosTranslatorBase(translator) {
   translator.palette = `const colorMapping = ${JSON.stringify(translator.colorMapping, null, 2)};`;
   translator.lineData = translator.lineData || [];
   translator.globalVariables = '';
-  translator.globalVariablesStorage = {};
   translator.functionDeclarationSupport = '';
   translator.scopes = [{}];
   translator.globalVariablesSet = new Set();
-  translator.output += `
+  translator.preamble += `
 const keyMapping = {
     1: "Escape",
     2: "Digit1",
@@ -270,9 +269,8 @@ const keyMapping = {
     238: "PlayPause",
     239: "PlayStop",
     240: "MediaNext"
-}`;
+}
 
-  translator.output += `
 let dataMatrixPointer = 0;
 let currentTimer = Date.now();
 let Ink = 1;
@@ -290,9 +288,8 @@ const keyCodes = () => {
         currentPressedKey = null;
     });
 };
-keyCodes();`;
+keyCodes();
 
-  translator.output += `
 function clearDivs(idtarget) {
     const screenDiv = document.getElementById(idtarget);
     if (screenDiv) {
