@@ -820,7 +820,7 @@ document.getElementById('game-container').appendChild(screenDiv);
 document.getElementById('amos-screen').style.backgroundColor = 'black';`;
   }
 
-  enterBlitter_fill(ctx) {}
+  enterBlitter_fill(ctx) { }
 
   enterBlitter_clear(ctx) {
     // Blitter Clear clears a rectangular region on screen
@@ -1392,7 +1392,8 @@ function ${name}(${props}) {
         return;
     }
     lastTime${name} = currentTime;
-    timeoutId${name} = null; // Clear the timeout ID after execution${localDeclarations}`;
+    timeoutId${name} = null; // Clear the timeout ID after execution
+${localDeclarations}`;
   }
 
   exitProcedure(ctx) {

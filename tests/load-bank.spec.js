@@ -1,11 +1,11 @@
 import transpile from '#root/src/transpilers/2.0.0-beta/transpiler.js';
 
-function translate(code) {
+async function translate(code) {
   const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
-  } = transpile(code);
+  } = await transpile(code);
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
@@ -14,20 +14,20 @@ function translate(code) {
   return normalizedJS;
 }
 
-test('load_banks without bank id', () => {
+test('load_banks without bank id', async () => {
   const amosBasicCode = `
     Load "assets/icons.abk"
   `;
 
-  const normalizedJS = translate(amosBasicCode);
+  const normalizedJS = await translate(amosBasicCode);
 
   expect(normalizedJS).toContain('loadBank(\'"assets/icons.abk"\', 1);');
 });
 
-test('load_banks with bank id', () => {
+test('load_banks with bank id', async () => {
   const amosBasicCode = `Load "assets/icons.abk", 2`;
 
-  const normalizedJS = translate(amosBasicCode);
+  const normalizedJS = await translate(amosBasicCode);
 
   expect(normalizedJS).toContain('loadBank(\'"assets/icons.abk"\', 2);');
 });

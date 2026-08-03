@@ -28,6 +28,7 @@ export default async function transpile(amosCode) {
 
   const translatedCode = await prettier.format(translator.getJavaScript(), {
     parser: 'babel',
+    singleQuote: true,
   });
 
   const response = {

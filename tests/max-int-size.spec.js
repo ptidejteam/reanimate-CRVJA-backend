@@ -1,11 +1,11 @@
 import transpile from '#root/src/transpilers/2.0.0-beta/transpiler.js';
 
-function translate(code) {
+async function translate(code) {
   const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
-  } = transpile(code);
+  } = await transpile(code);
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
@@ -14,13 +14,13 @@ function translate(code) {
   return normalizedJS;
 }
 
-test('max_int_size', () => {
+test('max_int_size', async () => {
   const amosBasicCode = `
    XW=2147483648
   `;
 
   try {
-    translate(amosBasicCode);
+    await translate(amosBasicCode);
   } catch (error) {
     // Verify that the error message is as expected
     expect(error.message).toBe(

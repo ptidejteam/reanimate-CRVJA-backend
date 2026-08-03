@@ -1,11 +1,11 @@
 import transpile from '#root/src/transpilers/2.0.0-beta/transpiler.js';
 
-function translate(code) {
+async function translate(code) {
   const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
-  } = transpile(code);
+  } = await transpile(code);
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
@@ -14,31 +14,31 @@ function translate(code) {
   return normalizedJS;
 }
 
-test('string assignments', () => {
+test('string assignments', async () => {
   const amosBasicCode = `
 A$ = "Hello, World!"
   `;
 
-  const normalizedJS = translate(amosBasicCode);
+  const normalizedJS = await translate(amosBasicCode);
 
-  expect(normalizedJS).toContain('A$ = "Hello, World!";');
+  expect(normalizedJS).toContain("A$ = 'Hello, World!';");
 });
 
-test('string assignments and text', () => {
+test('string assignments and text', async () => {
   const amosBasicCode = `
 A$ = "Hello, World!"
 Text 10,10,A$
   `;
 
-  const normalizedJS = translate(amosBasicCode);
+  const normalizedJS = await translate(amosBasicCode);
 
   // Find the name of the div (the transpiler uses a random identifier)
-  const match = normalizedJS.match(/const (textDiv1010[a-z0-9]+)/);
+  const match = normalizedJS.match(/const (textDiv1010[a-z0-9]*)/);
   if (!match) {
     throw new Error('Could not find generated variable name for textDiv1010');
   }
   const varName = match[1];
 
-  expect(normalizedJS).toContain('A$ = "Hello, World!";');
+  expect(normalizedJS).toContain("A$ = 'Hello, World!';");
   expect(normalizedJS).toContain(`${varName}.innerText = A$;`);
 });

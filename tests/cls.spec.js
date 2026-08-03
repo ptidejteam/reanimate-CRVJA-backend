@@ -1,11 +1,11 @@
 import transpile from '#root/src/transpilers/2.0.0-beta/transpiler.js';
 
-function translate(code) {
+async function translate(code) {
   const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
-  } = transpile(code);
+  } = await transpile(code);
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
@@ -14,24 +14,24 @@ function translate(code) {
   return normalizedJS;
 }
 
-test('cls translation', () => {
+test('cls translation', async () => {
   const amosBasicCode = `
     Cls
   `;
 
-  const normalizedJS = translate(amosBasicCode);
+  const normalizedJS = await translate(amosBasicCode);
 
   // Check if the output contains the screen clearing commands
   expect(normalizedJS).toContain("const amosScreen = document.getElementById('amos-screen');");
   expect(normalizedJS).toContain("amosScreen.innerHTML = '';");
 });
 
-test('cls with color translation', () => {
+test('cls with color translation', async () => {
   const amosBasicCode = `
     Cls 2
     `;
 
-  const normalizedJS = translate(amosBasicCode);
+  const normalizedJS = await translate(amosBasicCode);
 
   // Check if the output contains the screen clearing commands
   expect(normalizedJS).toContain("const amosScreen = document.getElementById('amos-screen');");
@@ -41,12 +41,12 @@ test('cls with color translation', () => {
   expect(normalizedJS).toContain('amosScreen.style.backgroundColor = colorMapping[2];');
 });
 
-test('cls with block area translation', () => {
+test('cls with block area translation', async () => {
   const amosBasicCode = `
         Cls 2,10,20 To 100,200
     `;
 
-  const normalizedJS = translate(amosBasicCode);
+  const normalizedJS = await translate(amosBasicCode);
 
   expect(normalizedJS).toContain('const clearColor = colorMapping[2];');
   expect(normalizedJS).toContain('const clearX1 = 10;');

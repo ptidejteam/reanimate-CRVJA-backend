@@ -1,11 +1,11 @@
 import transpile from '#root/src/transpilers/2.0.0-beta/transpiler.js';
 
-function translate(code) {
+async function translate(code) {
   const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
-  } = transpile(code);
+  } = await transpile(code);
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
@@ -14,15 +14,15 @@ function translate(code) {
   return normalizedJS;
 }
 
-test('do_loop', () => {
+test('do_loop', async () => {
   const amosBasicCode = `
   Do 
 
   Loop 
     `;
 
-  const normalizedJS = translate(amosBasicCode);
+  const normalizedJS = await translate(amosBasicCode);
 
   // Assert against current translator output containing loop guard and setInterval
-  expect(normalizedJS).toContain('while(true) {await new Promise(r => setTimeout(r, 16));}');
+  expect(normalizedJS).toContain('while (true) { await new Promise((r) => setTimeout(r, 16)); }');
 });

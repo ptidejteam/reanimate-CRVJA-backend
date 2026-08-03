@@ -1,11 +1,11 @@
 import transpile from '#root/src/transpilers/2.0.0-beta/transpiler.js';
 
-function translate(code) {
+async function translate(code) {
   const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
-  } = transpile(code);
+  } = await transpile(code);
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
@@ -14,11 +14,11 @@ function translate(code) {
   return normalizedJS;
 }
 
-test('generate a random number', () => {
+test('generate a random number', async () => {
   const amosCode = `
     RND_VAR = Rnd(10)
   `;
-  const normalizedJS = translate(amosCode);
+  const normalizedJS = await translate(amosCode);
   expect(normalizedJS).toContain('let RND_VAR = 0;');
   expect(normalizedJS).toContain('RND_VAR = Rnd(10);');
 });

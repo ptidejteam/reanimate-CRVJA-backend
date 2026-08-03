@@ -1393,7 +1393,8 @@ function ${name}(${props}) {
 		return;
 	}
 	lastTime${name} = currentTime;
-	timeoutId${name} = null; // Clear the timeout ID after execution${localDeclarations}`;
+	timeoutId${name} = null; // Clear the timeout ID after execution
+${localDeclarations}`;
   }
 
   exitProcedure(ctx) {

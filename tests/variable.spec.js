@@ -1,11 +1,11 @@
 import transpile from '#root/src/transpilers/2.0.0-beta/transpiler.js';
 
-function translate(code) {
+async function translate(code) {
   const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
-  } = transpile(code);
+  } = await transpile(code);
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
@@ -14,17 +14,17 @@ function translate(code) {
   return normalizedJS;
 }
 
-test('create a local variable', () => {
+test('create a local variable', async () => {
   const amosCode = `
     Procedure P_MYPROC
       LOCALVAR = 5
     End Proc
   `;
-  const normalizedJS = translate(amosCode);
-  expect(normalizedJS).toContain('let LOCALVAR = 0;LOCALVAR = 5;');
+  const normalizedJS = await translate(amosCode);
+  expect(normalizedJS).toContain('let LOCALVAR = 0; LOCALVAR = 5;');
 });
 
-test('create a global variable', () => {
+test('create a global variable', async () => {
   const amosCode = `
     Global TEMP_GLOBAL_VAR
     TEMP_GLOBAL_VAR = 10
@@ -32,52 +32,52 @@ test('create a global variable', () => {
       TEMP_GLOBAL_VAR = 20
     End Proc
   `;
-  const normalizedJS = translate(amosCode);
+  const normalizedJS = await translate(amosCode);
   expect(normalizedJS).toContain('TEMP_GLOBAL_VAR = 10;');
   expect(normalizedJS).toContain('TEMP_GLOBAL_VAR = 20;');
   expect(normalizedJS).not.toContain('let TEMP_GLOBAL_VAR');
 });
 
-test('attribute a value to a variable (number)', () => {
+test('attribute a value to a variable (number)', async () => {
   const amosCode = `
     V1 = 123
   `;
-  const normalizedJS = translate(amosCode);
+  const normalizedJS = await translate(amosCode);
   expect(normalizedJS).toContain('let V1 = 0;');
   expect(normalizedJS).toContain('V1 = 123;');
 });
 
-test('attribute a value to a variable (expression)', () => {
+test('attribute a value to a variable (expression)', async () => {
   const amosCode = `
     V1 = 123 + 456
   `;
-  const normalizedJS = translate(amosCode);
+  const normalizedJS = await translate(amosCode);
   expect(normalizedJS).toContain('let V1 = 0;');
-  expect(normalizedJS).toContain('V1 = 123+456;');
+  expect(normalizedJS).toContain('V1 = 123 + 456;');
 });
 
-test('attribute a value to a variable (another variable)', () => {
+test('attribute a value to a variable (another variable)', async () => {
   const amosCode = `
     V1 = 10
     V2 = V1
   `;
-  const normalizedJS = translate(amosCode);
+  const normalizedJS = await translate(amosCode);
   expect(normalizedJS).toContain('let V1 = 0;');
   expect(normalizedJS).toContain('let V2 = 0;');
   expect(normalizedJS).toContain('V1 = 10;');
   expect(normalizedJS).toContain('V2 = V1;');
 });
 
-test('attribute a value to a variable (another variable + expression)', () => {
+test('attribute a value to a variable (another variable + expression)', async () => {
   const amosCode = `
     V1 = 10
     V2 = V1 + 5
   `;
-  const normalizedJS = translate(amosCode);
+  const normalizedJS = await translate(amosCode);
   expect(normalizedJS).toContain('let V1 = 0;');
   expect(normalizedJS).toContain('let V2 = 0;');
   expect(normalizedJS).toContain('V1 = 10;');
-  expect(normalizedJS).toContain('V2 = V1+5;');
+  expect(normalizedJS).toContain('V2 = V1 + 5;');
 });
 
 // NOT IMPLEMENTED YET

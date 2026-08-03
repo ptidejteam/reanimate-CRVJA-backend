@@ -1,11 +1,11 @@
 import transpile from '#root/src/transpilers/2.0.0-beta/transpiler.js';
 
-function translate(code) {
+async function translate(code) {
   const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
-  } = transpile(code);
+  } = await transpile(code);
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
@@ -14,19 +14,19 @@ function translate(code) {
   return normalizedJS;
 }
 
-test('1D arrays creation, update and global reference', () => {
+test('1D arrays creation, update and global reference', async () => {
   const amosBasicCode = `
     Dim C(1)
     Global C(1)
     C(0) = 10
   `;
 
-  const normalizedJS = translate(amosBasicCode);
+  const normalizedJS = await translate(amosBasicCode);
 
   expect(normalizedJS).toContain('const C = Array(1).fill(0); C[Math.trunc(0)] = 10;');
 });
 
-test('2D arrays creation, update and global reference', () => {
+test('2D arrays creation, update and global reference', async () => {
   const amosBasicCode = `
   Dim S(2,2)
   Global S(2)
@@ -35,10 +35,10 @@ test('2D arrays creation, update and global reference', () => {
   Text 100,100,TEMP
   `;
 
-  const normalizedJS = translate(amosBasicCode);
+  const normalizedJS = await translate(amosBasicCode);
 
   // Dim S(2,2)
-  expect(normalizedJS).toContain('const S = Array(2).fill(0).map(x => Array(2).fill(0));');
+  expect(normalizedJS).toContain('const S = Array(2) .fill(0) .map((x) => Array(2).fill(0));');
   // S(1,0) = 20
   expect(normalizedJS).toContain('S[Math.trunc(1)][Math.trunc(0)] = 20;');
 });

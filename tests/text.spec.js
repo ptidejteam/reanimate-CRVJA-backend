@@ -1,11 +1,11 @@
 import transpile from '#root/src/transpilers/2.0.0-beta/transpiler.js';
 
-function translate(code) {
+async function translate(code) {
   const {
     lexicalErrors: lexicalErrors,
     syntaxErrors: syntaxErrors,
     translatedCode: translatedCode,
-  } = transpile(code);
+  } = await transpile(code);
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
@@ -14,15 +14,15 @@ function translate(code) {
   return normalizedJS;
 }
 
-test('Text', () => {
+test('Text', async () => {
   const amosBasicCode = `
         Text 10,10,"Hello, World!"
     `;
 
-  const normalizedJS = translate(amosBasicCode);
+  const normalizedJS = await translate(amosBasicCode);
 
   // Find the name of the div (the transpiler uses a random identifier)
-  const match = normalizedJS.match(/const (textDiv1010[a-z0-9]+)/);
+  const match = normalizedJS.match(/const (textDiv1010[a-z0-9]*)/);
   if (!match) {
     throw new Error('Could not find generated variable name for textDiv1010');
   }
@@ -30,7 +30,7 @@ test('Text', () => {
 
   const expectedJsCode = `
     const ${varName} = document.createElement('div');
-    ${varName}.innerText = "Hello, World!";
+    ${varName}.innerText = 'Hello, World!';
     ${varName}.id = '${varName}';
     ${varName}.style.position = 'absolute';
     ${varName}.style.left = '10px';
