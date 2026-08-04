@@ -279,10 +279,6 @@ or_and:
     'or' | 'and'
     ;
 
-//if_then:
-//    IF expression1 expressions_comparators? expression2 (or_and expression1 expressions_comparators expression2)? 'then' statement
-//    ;
-
 open_out_readfile:
     'Open' 'Out' NUMBER COMMA IDENTIFIER
     ;
@@ -469,7 +465,7 @@ for_loop:
     ;
 
 if_statement:
-    (IF expression1 | IF read_target) expressions_comparators expression2 (or_and expression1 expressions_comparators expression2)?
+    (IF expression1 | IF read_target) expressions_comparators expression1 (or_and expression1 expressions_comparators expression1)?
     (statement)*
     (('End' 'if') | else_statement | ENDIF)
     ;

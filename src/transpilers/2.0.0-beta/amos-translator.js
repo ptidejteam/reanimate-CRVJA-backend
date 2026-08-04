@@ -708,38 +708,6 @@ textEl.style.backgroundColor = getColour(Paper);
     this.output += `for (${variable} = ${start}; ${variable} <= ${end}; ${variable}++) {`;
   }
 
-  enterIf_then(ctx) {
-    let expressions1 = [];
-    let expressions2 = [];
-    let comparators = [];
-    let or_and = [];
-
-    for (let i = 0; i < ctx.expression1().length; i++) {
-      expressions1.push(ctx.expression1(i).getText());
-    }
-    for (let i = 0; i < ctx.expression2().length; i++) {
-      expressions2.push(ctx.expression2(i).getText());
-    }
-    for (let i = 0; i < ctx.expressions_comparators().length; i++) {
-      comparators.push(ctx.expressions_comparators(i).getText());
-    }
-    for (let i = 0; i < ctx.or_and().length; i++) {
-      or_and.push(ctx.or_and(i).getText());
-    }
-
-    let finalIfStatement = '';
-
-    for (let i = 0; i < expressions1.length; i++) {
-      finalIfStatement += expressions1[i] + ' ' + comparators[i] + ' ' + expressions2[i];
-      if (or_and[i] && or_and[i] === 'AND') {
-        finalIfStatement += ' && ';
-      }
-      if (or_and[i] && or_and[i] === 'OR') {
-        finalIfStatement += ' || ';
-      }
-    }
-  }
-
   enterArray_create(ctx) {
     for (let i = 0; i < ctx.array_structure().length; i++) {
       const struct = ctx.array_structure(i);
@@ -929,6 +897,7 @@ textEl.style.backgroundColor = getColour(Paper);
     for (let i = 0; i < ctx.children.length; i++) {
       if (ctx.children[i].constructor.name == 'Expression1Context') {
         statement += this.handleExpression(ctx.children[i]);
+        console.log(i + "º Expression: " + statement);
       } else if (ctx.children[i].constructor.name == 'Or_andContext') {
         logicalOperator = ctx.children[i].getText();
         if (logicalOperator == 'and') {
@@ -938,8 +907,6 @@ textEl.style.backgroundColor = getColour(Paper);
         } else {
           console.log('Unrecognized logicalOperator in IF Statement');
         }
-      } else if (ctx.children[i].constructor.name == 'Expression2Context') {
-        statement += this.handleExpression(ctx.children[i]);
       } else if (ctx.children[i].constructor.name == 'Expressions_comparatorsContext') {
         comparator = ctx.children[i].getText();
         // Special cases for = and <>
@@ -954,6 +921,7 @@ textEl.style.backgroundColor = getColour(Paper);
       }
     }
     this.output += `if (${statement}) {`;
+    console.log(statement);
   }
 
   exitIf_statement(ctx) {
