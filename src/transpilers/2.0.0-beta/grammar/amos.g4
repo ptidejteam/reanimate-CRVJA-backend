@@ -57,12 +57,8 @@ HASHTAG: '#';
 PERCENT: '%';
 QUESTION: '?';
 
-// Expression captures more complex expressions
-expression2:
-    term ((ADD | SUBTRACT) term)* // Handle addition and subtraction
-    ;
 
-expression1:
+expression:
     term ((ADD | SUBTRACT) term)* NUMBER? // Handle addition and subtraction
     ;
 
@@ -80,7 +76,7 @@ factor:
     | qcos_function
     | rndFunction
     | IDENTIFIER                // A variable
-    | '(' expression1 ')'        // Parentheses for grouping
+    | '(' expression ')'        // Parentheses for grouping
     | HEX_NUMBER
     ;
 
@@ -163,7 +159,7 @@ statement:
     ;
 
 rndFunction:
-    'Rnd' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression1) ROUND_BRACKET_CLOSE
+    'Rnd' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE
     ;
 
 screen_swap:
@@ -179,15 +175,15 @@ wait_key:
     ;
 
 box:
-    'Box' expression1 COMMA expression1 'To' expression1 COMMA expression1
+    'Box' expression COMMA expression 'To' expression COMMA expression
     ;
 
 circle:
-    'Circle' expression1 COMMA expression1 COMMA expression1
+    'Circle' expression COMMA expression COMMA expression
     ;
 
 on_gosub:
-    'On' IDENTIFIER ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression1) ROUND_BRACKET_CLOSE 'Gosub' IDENTIFIER (COMMA IDENTIFIER)*
+    'On' IDENTIFIER ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE 'Gosub' IDENTIFIER (COMMA IDENTIFIER)*
     ;
 
 screen_offset:
@@ -199,7 +195,7 @@ choose_Screen:
     ;
 
 data_statement:
-    'Data' expression1 (COMMA expression1)*
+    'Data' expression (COMMA expression)*
     ;
 
 read_statement:
@@ -232,15 +228,15 @@ bob_off:
     ;
 
 value:
-    expression1
+    expression
     ;
 
 set_rainbow:
-    'Set' 'Rainbow' (expression1 | NUMBER | STRING) COMMA (expression1 | NUMBER | STRING) COMMA (expression1 | NUMBER | STRING) COMMA (expression1 | NUMBER | STRING) COMMA (expression1 | NUMBER | STRING)? COMMA? (expression1 | NUMBER | STRING)?
+    'Set' 'Rainbow' (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING)? COMMA? (expression | NUMBER | STRING)?
     ;
 
 use_rainbow:
-    'Rainbow' (expression1 | NUMBER | STRING) COMMA (expression1 | NUMBER | STRING) COMMA (expression1 | NUMBER | STRING) COMMA (expression1 | NUMBER | STRING) COMMA? (expression1 | NUMBER | STRING)? COMMA? (expression1 | NUMBER | STRING)?
+    'Rainbow' (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA? (expression | NUMBER | STRING)? COMMA? (expression | NUMBER | STRING)?
     ;
 
 label_title:
@@ -268,7 +264,7 @@ loadBank:
     ;
 
 loadBankImgToSprite:
-    'Sprite' expression1 COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER) | 'Off'
+    'Sprite' expression COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER) | 'Off'
     ;
 
 expressions_comparators:
@@ -296,7 +292,7 @@ input_variable:
     ;
 
 btst:
-    'Btst' ROUND_BRACKET_OPEN expression1 COMMA expression1 ROUND_BRACKET_CLOSE
+    'Btst' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
     ;
 
 repeat_key:
@@ -314,7 +310,7 @@ global:
     ;
 
 turbo_draw:
-    'Turbo' 'Draw' expression1 COMMA expression1 'To' expression1 COMMA expression1 COMMA expression1 COMMA expression1
+    'Turbo' 'Draw' expression COMMA expression 'To' expression COMMA expression COMMA expression COMMA expression
     ;
 
 locate:
@@ -322,7 +318,7 @@ locate:
     ;
 
 add:
-    'Add' IDENTIFIER COMMA expression1 (COMMA expression1 'To' expression1)?
+    'Add' IDENTIFIER COMMA expression (COMMA expression 'To' expression)?
     ;
 
 blitter_copy:
@@ -330,11 +326,11 @@ blitter_copy:
     ;
 
 blitter_fill:
-    'Blitter' 'Fill' NUMBER COMMA NUMBER (COMMA expression1 COMMA expression1 COMMA expression1 COMMA expression1)?
+    'Blitter' 'Fill' NUMBER COMMA NUMBER (COMMA expression COMMA expression COMMA expression COMMA expression)?
     ;
 
 blitter_clear:
-    'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression1 COMMA expression1 'To' expression1 COMMA expression1)?
+    'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression COMMA expression 'To' expression COMMA expression)?
     ;
 
 autoback:
@@ -350,15 +346,15 @@ double_buffer:
     ;
 
 pen:
-    'Pen' expression1
+    'Pen' expression
     ;
 
 cls:
-    'Cls' (expression1 (COMMA expression1 COMMA expression1 'To' expression1 COMMA expression1)?)?
+    'Cls' (expression (COMMA expression COMMA expression 'To' expression COMMA expression)?)?
     ;
 
 paper:
-    'Paper' expression1
+    'Paper' expression
     ;
 
 degree:
@@ -378,23 +374,23 @@ flash_on:
     ;
 
 sin_function:
-    'Sin' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression1) ROUND_BRACKET_CLOSE
+    'Sin' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE
     ;
 
 cos_function:
-    'Cos' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression1) ROUND_BRACKET_CLOSE
+    'Cos' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE
     ;
 
 qsin_function:
-    'Qsin' ROUND_BRACKET_OPEN expression1 COMMA expression1 ROUND_BRACKET_CLOSE
+    'Qsin' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
     ;
 
 qcos_function:
-    'Qcos' ROUND_BRACKET_OPEN expression1 COMMA expression1 ROUND_BRACKET_CLOSE
+    'Qcos' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
     ;
 
 play_sound:
-    'Play' ((HEX_NUMBER NUMBER) | expression1 | IDENTIFIER) COMMA NUMBER
+    'Play' ((HEX_NUMBER NUMBER) | expression | IDENTIFIER) COMMA NUMBER
     ;
 
 wait_key_break:
@@ -402,16 +398,16 @@ wait_key_break:
     ;
 
 variable_starter:
-    IDENTIFIER '=' (expression1 | btst) // Now captures only variable assignments
+    IDENTIFIER '=' (expression | btst) // Now captures only variable assignments
     ;
 
 procedure_call:
-    IDENTIFIER SQUARE_BRACKET_OPEN expression1 (COMMA expression1)* SQUARE_BRACKET_CLOSE
+    IDENTIFIER SQUARE_BRACKET_OPEN expression (COMMA expression)* SQUARE_BRACKET_CLOSE
     | IDENTIFIER
     ;
 
 array_structure:
-    IDENTIFIER ROUND_BRACKET_OPEN expression1 (COMMA expression1)* ROUND_BRACKET_CLOSE
+    IDENTIFIER ROUND_BRACKET_OPEN expression (COMMA expression)* ROUND_BRACKET_CLOSE
     ;
 
 array_create:
@@ -419,7 +415,7 @@ array_create:
     ;
 
 array_update:
-    array_structure '=' expression1
+    array_structure '=' expression
     ;
 
 screen_open:
@@ -427,7 +423,7 @@ screen_open:
     ;
 
 load_iff:
-    LOADIFF IDENTIFIER expression1
+    LOADIFF IDENTIFIER expression
     ;
 
 curs_off:
@@ -439,11 +435,11 @@ curs_on:
     ;
 
 ink:
-    INK expression1
+    INK expression
     ;
 
 text:
-    TEXT expression1 COMMA expression1 COMMA (STRING | IDENTIFIER)
+    TEXT expression COMMA expression COMMA (STRING | IDENTIFIER)
     ;
 
 do_loop:
@@ -459,13 +455,13 @@ while_wend:
     ;
 
 for_loop:
-    FOR IDENTIFIER '=' expression1 TO expression1
+    FOR IDENTIFIER '=' expression TO expression
     (statement)*
     (NEXT IDENTIFIER | NEXT)
     ;
 
 if_statement:
-    (IF expression1 | IF read_target) expressions_comparators expression1 (or_and expression1 expressions_comparators expression1)?
+    (IF expression | IF read_target) expressions_comparators expression (or_and expression expressions_comparators expression)?
     (statement)*
     (('End' 'if') | else_statement | ENDIF)
     ;
@@ -483,7 +479,7 @@ if_statement_key_state:
     ;
 
 bar:
-    BAR expression1 COMMA expression2 'To' expression1 COMMA expression2
+    BAR expression COMMA expression 'To' expression COMMA expression
     ;
 
 procedure:
@@ -493,11 +489,11 @@ procedure:
     ;
 
 current_Key_State:
-    KEYSTATE ROUND_BRACKET_OPEN expression1 ROUND_BRACKET_CLOSE
+    KEYSTATE ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 print_options:
-    expression1
+    expression
     | HASHTAG NUMBER
     ;
 

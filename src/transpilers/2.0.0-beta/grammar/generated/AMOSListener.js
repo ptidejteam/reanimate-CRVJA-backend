@@ -5,21 +5,12 @@ import antlr4 from 'antlr4';
 // This class defines a complete listener for a parse tree produced by AMOSParser.
 export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
-	// Enter a parse tree produced by AMOSParser#expression2.
-	enterExpression2(ctx) {
+	// Enter a parse tree produced by AMOSParser#expression.
+	enterExpression(ctx) {
 	}
 
-	// Exit a parse tree produced by AMOSParser#expression2.
-	exitExpression2(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#expression1.
-	enterExpression1(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#expression1.
-	exitExpression1(ctx) {
+	// Exit a parse tree produced by AMOSParser#expression.
+	exitExpression(ctx) {
 	}
 
 

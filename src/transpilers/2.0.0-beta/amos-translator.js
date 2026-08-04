@@ -55,12 +55,12 @@ document.getElementById('amos-screen').style.backgroundColor = 'black';`;
 
   enterBlitter_clear(ctx) {
     // Blitter Clear clears a rectangular region on screen
-    // Grammar: 'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression1 COMMA expression1 'To' expression1 COMMA expression1)?
-    if (ctx.expression1().length >= 4) {
-      const x1 = ctx.expression1(0)?.getText();
-      const y1 = ctx.expression1(1)?.getText();
-      const x2 = ctx.expression1(2)?.getText();
-      const y2 = ctx.expression1(3)?.getText();
+    // Grammar: 'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression COMMA expression 'To' expression COMMA expression)?
+    if (ctx.expression().length >= 4) {
+      const x1 = ctx.expression(0)?.getText();
+      const y1 = ctx.expression(1)?.getText();
+      const x2 = ctx.expression(2)?.getText();
+      const y2 = ctx.expression(3)?.getText();
 
       this.output += `
 // Blitter Clear - remove elements in the region
@@ -162,7 +162,7 @@ readFromChannel(${channel}, (data) => {
       let text = ctx.print_options(i)?.getText();
 
       if (!text.includes('"')) {
-        text = ctx.print_options(i)?.expression1(0)?.getText().replace(/["']/g, '');
+        text = ctx.print_options(i)?.expression(0)?.getText().replace(/["']/g, '');
         this.output += `
 {
 const printId = 'printDiv${i}_' + '${text}';
@@ -203,7 +203,7 @@ printEl.style.color = getColour(Ink);
   }
 
   enterCls(ctx) {
-    const exprs = ctx.expression1();
+    const exprs = ctx.expression();
 
     if (exprs.length === 0) {
       // Case 1: Parameterless Cls (clear entire screen + set background color to current paper color)
@@ -350,13 +350,13 @@ if (amosScreen) {
       return id;
     }
 
-    let x1 = ctx.expression1(0)?.getText();
-    let y1 = ctx.expression1(1)?.getText();
-    let x2 = ctx.expression1(2)?.getText();
-    let y2 = ctx.expression1(3)?.getText();
-    let color = `colorMapping[(${ctx.expression1(4)?.getText()})]`;
+    let x1 = ctx.expression(0)?.getText();
+    let y1 = ctx.expression(1)?.getText();
+    let x2 = ctx.expression(2)?.getText();
+    let y2 = ctx.expression(3)?.getText();
+    let color = `colorMapping[(${ctx.expression(4)?.getText()})]`;
     let the_ID = generateRandomID();
-    let index = ctx.expression1(5)?.getText();
+    let index = ctx.expression(5)?.getText();
 
     // Calculate the length and angle of the line
 
@@ -410,10 +410,11 @@ if (lineDiv${the_ID}) {
   }
 
   enterBar(ctx) {
-    const x1 = ctx.expression1(0).getText();
-    const y1 = ctx.expression2(0).getText();
-    const x2 = ctx.expression1(1).getText();
-    const y2 = ctx.expression2(1).getText();
+    // AMOS command: Bar X1,Y1 To X2,Y2
+    const x1 = ctx.expression(0).getText();
+    const y1 = ctx.expression(1).getText();
+    const x2 = ctx.expression(2).getText();
+    const y2 = ctx.expression(3).getText();
 
     // Gere um ID seguro e único baseado nas coordenadas
     const idBar = `"Bar_" + (${x1}) + "_" + (${y1})`;
@@ -447,10 +448,10 @@ screenBarDiv.style.zIndex = 10;
   }
 
   enterBox(ctx) {
-    const x1 = ctx.expression1(0).getText();
-    const y1 = ctx.expression1(1).getText();
-    const x2 = ctx.expression1(2).getText();
-    const y2 = ctx.expression1(3).getText();
+    const x1 = ctx.expression(0).getText();
+    const y1 = ctx.expression(1).getText();
+    const x2 = ctx.expression(2).getText();
+    const y2 = ctx.expression(3).getText();
 
     const boxID = `"Box_" + ${x1} + "_" + ${y1} + "_" + ${x2} + "_" + ${y2}`;
 
@@ -475,9 +476,9 @@ boxDiv.style.zIndex = 10;
   }
 
   enterCircle(ctx) {
-    const x = ctx.expression1(0).getText();
-    const y = ctx.expression1(1).getText();
-    const r = ctx.expression1(2).getText();
+    const x = ctx.expression(0).getText();
+    const y = ctx.expression(1).getText();
+    const r = ctx.expression(2).getText();
     const circleID = `"Circle_" + (${x}) + "_" + (${y}) + "_" + (${r})`;
 
     this.output += `
@@ -503,7 +504,7 @@ circleDiv.style.backgroundColor = getColour(Ink);
   }
 
   enterWhile_wend(ctx) {
-    let leftExpression = ctx.current_Key_State(0)?.expression1(0)?.getText();
+    let leftExpression = ctx.current_Key_State(0)?.expression(0)?.getText();
     if (!leftExpression) return;
 
     // Replace all occurrences of $xx with decimal equivalents
@@ -576,9 +577,9 @@ circleDiv.style.backgroundColor = getColour(Ink);
     let valueStarter;
     let valueEndIteration;
 
-    if (ctx.expression1().length > 1) {
-      valueStarter = ctx.expression1(1)?.getText();
-      valueEndIteration = ctx.expression1(2)?.getText();
+    if (ctx.expression().length > 1) {
+      valueStarter = ctx.expression(1)?.getText();
+      valueEndIteration = ctx.expression(2)?.getText();
 
       this.output += `
 ${variable} = (${variable} + ${valueExpression}) % ${valueEndIteration};
@@ -632,14 +633,13 @@ ${localDeclarations}`;
   exitProcedure(ctx) {
     this.exitCurrentScope();
     this.output += '}';
-    console.log(this.currentScope);
   }
   enterText(ctx) {
     const text = (ctx.STRING() || ctx.IDENTIFIER())?.getText();
     const cleanText = text.replace(/ /g, ' '); // Replace all occurrences of <Space> with <Em Dash>
 
-    const x = ctx.expression1(0)?.getText();
-    const y = ctx.expression1(1)?.getText();
+    const x = ctx.expression(0)?.getText();
+    const y = ctx.expression(1)?.getText();
 
     const isNumeric = (str) => /^\d+$/.test(str);
     const xValue = isNumeric(x) ? `'${x}px'` : `(${x}) + 'px'`;
@@ -713,12 +713,12 @@ textEl.style.backgroundColor = getColour(Paper);
       const struct = ctx.array_structure(i);
       const name = struct.IDENTIFIER(0)?.getText();
 
-      const numberOfDimensions = struct.expression1().length;
-      let dimension = struct.expression1()[0].getText();
+      const numberOfDimensions = struct.expression().length;
+      let dimension = struct.expression()[0].getText();
       this.output += `const ${name} = Array(${dimension}).fill(0)`;
 
       for (let i = 1; i < numberOfDimensions; i++) {
-        let dimension = struct.expression1()[i].getText();
+        let dimension = struct.expression()[i].getText();
         this.output += `.map(x => Array(${dimension}).fill(0)`;
       }
       for (let i = 1; i < numberOfDimensions; i++) {
@@ -740,7 +740,7 @@ textEl.style.backgroundColor = getColour(Paper);
     }
 
     // Data values are "contiguous" and should be read one after the other until no more
-    const values = ctx.expression1().map((e) => e.getText());
+    const values = ctx.expression().map((e) => e.getText());
     const row = `${values.join(', ')}`;
     this.output += `dataMatrix.push(${row});`;
   }
@@ -765,9 +765,9 @@ textEl.style.backgroundColor = getColour(Paper);
           const name = child.IDENTIFIER(0).getText();
           this.output += `${name}`;
 
-          const numberOfDimensions = child.expression1().length;
+          const numberOfDimensions = child.expression().length;
           for (let j = 0; j < numberOfDimensions; j++) {
-            const indexValue = child.expression1(j).getText();
+            const indexValue = child.expression(j).getText();
             this.output += `[${indexValue}]`;
           }
 
@@ -786,16 +786,16 @@ textEl.style.backgroundColor = getColour(Paper);
     const struct = ctx.array_structure();
 
     const name = struct.IDENTIFIER(0)?.getText();
-    const firstIndex = struct.expression1(0).getText();
+    const firstIndex = struct.expression(0).getText();
     this.output += ` ${name}[Math.trunc(${firstIndex})]`;
-    const numberOfDimensions = struct.expression1().length;
+    const numberOfDimensions = struct.expression().length;
     for (let j = 1; j < numberOfDimensions; j++) {
-      const indexValue = struct.expression1(j).getText();
+      const indexValue = struct.expression(j).getText();
       this.output += `[Math.trunc(${indexValue})]`;
     }
 
-    const expression1 = ctx.expression1();
-    const arrayValue = expression1.getText();
+    const expression = ctx.expression();
+    const arrayValue = expression.getText();
     this.output += ` = ${arrayValue};`;
   }
 
@@ -809,7 +809,7 @@ textEl.style.backgroundColor = getColour(Paper);
       | qcos_function
       | rndFunction
       | IDENTIFIER
-      | '(' expression1 ')'
+      | '(' expression ')'
       | HEX_NUMBER
       */
   handleFactor(accumulator, factorContext) {
@@ -822,15 +822,14 @@ textEl.style.backgroundColor = getColour(Paper);
         this.handleSymbol(accumulator, child);
       } else if (childName === 'Array_structureContext') {
         this.handleArrayAccess(accumulator, child);
-      } else if (childName === 'Expression1Context') {
+      } else if (childName === 'ExpressionContext') {
         this.handleExpr(accumulator, child);
-      } else if (typeof factorContext.expression1() === 'function') {
+      } else if (typeof factorContext.expression() === 'function') {
         accumulator.push('(');
         this.handleExpression(factorContext.expression());
         accumulator.push(')');
       } else {
         console.log("XXX, I don't know what to do with " + childName);
-        // console.log(child.getText());
         accumulator.push(child.getText());
       }
     }
@@ -839,12 +838,12 @@ textEl.style.backgroundColor = getColour(Paper);
   handleArrayAccess(accumulator, arrayStructure) {
     const name = arrayStructure.IDENTIFIER(0)?.getText();
 
-    const firstIndex = arrayStructure.expression1(0).getText();
+    const firstIndex = arrayStructure.expression(0).getText();
     accumulator.push(`${name}[Math.trunc(${firstIndex})]`);
 
-    const numberOfDimensions = arrayStructure.expression1().length;
+    const numberOfDimensions = arrayStructure.expression().length;
     for (let j = 1; j < numberOfDimensions; j++) {
-      const indexValue = arrayStructure.expression1(j).getText();
+      const indexValue = arrayStructure.expression(j).getText();
       accumulator.push(`[Math.trunc(${indexValue})]`);
     }
   }
@@ -895,9 +894,8 @@ textEl.style.backgroundColor = getColour(Paper);
     let comparator = '';
 
     for (let i = 0; i < ctx.children.length; i++) {
-      if (ctx.children[i].constructor.name == 'Expression1Context') {
+      if (ctx.children[i].constructor.name == 'ExpressionContext') {
         statement += this.handleExpression(ctx.children[i]);
-        console.log(i + "º Expression: " + statement);
       } else if (ctx.children[i].constructor.name == 'Or_andContext') {
         logicalOperator = ctx.children[i].getText();
         if (logicalOperator == 'and') {
@@ -921,7 +919,6 @@ textEl.style.backgroundColor = getColour(Paper);
       }
     }
     this.output += `if (${statement}) {`;
-    console.log(statement);
   }
 
   exitIf_statement(ctx) {
@@ -938,7 +935,7 @@ textEl.style.backgroundColor = getColour(Paper);
     } else {
       // Case 2: Calling a procedure with some parameters
       const args = ctx
-        .expression1()
+        .expression()
         .map((expr) => expr.getText())
         .join(', ');
       callCode = `${name}(${args});`;
@@ -948,7 +945,7 @@ textEl.style.backgroundColor = getColour(Paper);
   }
 
   enterIf_statement_key_state(ctx) {
-    let leftExpression = ctx.current_Key_State(0)?.expression1(0)?.getText();
+    let leftExpression = ctx.current_Key_State(0)?.expression(0)?.getText();
 
     if (leftExpression.includes('$')) {
       // Extract the hexadecimal value from the expression
