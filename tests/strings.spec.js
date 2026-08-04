@@ -32,13 +32,7 @@ Text 10,10,A$
 
   const normalizedJS = await translate(amosBasicCode);
 
-  // Find the name of the div (the transpiler uses a random identifier)
-  const match = normalizedJS.match(/const (textDiv1010[a-z0-9]*)/);
-  if (!match) {
-    throw new Error('Could not find generated variable name for textDiv1010');
-  }
-  const varName = match[1];
-
   expect(normalizedJS).toContain("A$ = 'Hello, World!';");
-  expect(normalizedJS).toContain(`${varName}.innerText = A$;`);
+  // The new pattern uses getElementById + textEl, not a const textDivXY variable
+  expect(normalizedJS).toContain('textEl.innerText = A$;');
 });

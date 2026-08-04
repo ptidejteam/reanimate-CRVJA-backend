@@ -27,7 +27,7 @@ export default function setupAmosTranslatorBase(translator) {
   translator.functionDeclarationSupport = '';
   translator.scopes = [{}];
   translator.globalVariablesSet = new Set();
-  translator.preamble += `
+  translator.preamble = `
 const keyMapping = {
     1: "Escape",
     2: "Digit1",
@@ -690,7 +690,7 @@ function loadBank(bankName, bank) {
             if (bankData[bank].sprites.length > 0) {
                 console.log("Loaded bank slot:", bank, "with", bankData[bank].sprites.length, "sprites", "and color palette: ", bankData[bank].palette);
             } else {
-                console.log('Bank', bankId, 'failed to be loaded', ' on bank slot:', bank);
+                console.log('Bank', bank, 'failed to be loaded', ' on bank slot:', bank);
             }
             console.log("Bank data updated:", bankData[bank]);
         }

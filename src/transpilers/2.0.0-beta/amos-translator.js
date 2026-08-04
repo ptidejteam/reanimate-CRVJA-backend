@@ -164,32 +164,40 @@ readFromChannel(${channel}, (data) => {
       if (!text.includes('"')) {
         text = ctx.print_options(i)?.expression1(0)?.getText().replace(/["']/g, '');
         this.output += `
-const finder_printDiv${i} = document.getElementById('printDiv${i}' + '${text}');
-if (finder_printDiv${i}) { finder_printDiv${i}.remove(); }
-const printDiv${i} = document.createElement('div');
-printDiv${i}.innerText = ${text};
-printDiv${i}.style.position = 'relative';
-printDiv${i}.style.left = '50%';
-printDiv${i}.style.top = '50%';
-printDiv${i}.style.fontSize = '14px';
-printDiv${i}.style.color = getColour(Ink);
-printDiv${i}.style.zIndex = '999';
-printDiv${i}.id = 'printDiv${i}' + '${text}';
-document.getElementById('amos-screen').appendChild(printDiv${i});`;
+{
+const printId = 'printDiv${i}_' + '${text}';
+let printEl = document.getElementById(printId);
+if (!printEl) {
+    printEl = document.createElement('div');
+    printEl.id = printId;
+    printEl.style.position = 'relative';
+    printEl.style.left = '50%';
+    printEl.style.top = '50%';
+    printEl.style.fontSize = '14px';
+    printEl.style.zIndex = '999';
+    document.getElementById('amos-screen').appendChild(printEl);
+}
+printEl.innerText = ${text};
+printEl.style.color = getColour(Ink);
+}`;
       } else {
         this.output += `
-const finder_printDiv${i} = document.getElementById('printDiv${i}' + '${text}');
-if (finder_printDiv${i}) { finder_printDiv${i}.remove(); }
-const printDiv${i} = document.createElement('div');
-printDiv${i}.innerText = ${text};
-printDiv${i}.style.position = 'relative';
-printDiv${i}.style.left = '50%';
-printDiv${i}.style.top = '50%';
-printDiv${i}.style.fontSize = '14px';
-printDiv${i}.style.color = getColour(Ink);
-printDiv${i}.style.zIndex = '999';
-printDiv${i}.id = 'printDiv${i}' + '${text}';
-document.getElementById('amos-screen').appendChild(printDiv${i});`;
+{
+const printId = 'printDiv${i}_' + '${text}';
+let printEl = document.getElementById(printId);
+if (!printEl) {
+    printEl = document.createElement('div');
+    printEl.id = printId;
+    printEl.style.position = 'relative';
+    printEl.style.left = '50%';
+    printEl.style.top = '50%';
+    printEl.style.fontSize = '14px';
+    printEl.style.zIndex = '999';
+    document.getElementById('amos-screen').appendChild(printEl);
+}
+printEl.innerText = ${text};
+printEl.style.color = getColour(Ink);
+}`;
       }
     }
   }
@@ -411,6 +419,7 @@ if (lineDiv${the_ID}) {
     const idBar = `"Bar_" + (${x1}) + "_" + (${y1})`;
 
     this.output += `
+{
 const idBar = ${idBar};
 const x1 = ${x1};
 const y1 = ${y1};
@@ -433,7 +442,8 @@ screenBarDiv.style.left = x1 + 'px';
 screenBarDiv.style.top = y1 + 'px';
 screenBarDiv.style.width = width + 'px';
 screenBarDiv.style.height = height + 'px';
-screenBarDiv.style.zIndex = 10;`;
+screenBarDiv.style.zIndex = 10;
+}`;
   }
 
   enterBox(ctx) {
@@ -445,6 +455,7 @@ screenBarDiv.style.zIndex = 10;`;
     const boxID = `"Box_" + ${x1} + "_" + ${y1} + "_" + ${x2} + "_" + ${y2}`;
 
     this.output += `
+{
 const idBox = ${boxID};
 let boxDiv = document.getElementById(idBox);
 if (!boxDiv) {
@@ -459,7 +470,8 @@ boxDiv.style.left = (${x1}) + 'px';
 boxDiv.style.top = (${y1}) + 'px';
 boxDiv.style.width = (${x2} - ${x1}) + 'px';
 boxDiv.style.height = (${y2} - ${y1}) + 'px';
-boxDiv.style.zIndex = 10;`;
+boxDiv.style.zIndex = 10;
+}`;
   }
 
   enterCircle(ctx) {
@@ -469,6 +481,7 @@ boxDiv.style.zIndex = 10;`;
     const circleID = `"Circle_" + (${x}) + "_" + (${y}) + "_" + (${r})`;
 
     this.output += `
+{
 const circleId = ${circleID};
 let circleDiv = document.getElementById(circleId);
 if (!circleDiv) {
@@ -485,7 +498,8 @@ circleDiv.style.top = (${y} - ${r}) + 'px';
 circleDiv.style.width = (${r} * 2) + 'px';
 circleDiv.style.height = (${r} * 2) + 'px';
 circleDiv.style.zIndex = 10;
-circleDiv.style.backgroundColor = getColour(Ink);`;
+circleDiv.style.backgroundColor = getColour(Ink);
+}`;
   }
 
   enterWhile_wend(ctx) {
@@ -499,12 +513,6 @@ circleDiv.style.backgroundColor = getColour(Ink);`;
 
     // Cf. https://www.cknow.com/cms/articles/what-is-a-scan-code.html
     this.output += `\nif (currentPressedKey === keyMapping[${leftExpression}]) {`;
-  }
-
-  enterWait_key(ctx) {
-    const waitTime = ctx.NUMBER().getText();
-    const ms = parseInt(waitTime) * 20; // 20ms por tick
-    this.output += `await new Promise(resolve => setTimeout(resolve, ${ms}));\n`;
   }
 
   exitWhile_wend(ctx) {
@@ -624,39 +632,39 @@ ${localDeclarations}`;
   exitProcedure(ctx) {
     this.exitCurrentScope();
     this.output += '}';
+    console.log(this.currentScope);
   }
-
   enterText(ctx) {
     const text = (ctx.STRING() || ctx.IDENTIFIER())?.getText();
-    const cleanText = text.replace(/ /g, ' '); // Replace all occurrences of <Space> with <Em Dash>
+    const cleanText = text.replace(/ /g, ' '); // Replace all occurrences of <Space> with <Em Dash>
 
     const x = ctx.expression1(0)?.getText();
-    const cleanX = x.replace(/[^a-zA-Z0-9]/g, '');
     const y = ctx.expression1(1)?.getText();
-    const cleanY = y.replace(/[^a-zA-Z0-9]/g, '');
-    const varName = `textDiv${cleanX}${cleanY}`;
 
     const isNumeric = (str) => /^\d+$/.test(str);
     const xValue = isNumeric(x) ? `'${x}px'` : `(${x}) + 'px'`;
     const yValue = isNumeric(y) ? `'${y}px'` : `(${y}) + 'px'`;
 
-    if (this.output.includes(varName)) {
-      // Changing the value of a text
-      this.output += `${varName}.innerText = ${cleanText};`;
-    } else {
-      this.output += `
-const ${varName} = document.createElement('div');
-${varName}.innerText = ${cleanText};
-${varName}.id = 'textDiv${x}${y}';
-${varName}.style.position = 'absolute';
-${varName}.style.left = ${xValue};
-${varName}.style.top = ${yValue};
-${varName}.style.fontSize = '14px';
-${varName}.style.color = getColour(Ink);
-${varName}.style.backgroundColor = getColour(Paper);
-${varName}.style.zIndex = 99;
-document.getElementById('amos-screen').appendChild(${varName});`;
-    }
+    const textId = `"textDiv_" + (${x}) + "_" + (${y})`;
+
+    this.output += `
+{
+const textId = ${textId};
+let textEl = document.getElementById(textId);
+if (!textEl) {
+    textEl = document.createElement('div');
+    textEl.id = textId;
+    textEl.style.position = 'absolute';
+    textEl.style.left = ${xValue};
+    textEl.style.top = ${yValue};
+    textEl.style.fontSize = '14px';
+    textEl.style.zIndex = 99;
+    document.getElementById('amos-screen').appendChild(textEl);
+}
+textEl.innerText = ${cleanText};
+textEl.style.color = getColour(Ink);
+textEl.style.backgroundColor = getColour(Paper);
+}`;
   }
 
   enterWait_key(ctx) {
@@ -850,7 +858,7 @@ document.getElementById('amos-screen').appendChild(${varName});`;
         this.handleExpr(accumulator, child);
       } else if (typeof factorContext.expression1() === 'function') {
         accumulator.push('(');
-        this.handleExpression(accumulator, factorContext.expression());
+        this.handleExpression(factorContext.expression());
         accumulator.push(')');
       } else {
         console.log("XXX, I don't know what to do with " + childName);
