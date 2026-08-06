@@ -480,7 +480,7 @@ function openFile(fileName, channel, mode = 'w') {
 function writeToChannel(channel, data) {
     const stream = channels[channel];
     if (!stream) {
-        throw new Error('No file opened on channel', channel);
+        throw new Error('No file opened on channel');
     }
     stream.write(data + '\\n', 'utf8', (err) => {
         if (err) throw err;
@@ -491,7 +491,7 @@ function writeToChannel(channel, data) {
 function readFromChannel(channel, callback) {
     const stream = channels[channel];
     if (!stream || !stream.readable) {
-        throw new Error('No readable file opened on channel', channel);
+        throw new Error('No readable file opened on channel');
     }
     let data = '';
     stream.on('data', chunk => data += chunk);
@@ -504,7 +504,7 @@ function readFromChannel(channel, callback) {
 function closeChannel(channel) {
     const stream = channels[channel];
     if (!stream) {
-        throw new Error('No file opened on channel', channel);
+        throw new Error('No file opened on channel');
     }
     delete channels[channel];
 }
@@ -583,6 +583,7 @@ function loadBank(bankName, bank) {
                 break;
             }
         }
+        // TODO: this only works if orinal bank was 1
         if (bank == 1) {
             console.log("Bank slots are full");
             return;
@@ -677,6 +678,7 @@ function loadBank(bankName, bank) {
             colorPalette.push(color.toUpperCase());
         }
 
+        // TODO: loadBank always merges into bank 1 regardless of target bank
         if (bankData[1].sprites.length > 0) {
             // Merge the new sprites and palette with the existing ones
             bankData[1].sprites = [...bankData[1].sprites, ...objectsArray];
@@ -705,6 +707,7 @@ let tries = 0;
 function renderSprite(spriteNumber, x, y, bankImgIndex) {
     if (tries > 40) {
         console.error("Bank not found or could not be loaded");
+        // TODO: force reload
         location.reload();
         return;
     }
@@ -731,6 +734,7 @@ function renderSprite(spriteNumber, x, y, bankImgIndex) {
     const rowSize = bytesPerRow * depth;
 
     // Build pixels array with hex color values based on the planar graphic data
+    // TODO: renderSprite shadows outer x/y parameters with inner loop variables
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
             let colorIndex = 0;
@@ -767,6 +771,7 @@ function renderSprite(spriteNumber, x, y, bankImgIndex) {
     // Append the new sprite container to the document body (or a specific parent container)
     document.body.appendChild(spriteContainer);
 
+    // TODO: Sprite rendering creates one <div> per pixel -> DOM bloat
     // Continue rendering the sprite's pixels
     pixels.forEach((color) => {
         if (color === colorPalette[0]) {

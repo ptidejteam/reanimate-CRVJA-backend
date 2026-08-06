@@ -119,14 +119,14 @@ document.getElementById('amos-screen').style.backgroundColor = 'black';`;
     const channel = ctx.children[2]?.getText();
     const fileName = ctx.children[4]?.getText();
 
-    this.output += `openFile('${fileName}', ${channel}, 'w');`;
+    this.output += `openFile('${fileName}', ${channel}, 'r');`;
   }
 
   enterOpen_in_writefile(ctx) {
     const channel = ctx.children[2]?.getText();
     const fileName = ctx.children[4]?.getText();
 
-    this.output += `openFile('${fileName}', ${channel}, 'r');`;
+    this.output += `openFile('${fileName}', ${channel}, 'w');`;
   }
 
   enterInput_variable(ctx) {
@@ -163,24 +163,6 @@ readFromChannel(${channel}, (data) => {
 
       if (!text.includes('"')) {
         text = ctx.print_options(i)?.expression(0)?.getText().replace(/["']/g, '');
-        this.output += `
-{
-const printId = 'printDiv${i}_' + '${text}';
-let printEl = document.getElementById(printId);
-if (!printEl) {
-    printEl = document.createElement('div');
-    printEl.id = printId;
-    printEl.style.position = 'relative';
-    printEl.style.left = '50%';
-    printEl.style.top = '50%';
-    printEl.style.fontSize = '14px';
-    printEl.style.zIndex = '999';
-    document.getElementById('amos-screen').appendChild(printEl);
-}
-printEl.innerText = ${text};
-printEl.style.color = getColour(Ink);
-}`;
-      } else {
         this.output += `
 {
 const printId = 'printDiv${i}_' + '${text}';
@@ -416,7 +398,6 @@ if (lineDiv${the_ID}) {
     const x2 = ctx.expression(2).getText();
     const y2 = ctx.expression(3).getText();
 
-    // Gere um ID seguro e único baseado nas coordenadas
     const idBar = `"Bar_" + (${x1}) + "_" + (${y1})`;
 
     this.output += `
@@ -541,6 +522,7 @@ circleDiv.style.backgroundColor = getColour(Ink);
         );
       }
 
+      // TODO: use a Set tracking would be O(1)
       if (this.isVariableDeclared(name)) {
         // Variable already exists at this level
         this.output += `${name} = ${value};`;
@@ -614,7 +596,7 @@ if (${variable} < ${valueStarter}) {
 
     this.functionDeclarationSupport += `let lastTime${name} = 0; let timeoutId${name} = null;`;
 
-    this.output += `2
+    this.output += `
 function ${name}(${props}) {
     const currentTime = Date.now();
     const timeSinceLastCall = currentTime - lastTime${name};
@@ -636,7 +618,6 @@ ${localDeclarations}`;
   }
   enterText(ctx) {
     const text = (ctx.STRING() || ctx.IDENTIFIER())?.getText();
-    const cleanText = text.replace(/ /g, ' '); // Replace all occurrences of <Space> with <Em Dash>
 
     const x = ctx.expression(0)?.getText();
     const y = ctx.expression(1)?.getText();
@@ -661,7 +642,7 @@ if (!textEl) {
     textEl.style.zIndex = 99;
     document.getElementById('amos-screen').appendChild(textEl);
 }
-textEl.innerText = ${cleanText};
+textEl.innerText = ${text};
 textEl.style.color = getColour(Ink);
 textEl.style.backgroundColor = getColour(Paper);
 }`;
@@ -944,6 +925,7 @@ textEl.style.backgroundColor = getColour(Paper);
     this.output += `${callCode}`;
   }
 
+  // TODO: verify open/close brackets
   enterIf_statement_key_state(ctx) {
     let leftExpression = ctx.current_Key_State(0)?.expression(0)?.getText();
 
