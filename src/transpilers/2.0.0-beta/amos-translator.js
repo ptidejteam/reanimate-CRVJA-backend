@@ -1,967 +1,220 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import AMOSListener from './grammar/generated/AMOSListener.js';
-import setupAmosTranslatorBase from './amos-base-setup.js';
+import ScopeHandler from './handlers/scope-handler.js';
+import ExpressionHandler from './handlers/expression-handler.js';
+import ScreenHandler from './handlers/screen-handler.js';
+import DrawingHandler from './handlers/drawing-handler.js';
+import ControlFlowHandler from './handlers/control-flow-handler.js';
+import SoundHandler from './handlers/sound-handler.js';
+import DataHandler from './handlers/data-handler.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const runtimeScript = fs.readFileSync(path.join(__dirname, 'runtime', 'amos-runtime.js'), 'utf8');
 
 class AmosTranslator extends AMOSListener {
   constructor() {
     super();
 
-    setupAmosTranslatorBase(this);
+    // Initialize state
+    this.imports = '';
+    this.output = '';
+    this.id = 0;
+    this.colorMapping = {
+      0: 'rgb(0,0,0)',
+      1: 'rgb(255,255,255)',
+      2: 'rgb(255,0,0)',
+      3: 'rgb(0,255,0)',
+      4: 'rgb(0,0,255)',
+      5: 'rgb(255,255,0)',
+      6: 'rgb(0,255,255)',
+      7: 'rgb(255,0,255)',
+      8: 'rgb(192,192,192)',
+      9: 'rgb(128,128,128)',
+      10: 'rgb(128,0,0)',
+      11: 'rgb(128,128,0)',
+      12: 'rgb(0,128,0)',
+      13: 'rgb(128,0,128)',
+      14: 'rgb(0,128,128)',
+      15: 'rgb(0,0,128)',
+    };
+    this.palette = `const colorMapping = ${JSON.stringify(this.colorMapping, null, 2)};\n`;
+    this.lineData = [];
+    this.globalVariables = '';
+    this.functionDeclarationSupport = '';
+    this.scopes = [{}];
+    this.globalVariablesSet = new Set();
+    this.hasDataMatrix = false;
+    this.preamble = `\n${runtimeScript}\n`;
+
+    // Delegate modules
+    this.scopeHandler = new ScopeHandler(this);
+    this.expressionHandler = new ExpressionHandler(this);
+    this.screenHandler = new ScreenHandler(this);
+    this.drawingHandler = new DrawingHandler(this);
+    this.controlFlowHandler = new ControlFlowHandler(this);
+    this.soundHandler = new SoundHandler(this);
+    this.dataHandler = new DataHandler(this);
   }
 
-  // Scope management
-  enterNewScope() {
-    this.scopes.push({});
-  }
+  // ScopeHandler
+  enterNewScope() { this.scopeHandler.enterNewScope(); }
+  exitCurrentScope() { this.scopeHandler.exitCurrentScope(); }
+  get currentScope() { return this.scopeHandler.currentScope; }
+  get isRootScope() { return this.scopeHandler.isRootScope; }
+  isVariableDeclared(name) { return this.scopeHandler.isVariableDeclared(name); }
+  enterGlobal(ctx) { this.scopeHandler.enterGlobal(ctx); }
+  enterVariable_starter(ctx) { this.scopeHandler.enterVariable_starter(ctx); }
+  enterAdd(ctx) { this.scopeHandler.enterAdd(ctx); }
+  enterProcedure(ctx) { this.scopeHandler.enterProcedure(ctx); }
+  exitProcedure(ctx) { this.scopeHandler.exitProcedure(ctx); }
+  enterProcedure_call(ctx) { this.scopeHandler.enterProcedure_call(ctx); }
 
-  exitCurrentScope() {
-    this.scopes.pop();
-  }
-
-  get currentScope() {
-    return this.scopes[this.scopes.length - 1];
-  }
-
-  get isRootScope() {
-    return this.scopes.length === 1;
-  }
-
-  isVariableDeclared(name) {
-    const isLocal = this.currentScope[name] !== undefined;
-    const isGlobal = this.globalVariablesSet.has(name);
-
-    return isLocal || isGlobal;
-  }
-
+  // ScreenHandler
   enterScreen_open(ctx) {
-    const width = ctx.children[3]?.getText();
-    const height = ctx.children[5]?.getText();
-    const color = ctx.children[7]?.getText();
-
-    this.output += `
-const screenDiv = document.createElement('div');
-screenDiv.style.width = '${width}px';
-screenDiv.style.height = '${height}px';
-screenDiv.style.border = '1px solid black';
-screenDiv.style.overflow = 'hidden'; 
-screenDiv.style.padding = '0'; 
-screenDiv.style.position = 'relative'; 
-screenDiv.id = 'amos-screen'; 
-screenDiv.style.zIndex = 1;
-document.getElementById('game-container').appendChild(screenDiv);
-document.getElementById('amos-screen').style.backgroundColor = 'black';`;
+    this.screenHandler.enterScreen_open(ctx);
   }
-
-  enterBlitter_fill(ctx) { }
-
-  enterBlitter_clear(ctx) {
-    // Blitter Clear clears a rectangular region on screen
-    // Grammar: 'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression COMMA expression 'To' expression COMMA expression)?
-    if (ctx.expression().length >= 4) {
-      const x1 = ctx.expression(0)?.getText();
-      const y1 = ctx.expression(1)?.getText();
-      const x2 = ctx.expression(2)?.getText();
-      const y2 = ctx.expression(3)?.getText();
-
-      this.output += `
-// Blitter Clear - remove elements in the region
-{
-  const clearX1 = ${x1};
-  const clearY1 = ${y1};
-  const clearX2 = ${x2};
-  const clearY2 = ${y2};
-  const screen = document.getElementById('amos-screen');
-  if (screen) {
-    const children = Array.from(screen.children);
-    children.forEach(child => {
-      const left = parseInt(child.style.left) || 0;
-      const top = parseInt(child.style.top) || 0;
-      if (left >= clearX1 && left <= clearX2 && top >= clearY1 && top <= clearY2) {
-        child.remove();
-      }
-    });
-  }
-}
-`;
-    }
-  }
-
-  enterLoadBank(ctx) {
-    const fileName = ctx.children[1]?.getText();
-    const bankId = ctx.children[3]?.getText();
-    if (!bankId) {
-      this.output += `loadBank('${fileName}', 1);`;
-    } else {
-      this.output += `loadBank('${fileName}', ${bankId});`;
-    }
-  }
-
-  enterLoadBankImgToSprite(ctx) {
-    const option = ctx.children[1]?.getText();
-    if (option === 'Off') {
-      this.output += `
-{
-    const screen = document.getElementById('amos-screen');
-    if (screen) {
-        const sprites = screen.querySelectorAll('[id^="sprite"]');
-        sprites.forEach(sprite => sprite.remove());
-    }
-}`;
-      return;
-    }
-    const spriteNumber = option;
-    const x = ctx.children[3]?.getText();
-    const y = ctx.children[5]?.getText();
-    const bankImgIndex = ctx.children[7]?.getText();
-    this.output += `renderSprite(${spriteNumber}, ${x}, ${y}, ${bankImgIndex});`;
-  }
-
-  enterOpen_out_readfile(ctx) {
-    const channel = ctx.children[2]?.getText();
-    const fileName = ctx.children[4]?.getText();
-
-    this.output += `openFile('${fileName}', ${channel}, 'r');`;
-  }
-
-  enterOpen_in_writefile(ctx) {
-    const channel = ctx.children[2]?.getText();
-    const fileName = ctx.children[4]?.getText();
-
-    this.output += `openFile('${fileName}', ${channel}, 'w');`;
-  }
-
-  enterInput_variable(ctx) {
-    let channel = ctx.children[1]?.getText() || '';
-    if (ctx.children[2]) channel += ctx.children[2].getText();
-
-    let variable = ctx.children[4]?.getText() || '';
-    if (ctx.children[5]) variable += ctx.children[5].getText();
-
-    this.output += `
-let ${variable} = '';
-readFromChannel(${channel}, (data) => {
-    ${variable} = data;
-});`;
-  }
-
-  enterClose_file(ctx) {
-    const channel = ctx.children[1]?.getText();
-
-    this.output += `closeChannel(${channel});`;
-  }
-
-  enterPrint_something(ctx) {
-    const printConfig = ctx.print_options(0)?.getText();
-    if (printConfig.includes('#')) {
-      /* WRITE TO FILE */
-      let channel = ctx.print_options(0)?.getText();
-      let content = ctx.print_options(1)?.getText();
-      this.output += `writeToChannel(${channel}, ${content});`;
-      return;
-    }
-    for (let i = 0; i < ctx.print_options().length; i++) {
-      let text = ctx.print_options(i)?.getText();
-
-      if (!text.includes('"')) {
-        text = ctx.print_options(i)?.expression(0)?.getText().replace(/["']/g, '');
-        this.output += `
-{
-const printId = 'printDiv${i}_' + '${text}';
-let printEl = document.getElementById(printId);
-if (!printEl) {
-    printEl = document.createElement('div');
-    printEl.id = printId;
-    printEl.style.position = 'relative';
-    printEl.style.left = '50%';
-    printEl.style.top = '50%';
-    printEl.style.fontSize = '14px';
-    printEl.style.zIndex = '999';
-    document.getElementById('amos-screen').appendChild(printEl);
-}
-printEl.innerText = ${text};
-printEl.style.color = getColour(Ink);
-}`;
-      }
-    }
-  }
-
   enterCls(ctx) {
-    const exprs = ctx.expression();
-
-    if (exprs.length === 0) {
-      // Case 1: Parameterless Cls (clear entire screen + set background color to current paper color)
-      this.output += `
-const amosScreen = document.getElementById('amos-screen');
-if (amosScreen) {
-    amosScreen.innerHTML = '';
-    amosScreen.style.backgroundColor = colorMapping[Paper];
-}`;
-    } else if (exprs.length === 1) {
-      // Case 2: Cls colour (clear entire screen + set background color to specified color index)
-      const color = exprs[0].getText();
-      this.output += `
-const amosScreen = document.getElementById('amos-screen');
-if (amosScreen) {
-    amosScreen.innerHTML = '';
-    amosScreen.style.backgroundColor = colorMapping[${color}];
-}`;
-    } else if (exprs.length >= 5) {
-      // Case 3: Cls colour, x1, y1 To x2, y2 (clear rectangular block + fill with color)
-      const color = exprs[0].getText();
-      const x1 = exprs[1].getText();
-      const y1 = exprs[2].getText();
-      const x2 = exprs[3].getText();
-      const y2 = exprs[4].getText();
-
-      this.output += `
-{
-    const clearColor = colorMapping[${color}];
-    const clearX1 = ${x1};
-    const clearY1 = ${y1};
-    const clearX2 = ${x2};
-    const clearY2 = ${y2};
-    const screen = document.getElementById('amos-screen');
-    if (screen) {
-        // 1. Remove child elements that fall inside the bounding box coordinates
-        const children = Array.from(screen.children);
-        children.forEach(child => {
-            const left = parseInt(child.style.left) || 0;
-            const top = parseInt(child.style.top) || 0;
-            if (left >= clearX1 && left <= clearX2 && top >= clearY1 && top <= clearY2) { child.remove(); }
-        });
-        // 2. Add a filled background div to cover the cleared area
-        const fillDiv = document.createElement('div');
-        fillDiv.style.position = 'absolute';
-        fillDiv.style.left = clearX1 + 'px';
-        fillDiv.style.top = clearY1 + 'px';
-        fillDiv.style.width = (clearX2 - clearX1) + 'px';
-        fillDiv.style.height = (clearY2 - clearY1) + 'px';
-        fillDiv.style.backgroundColor = clearColor;
-        fillDiv.style.zIndex = 1;
-        screen.appendChild(fillDiv);
-    }
-}`;
-    }
+    this.screenHandler.enterCls(ctx);
   }
-
   enterCurs_off(ctx) {
-    this.output += "document.getElementById('amos-screen').style.cursor = 'none';";
+    this.screenHandler.enterCurs_off(ctx);
   }
-
-  enterPaper(ctx) {
-    const color = this.handleExpression(ctx.children[1]);
-    this.output += `Paper = ${color};`;
-  }
-
   enterCurs_on(ctx) {
-    this.output += "document.getElementById('amos-screen').style.cursor = 'auto';";
+    this.screenHandler.enterCurs_on(ctx);
   }
-
-  enterPlay_sound(ctx) {
-    const soundIndex = ctx.children[1]?.getText();
-    const duration = ctx.children[3]?.getText();
-
-    this.output += `soundPlayer(${soundIndex}, ${duration} * 1000);`;
-  }
-
-  enterInk(ctx) {
-    const colorIndexExp = this.handleExpression(ctx.children[1]);
-
-    this.output += `Ink = ${colorIndexExp};`;
-  }
-
-  enterPen(ctx) {
-    const colorIndexExp = this.handleExpression(ctx.children[1]);
-
-    this.output += `Ink = ${colorIndexExp};`;
-  }
-
   enterPalette(ctx) {
-    // Array to collect complete hex colour values from the Palette
-    const hexColors = [];
-    let currentHex = '';
-
-    // Loop through each child in `ctx` to gather colors
-    for (const child of ctx.children) {
-      const text = child.getText().trim();
-
-      if (text.toLowerCase() === 'palette') continue;
-      if (text === '$') {
-        // Start of a new hex color, initialize currentHex
-        currentHex = '$';
-      } else if (text === ',') {
-        // End of a hex color, parse it if currentHex has a complete hex value
-        if (currentHex.length > 1) {
-          hexColors.push(currentHex);
-          currentHex = ''; // Reset for the next hex color
-        }
-      } else {
-        // Append hex digits to currentHex
-        currentHex += text;
-      }
-    }
-
-    // Handle the last hex color if there's no trailing comma
-    if (currentHex.length > 1) {
-      hexColors.push(currentHex);
-    }
-
-    // Convert and map hex colors
-    this.colorMapping = {};
-    hexColors.forEach((hex, index) => {
-      const hexValue = parseInt(hex.slice(1), 16); // Remove '$' and parse as hex
-
-      // Extract R, G, B components
-      const red = ((hexValue >> 8) & 0xf) * 17;
-      const green = ((hexValue >> 4) & 0xf) * 17;
-      const blue = (hexValue & 0xf) * 17;
-
-      // Map color in `rgb` format
-      this.colorMapping[index] = `rgb(${red}, ${green}, ${blue})`;
-    });
-    this.palette = `const colorMapping = ${JSON.stringify(this.colorMapping, null, 2)};`;
+    this.screenHandler.enterPalette(ctx);
+  }
+  enterInk(ctx) {
+    this.screenHandler.enterInk(ctx);
+  }
+  enterPen(ctx) {
+    this.screenHandler.enterPen(ctx);
+  }
+  enterPaper(ctx) {
+    this.screenHandler.enterPaper(ctx);
   }
 
-  enterTurbo_draw(ctx) {
-    function generateRandomID() {
-      let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let id = '';
-      for (let i = 0; i < 9; i++) {
-        let randomIndex = Math.floor(Math.random() * characters.length);
-        id += characters[randomIndex];
-      }
-      return id;
-    }
-
-    let x1 = ctx.expression(0)?.getText();
-    let y1 = ctx.expression(1)?.getText();
-    let x2 = ctx.expression(2)?.getText();
-    let y2 = ctx.expression(3)?.getText();
-    let color = `colorMapping[(${ctx.expression(4)?.getText()})]`;
-    let the_ID = generateRandomID();
-    let index = ctx.expression(5)?.getText();
-
-    // Calculate the length and angle of the line
-
-    this.output += `
-// Calculate the length and angle of the line
-const TurboDrawX1${the_ID} = ${x1};
-const TurboDrawX2${the_ID} = ${x2};
-const TurboDrawY1${the_ID} = ${y1};
-const TurboDrawY2${the_ID} = ${y2};
-const idBar${the_ID} = 'TurboDraw${the_ID}';
-
-let lineDiv${the_ID} = document.getElementById(idBar${the_ID});
-
-const deltaX${the_ID} = TurboDrawX2${the_ID} - TurboDrawX1${the_ID};
-const deltaY${the_ID} = TurboDrawY2${the_ID} - TurboDrawY1${the_ID};
-const length${the_ID} = Math.sqrt(deltaX${the_ID} * deltaX${the_ID} + deltaY${the_ID} * deltaY${the_ID}); // Pythagorean theorem
-const angle${the_ID}  = Math.atan2(deltaY${the_ID}, deltaX${the_ID}) * (180 / Math.PI); // Convert angle to degrees
-
-if (lineDiv${the_ID}) {
-    // If the div exists, update its properties
-    lineDiv${the_ID}.style.backgroundColor = ${color};
-    lineDiv${the_ID}.style.left = TurboDrawX1${the_ID} + 'px';
-    lineDiv${the_ID}.style.top = TurboDrawY1${the_ID} + 'px';
-    lineDiv${the_ID}.style.width = length${the_ID} + 'px';
-    lineDiv${the_ID}.style.height = '2px'; // Line height
-    lineDiv${the_ID}.style.transform = 'rotate(' + angle${the_ID} + 'deg)';
-    lineDiv${the_ID}.style.transformOrigin = '0 0'; // Rotate from the starting point
-    lineDiv${the_ID}.style.position = 'absolute';
-    lineDiv${the_ID}.style.borderRadius = '1px';
-    lineDiv${the_ID}.style.borderColor = ${color};
-    lineDiv${the_ID}.style.zIndex = 1000${index};
-    lineDiv${the_ID}.indexPlacer = 1000${index};
-} else {
-    // If the div doesn't exist, create it
-    lineDiv${the_ID} = document.createElement('div');
-    lineDiv${the_ID}.style.position = 'absolute';
-    lineDiv${the_ID}.id = idBar${the_ID};
-    lineDiv${the_ID}.style.backgroundColor = ${color};
-    lineDiv${the_ID}.style.left = TurboDrawX1${the_ID} + 'px';
-    lineDiv${the_ID}.style.top = TurboDrawY1${the_ID} + 'px';
-    lineDiv${the_ID}.style.width = length${the_ID} + 'px';
-    lineDiv${the_ID}.style.height = '2px'; // Line height
-    lineDiv${the_ID}.style.transform = 'rotate(' + angle${the_ID} + 'deg)';
-    lineDiv${the_ID}.style.transformOrigin = '0 0'; // Rotate from the starting point
-    lineDiv${the_ID}.style.borderRadius = '1px';
-    lineDiv${the_ID}.style.borderColor = ${color};
-    lineDiv${the_ID}.style.zIndex = 1000${index};
-    lineDiv${the_ID}.indexPlacer = 1000${index};
-    document.getElementById('amos-screen').appendChild(lineDiv${the_ID});
-}`;
-  }
-
+  // DrawingHandler
   enterBar(ctx) {
-    // AMOS command: Bar X1,Y1 To X2,Y2
-    const x1 = ctx.expression(0).getText();
-    const y1 = ctx.expression(1).getText();
-    const x2 = ctx.expression(2).getText();
-    const y2 = ctx.expression(3).getText();
-
-    const idBar = `"Bar_" + (${x1}) + "_" + (${y1})`;
-
-    this.output += `
-{
-const idBar = ${idBar};
-const x1 = ${x1};
-const y1 = ${y1};
-const x2 = ${x2};
-const y2 = ${y2};
-const width = x2 - x1;
-const height = y2 - y1;
-
-let screenBarDiv = document.getElementById(idBar);
-if (!screenBarDiv) {
-    screenBarDiv = document.createElement('div');
-    screenBarDiv.id = idBar;
-    screenBarDiv.style.position = 'absolute';
-    screenBarDiv.style.boxSizing = 'border-box';
-    document.getElementById('amos-screen').appendChild(screenBarDiv);
-}
-
-screenBarDiv.style.backgroundColor = getColour(Ink);
-screenBarDiv.style.left = x1 + 'px';
-screenBarDiv.style.top = y1 + 'px';
-screenBarDiv.style.width = width + 'px';
-screenBarDiv.style.height = height + 'px';
-screenBarDiv.style.zIndex = 10;
-}`;
+    this.drawingHandler.enterBar(ctx);
   }
-
   enterBox(ctx) {
-    const x1 = ctx.expression(0).getText();
-    const y1 = ctx.expression(1).getText();
-    const x2 = ctx.expression(2).getText();
-    const y2 = ctx.expression(3).getText();
-
-    const boxID = `"Box_" + ${x1} + "_" + ${y1} + "_" + ${x2} + "_" + ${y2}`;
-
-    this.output += `
-{
-const idBox = ${boxID};
-let boxDiv = document.getElementById(idBox);
-if (!boxDiv) {
-    boxDiv = document.createElement('div');
-    boxDiv.id = idBox;
-    boxDiv.style.position = 'absolute';
-    boxDiv.style.boxSizing = 'border-box';
-    document.getElementById('amos-screen').appendChild(boxDiv);
-}
-boxDiv.style.border = '2px solid ' + getColour(Ink);
-boxDiv.style.left = (${x1}) + 'px';
-boxDiv.style.top = (${y1}) + 'px';
-boxDiv.style.width = (${x2} - ${x1}) + 'px';
-boxDiv.style.height = (${y2} - ${y1}) + 'px';
-boxDiv.style.zIndex = 10;
-}`;
+    this.drawingHandler.enterBox(ctx);
   }
-
   enterCircle(ctx) {
-    const x = ctx.expression(0).getText();
-    const y = ctx.expression(1).getText();
-    const r = ctx.expression(2).getText();
-    const circleID = `"Circle_" + (${x}) + "_" + (${y}) + "_" + (${r})`;
-
-    this.output += `
-{
-const circleId = ${circleID};
-let circleDiv = document.getElementById(circleId);
-if (!circleDiv) {
-    circleDiv = document.createElement('div');
-    circleDiv.id = circleId;
-    circleDiv.style.position = 'absolute';
-    circleDiv.style.boxSizing = 'border-box';
-    document.getElementById('amos-screen').appendChild(circleDiv);
-}
-circleDiv.style.borderRadius = '50%';
-circleDiv.style.border = '2px solid ' + getColour(Ink);
-circleDiv.style.left = (${x} - ${r}) + 'px';
-circleDiv.style.top = (${y} - ${r}) + 'px';
-circleDiv.style.width = (${r} * 2) + 'px';
-circleDiv.style.height = (${r} * 2) + 'px';
-circleDiv.style.zIndex = 10;
-circleDiv.style.backgroundColor = getColour(Ink);
-}`;
-  }
-
-  enterWhile_wend(ctx) {
-    let leftExpression = ctx.current_Key_State(0)?.expression(0)?.getText();
-    if (!leftExpression) return;
-
-    // Replace all occurrences of $xx with decimal equivalents
-    leftExpression = leftExpression.replace(/\$[0-9A-Fa-f]+/g, (match) => {
-      return parseInt(match.substring(1), 16);
-    });
-
-    // Cf. https://www.cknow.com/cms/articles/what-is-a-scan-code.html
-    this.output += `\nif (currentPressedKey === keyMapping[${leftExpression}]) {`;
-  }
-
-  exitWhile_wend(ctx) {
-    this.output += '}';
-  }
-
-  enterGlobal(ctx) {
-    for (let i = 0; i < ctx.IDENTIFIER().length; i++) {
-      this.globalVariablesSet.add(ctx.IDENTIFIER(i).getText());
-    }
-    for (let i = 0; i < ctx.array_structure().length; i++) {
-      this.globalVariablesSet.add(ctx.array_structure(i).IDENTIFIER(0).getText());
-    }
-  }
-
-  enterVariable_starter(ctx) {
-    let name = ctx.children[0].getText();
-    let value = this.handleExpression(ctx.children[2]);
-
-    let lineNumber = ctx.start.line;
-    if (name !== 'Timer') {
-      if (value > 2147483647) {
-        throw new Error(
-          `ERROR: Amos code line ${lineNumber}: Value for variable "${name}" exceeds the allowed limit of 2,147,483,647.`,
-        );
-      }
-
-      // TODO: use a Set tracking would be O(1)
-      if (this.isVariableDeclared(name)) {
-        // Variable already exists at this level
-        this.output += `${name} = ${value};`;
-      } else {
-        // Variable doesn't exist at this level, so create it
-        let defaultValue = name.endsWith('$') ? '""' : 0;
-        if (this.isRootScope) {
-          this.globalVariables += `let ${name} = ${defaultValue};\n`;
-          this.output += `${name} = ${value};`;
-        } else {
-          this.output += `let ${name} = ${defaultValue};${name} = ${value};`;
-        }
-
-        // Store the variable in the current scope
-        this.currentScope[name] = defaultValue;
-      }
-    }
-  }
-
-  enterAdd(ctx) {
-    let variable = ctx.children[1]?.getText();
-    let valueExpression = ctx.children[3]?.getText();
-
-    if (!this.isVariableDeclared(variable)) {
-      let defaultValue = variable.endsWith('$') ? '""' : 0;
-      if (this.isRootScope) {
-        this.globalVariables += `let ${variable} = ${defaultValue};`;
-      } else {
-        this.output += `let ${variable} = ${defaultValue};`;
-      }
-      this.currentScope[variable] = defaultValue;
-    }
-
-    let valueStarter;
-    let valueEndIteration;
-
-    if (ctx.expression().length > 1) {
-      valueStarter = ctx.expression(1)?.getText();
-      valueEndIteration = ctx.expression(2)?.getText();
-
-      this.output += `
-${variable} = (${variable} + ${valueExpression}) % ${valueEndIteration};
-if (${variable} < ${valueStarter}) {
-    ${variable} += ${valueEndIteration};
-}`;
-    } else {
-      this.output += `${variable} = ${variable} + ${valueExpression};`;
-    }
-  }
-
-  enterProcedure(ctx) {
-    this.id++;
-    let name = ctx.children[1]?.getText();
-
-    let params = [];
-    // Collect all IDENTIFIER tokens after the procedure name (which is index 0 in the parser context)
-    for (let i = 1; i < ctx.IDENTIFIER().length; i++) {
-      params.push(ctx.IDENTIFIER(i).getText());
-    }
-    let props = params.join(', ');
-
-    this.enterNewScope();
-    let localDeclarations = '';
-    for (let varName of Object.keys(this.scopes[0])) {
-      if (!this.globalVariablesSet.has(varName) && !params.includes(varName)) {
-        let defaultValue = varName.endsWith('$') ? '""' : 0;
-        localDeclarations += `\n  let ${varName} = ${defaultValue};`;
-        this.currentScope[varName] = defaultValue;
-      }
-    }
-
-    this.functionDeclarationSupport += `let lastTime${name} = 0; let timeoutId${name} = null;`;
-
-    this.output += `
-function ${name}(${props}) {
-    const currentTime = Date.now();
-    const timeSinceLastCall = currentTime - lastTime${name};
-    if (timeSinceLastCall < 16) {
-        if (timeoutId${name}) {
-            clearTimeout(timeoutId${name});
-        }
-        timeoutId${name} = setTimeout(() => { ${name}(${props}); }, 100 - timeSinceLastCall);
-        return;
-    }
-    lastTime${name} = currentTime;
-    timeoutId${name} = null; // Clear the timeout ID after execution
-${localDeclarations}`;
-  }
-
-  exitProcedure(ctx) {
-    this.exitCurrentScope();
-    this.output += '}';
+    this.drawingHandler.enterCircle(ctx);
   }
   enterText(ctx) {
-    const text = (ctx.STRING() || ctx.IDENTIFIER())?.getText();
-
-    const x = ctx.expression(0)?.getText();
-    const y = ctx.expression(1)?.getText();
-
-    const isNumeric = (str) => /^\d+$/.test(str);
-    const xValue = isNumeric(x) ? `'${x}px'` : `(${x}) + 'px'`;
-    const yValue = isNumeric(y) ? `'${y}px'` : `(${y}) + 'px'`;
-
-    const textId = `"textDiv_" + (${x}) + "_" + (${y})`;
-
-    this.output += `
-{
-const textId = ${textId};
-let textEl = document.getElementById(textId);
-if (!textEl) {
-    textEl = document.createElement('div');
-    textEl.id = textId;
-    textEl.style.position = 'absolute';
-    textEl.style.left = ${xValue};
-    textEl.style.top = ${yValue};
-    textEl.style.fontSize = '14px';
-    textEl.style.zIndex = 99;
-    document.getElementById('amos-screen').appendChild(textEl);
-}
-textEl.innerText = ${text};
-textEl.style.color = getColour(Ink);
-textEl.style.backgroundColor = getColour(Paper);
-}`;
+    this.drawingHandler.enterText(ctx);
+  }
+  enterTurbo_draw(ctx) {
+    this.drawingHandler.enterTurbo_draw(ctx);
+  }
+  enterBlitter_fill(ctx) {
+    this.drawingHandler.enterBlitter_fill(ctx);
+  }
+  enterBlitter_clear(ctx) {
+    this.drawingHandler.enterBlitter_clear(ctx);
+  }
+  enterLoadBank(ctx) {
+    this.drawingHandler.enterLoadBank(ctx);
+  }
+  enterLoadBankImgToSprite(ctx) {
+    this.drawingHandler.enterLoadBankImgToSprite(ctx);
   }
 
-  enterWait_key(ctx) {
-    const waitTicks = ctx.NUMBER().getText();
-    const ms = parseInt(waitTicks) * 20; // AMOS = ~50fps
-
-    this.output += `await new Promise(r => setTimeout(r, ${ms}));`;
-  }
-
-  enterDo_loop(ctx) {
-    this.output += 'while(true) {';
-  }
-
-  enterRepeat_key(ctx) {
-    this.output += 'setInterval(() => { currentTimer = Date.now(); Timer++;';
-  }
-
-  exitRepeat_key(ctx) {
-    this.output += 'Timer = 9; }, 16);';
-  }
-
-  exitDo_loop(ctx) {
-    this.output += 'await new Promise(r => setTimeout(r, 16));}';
-  }
-
-  enterFor_loop(ctx) {
-    let variable = ctx.children[1]?.getText();
-    let start = ctx.children[3]?.getText();
-    let end = ctx.children[5]?.getText();
-
-    if (!this.isVariableDeclared(variable)) {
-      let defaultValue = variable.endsWith('$') ? '""' : 0;
-      if (this.isRootScope) {
-        this.globalVariables += `let ${variable} = ${defaultValue};\n`;
-      } else {
-        this.output += `let ${variable} = ${defaultValue};\n`;
-      }
-      this.currentScope[variable] = defaultValue;
-    }
-
-    this.output += `for (${variable} = ${start}; ${variable} <= ${end}; ${variable}++) {`;
-  }
-
-  enterArray_create(ctx) {
-    for (let i = 0; i < ctx.array_structure().length; i++) {
-      const struct = ctx.array_structure(i);
-      const name = struct.IDENTIFIER(0)?.getText();
-
-      const numberOfDimensions = struct.expression().length;
-      let dimension = struct.expression()[0].getText();
-      this.output += `const ${name} = Array(${dimension}).fill(0)`;
-
-      for (let i = 1; i < numberOfDimensions; i++) {
-        let dimension = struct.expression()[i].getText();
-        this.output += `.map(x => Array(${dimension}).fill(0)`;
-      }
-      for (let i = 1; i < numberOfDimensions; i++) {
-        this.output += ')';
-      }
-
-      this.output += ';';
-    }
-  }
-
-  exitFor_loop(ctx) {
-    this.output += '}';
-  }
-
-  enterData_statement(ctx) {
-    if (!this.hasDataMatrix) {
-      this.hasDataMatrix = true;
-      this.output += 'const dataMatrix = [];';
-    }
-
-    // Data values are "contiguous" and should be read one after the other until no more
-    const values = ctx.expression().map((e) => e.getText());
-    const row = `${values.join(', ')}`;
-    this.output += `dataMatrix.push(${row});`;
-  }
-
-  enterRead_statement(ctx) {
-    const targets = ctx.children.filter(
-      (child) => child.getText() !== 'Read' && child.getText() !== ',',
-    );
-
-    for (let i = 0; i < targets.length; i++) {
-      const children = targets[i].children;
-
-      for (let j = 0; j < children.length; j++) {
-        const child = children[j];
-        const childName = child.constructor.name;
-
-        // TODO: AMOS should report an error if dataMatrixPointer > dataMatrix.length
-        if (childName === 'Me' || childName === 'Fe') {
-          this.output += child.getText();
-          this.output += ` = dataMatrix[dataMatrixPointer++];`;
-        } else if (childName === 'Array_structureContext') {
-          const name = child.IDENTIFIER(0).getText();
-          this.output += `${name}`;
-
-          const numberOfDimensions = child.expression().length;
-          for (let j = 0; j < numberOfDimensions; j++) {
-            const indexValue = child.expression(j).getText();
-            this.output += `[${indexValue}]`;
-          }
-
-          // Reading dataMatrix should be independent of x and y
-          this.output += ' = dataMatrix[dataMatrixPointer++];';
-        } else {
-          console.log("WWW, I don't know what to do with " + childName);
-          accumulator.push(child.getText());
-        }
-      }
-    }
-  }
-
-  enterArray_update(ctx) {
-    // This is NOT a context, it's an Array_updateContext, which contains an array_structure
-    const struct = ctx.array_structure();
-
-    const name = struct.IDENTIFIER(0)?.getText();
-    const firstIndex = struct.expression(0).getText();
-    this.output += ` ${name}[Math.trunc(${firstIndex})]`;
-    const numberOfDimensions = struct.expression().length;
-    for (let j = 1; j < numberOfDimensions; j++) {
-      const indexValue = struct.expression(j).getText();
-      this.output += `[Math.trunc(${indexValue})]`;
-    }
-
-    const expression = ctx.expression();
-    const arrayValue = expression.getText();
-    this.output += ` = ${arrayValue};`;
-  }
-
-  /*
-      NUMBER
-      | STRING
-      | array_structure
-      | sin_function
-      | cos_function
-      | qsin_function
-      | qcos_function
-      | rndFunction
-      | IDENTIFIER
-      | '(' expression ')'
-      | HEX_NUMBER
-      */
-  handleFactor(accumulator, factorContext) {
-    const children = factorContext.children;
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i];
-      const childName = child.constructor.name;
-
-      if (childName === 'Me' || childName === 'Fe') {
-        this.handleSymbol(accumulator, child);
-      } else if (childName === 'Array_structureContext') {
-        this.handleArrayAccess(accumulator, child);
-      } else if (childName === 'ExpressionContext') {
-        this.handleExpr(accumulator, child);
-      } else if (typeof factorContext.expression() === 'function') {
-        accumulator.push('(');
-        this.handleExpression(factorContext.expression());
-        accumulator.push(')');
-      } else {
-        console.log("XXX, I don't know what to do with " + childName);
-        accumulator.push(child.getText());
-      }
-    }
-  }
-
-  handleArrayAccess(accumulator, arrayStructure) {
-    const name = arrayStructure.IDENTIFIER(0)?.getText();
-
-    const firstIndex = arrayStructure.expression(0).getText();
-    accumulator.push(`${name}[Math.trunc(${firstIndex})]`);
-
-    const numberOfDimensions = arrayStructure.expression().length;
-    for (let j = 1; j < numberOfDimensions; j++) {
-      const indexValue = arrayStructure.expression(j).getText();
-      accumulator.push(`[Math.trunc(${indexValue})]`);
-    }
-  }
-
-  handleSymbol(accumulator, symbol) {
-    accumulator.push(symbol.getText());
-  }
-
-  handleTerm(accumulator, termContext) {
-    const children = termContext.children;
-    if (termContext.children != null) {
-      for (let i = 0; i < children.length; i++) {
-        const child = children[i];
-        const childName = child.constructor.name;
-        if (childName === 'Me' || childName === 'Fe') {
-          this.handleSymbol(accumulator, child);
-        } else if (childName === 'FactorContext') {
-          this.handleFactor(accumulator, child);
-        } else {
-          console.log("ZZZ, I don't know what to do with " + childName);
-          //   accumulator.push("ZZZ");
-        }
-      }
-    }
-  }
-
-  handleExpr(accumulator, expressionContext) {
-    this.handleTerm(accumulator, expressionContext.term(0));
-    if (expressionContext.term(1)) {
-      this.handleSymbol(accumulator, expressionContext.children[1]);
-      this.handleTerm(accumulator, expressionContext.term(1));
-    }
-  }
-
-  handleExpression(expressionContext) {
-    let accumulator = [];
-    this.handleTerm(accumulator, expressionContext.term(0));
-    if (expressionContext.term(1)) {
-      this.handleSymbol(accumulator, expressionContext.children[1]);
-      this.handleTerm(accumulator, expressionContext.term(1));
-    }
-    return accumulator.join('');
-  }
-
+  // ControlFlowHandler
   enterIf_statement(ctx) {
-    let statement = '';
-    let logicalOperator = '';
-    let comparator = '';
-
-    for (let i = 0; i < ctx.children.length; i++) {
-      if (ctx.children[i].constructor.name == 'ExpressionContext') {
-        statement += this.handleExpression(ctx.children[i]);
-      } else if (ctx.children[i].constructor.name == 'Or_andContext') {
-        logicalOperator = ctx.children[i].getText();
-        if (logicalOperator == 'and') {
-          statement += ' && ';
-        } else if (logicalOperator == 'or') {
-          statement += ' || ';
-        } else {
-          console.log('Unrecognized logicalOperator in IF Statement');
-        }
-      } else if (ctx.children[i].constructor.name == 'Expressions_comparatorsContext') {
-        comparator = ctx.children[i].getText();
-        // Special cases for = and <>
-        if (comparator === '=') {
-          comparator = '==';
-        } else if (comparator === '<>') {
-          comparator = '!=';
-        } else {
-          // Nothing to do here
-        }
-        statement += ` ${comparator} `;
-      }
-    }
-    this.output += `if (${statement}) {`;
+    this.controlFlowHandler.enterIf_statement(ctx);
   }
-
   exitIf_statement(ctx) {
-    this.output += '}';
+    this.controlFlowHandler.exitIf_statement(ctx);
   }
-
-  enterProcedure_call(ctx) {
-    const name = ctx.IDENTIFIER().getText();
-    let callCode = '';
-
-    if (!ctx.SQUARE_BRACKET_OPEN()) {
-      // Case 1: Calling a procedure with just its name
-      callCode = `${name}();`;
-    } else {
-      // Case 2: Calling a procedure with some parameters
-      const args = ctx
-        .expression()
-        .map((expr) => expr.getText())
-        .join(', ');
-      callCode = `${name}(${args});`;
-    }
-
-    this.output += `${callCode}`;
-  }
-
-  // TODO: verify open/close brackets
-  enterIf_statement_key_state(ctx) {
-    let leftExpression = ctx.current_Key_State(0)?.expression(0)?.getText();
-
-    if (leftExpression.includes('$')) {
-      // Extract the hexadecimal value from the expression
-      let hexValueMatch = leftExpression.match(/\$[0-9A-Fa-f]+/);
-
-      if (hexValueMatch) {
-        let hexValue = parseInt(hexValueMatch[0].replace('$', ''), 16);
-
-        // Check if the leftExpression is just a hexadecimal value
-        if (hexValueMatch[0] === leftExpression) {
-          // If it's only a hex value, convert it to a key mapping lookup
-          leftExpression = `keyMapping[${hexValue}`;
-        } else {
-          let variable = leftExpression.split('$')[0];
-
-          // If it's a variable or expression with a hex part, construct it accordingly
-          leftExpression = leftExpression.replace(/\$[0-9A-Fa-f]+/, `keyMapping[${hexValue}`);
-        }
-      }
-    }
-    this.output += `if (currentPressedKey === ${leftExpression}]) {`;
-  }
-
-  exitIf_statement_key_state(ctx) {
-    this.output += '}';
-  }
-
   enterElse_statement(ctx) {
-    this.output += '} else {';
+    this.controlFlowHandler.enterElse_statement(ctx);
+  }
+  exitElse_statement(ctx) {
+    this.controlFlowHandler.exitElse_statement(ctx);
+  }
+  enterIf_statement_key_state(ctx) {
+    this.controlFlowHandler.enterIf_statement_key_state(ctx);
+  }
+  exitIf_statement_key_state(ctx) {
+    this.controlFlowHandler.exitIf_statement_key_state(ctx);
+  }
+  enterFor_loop(ctx) {
+    this.controlFlowHandler.enterFor_loop(ctx);
+  }
+  exitFor_loop(ctx) {
+    this.controlFlowHandler.exitFor_loop(ctx);
+  }
+  enterDo_loop(ctx) {
+    this.controlFlowHandler.enterDo_loop(ctx);
+  }
+  exitDo_loop(ctx) {
+    this.controlFlowHandler.exitDo_loop(ctx);
+  }
+  enterWhile_wend(ctx) {
+    this.controlFlowHandler.enterWhile_wend(ctx);
+  }
+  exitWhile_wend(ctx) {
+    this.controlFlowHandler.exitWhile_wend(ctx);
+  }
+  enterRepeat_key(ctx) {
+    this.controlFlowHandler.enterRepeat_key(ctx);
+  }
+  exitRepeat_key(ctx) {
+    this.controlFlowHandler.exitRepeat_key(ctx);
+  }
+  enterWait_key(ctx) {
+    this.controlFlowHandler.enterWait_key(ctx);
   }
 
-  exitElse_statement(ctx) {
-    this.output += '';
+  // SoundHandler
+  enterPlay_sound(ctx) {
+    this.soundHandler.enterPlay_sound(ctx);
   }
+
+  // DataHandler
+  enterOpen_out_readfile(ctx) {
+    this.dataHandler.enterOpen_out_readfile(ctx);
+  }
+  enterOpen_in_writefile(ctx) {
+    this.dataHandler.enterOpen_in_writefile(ctx);
+  }
+  enterInput_variable(ctx) {
+    this.dataHandler.enterInput_variable(ctx);
+  }
+  enterClose_file(ctx) {
+    this.dataHandler.enterClose_file(ctx);
+  }
+  enterPrint_something(ctx) {
+    this.dataHandler.enterPrint_something(ctx);
+  }
+  enterData_statement(ctx) {
+    this.dataHandler.enterData_statement(ctx);
+  }
+  enterRead_statement(ctx) {
+    this.dataHandler.enterRead_statement(ctx);
+  }
+  enterArray_create(ctx) {
+    this.dataHandler.enterArray_create(ctx);
+  }
+  enterArray_update(ctx) {
+    this.dataHandler.enterArray_update(ctx);
+  }
+
+  // ExpressionHandler
+  handleFactor(accumulator, factorContext) { this.expressionHandler.handleFactor(accumulator, factorContext); }
+  handleArrayAccess(accumulator, arrayStructure) { this.expressionHandler.handleArrayAccess(accumulator, arrayStructure); }
+  handleSymbol(accumulator, symbol) { this.expressionHandler.handleSymbol(accumulator, symbol); }
+  handleTerm(accumulator, termContext) { this.expressionHandler.handleTerm(accumulator, termContext); }
+  handleExpr(accumulator, expressionContext) { this.expressionHandler.handleExpr(accumulator, expressionContext); }
+  handleExpression(expressionContext) { return this.expressionHandler.handleExpression(expressionContext); }
 
   getJavaScript() {
     let result =

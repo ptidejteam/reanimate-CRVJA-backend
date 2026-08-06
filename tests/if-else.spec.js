@@ -81,7 +81,7 @@ test('if-else statement execution branches', async () => {
   const normalizedJS = await translate(amosBasicCode);
 
   expect(normalizedJS).toContain(
-    "if (1 > 0) { document.getElementById('amos-screen').style.cursor = 'none'; } else { document.getElementById('amos-screen').style.cursor = 'auto'; }"
+    "if (1 > 0) { document.getElementById('amos-screen').style.cursor = 'none'; } else { document.getElementById('amos-screen').style.cursor = 'auto'; }",
   );
 });
 
