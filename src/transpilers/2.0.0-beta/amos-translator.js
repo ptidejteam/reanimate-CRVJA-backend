@@ -60,17 +60,39 @@ class AmosTranslator extends AMOSListener {
   }
 
   // ScopeHandler
-  enterNewScope() { this.scopeHandler.enterNewScope(); }
-  exitCurrentScope() { this.scopeHandler.exitCurrentScope(); }
-  get currentScope() { return this.scopeHandler.currentScope; }
-  get isRootScope() { return this.scopeHandler.isRootScope; }
-  isVariableDeclared(name) { return this.scopeHandler.isVariableDeclared(name); }
-  enterGlobal(ctx) { this.scopeHandler.enterGlobal(ctx); }
-  enterVariable_starter(ctx) { this.scopeHandler.enterVariable_starter(ctx); }
-  enterAdd(ctx) { this.scopeHandler.enterAdd(ctx); }
-  enterProcedure(ctx) { this.scopeHandler.enterProcedure(ctx); }
-  exitProcedure(ctx) { this.scopeHandler.exitProcedure(ctx); }
-  enterProcedure_call(ctx) { this.scopeHandler.enterProcedure_call(ctx); }
+  enterNewScope() {
+    this.scopeHandler.enterNewScope();
+  }
+  exitCurrentScope() {
+    this.scopeHandler.exitCurrentScope();
+  }
+  get currentScope() {
+    return this.scopeHandler.currentScope;
+  }
+  get isRootScope() {
+    return this.scopeHandler.isRootScope;
+  }
+  isVariableDeclared(name) {
+    return this.scopeHandler.isVariableDeclared(name);
+  }
+  enterGlobal(ctx) {
+    this.scopeHandler.enterGlobal(ctx);
+  }
+  enterVariable_starter(ctx) {
+    this.scopeHandler.enterVariable_starter(ctx);
+  }
+  enterAdd(ctx) {
+    this.scopeHandler.enterAdd(ctx);
+  }
+  enterProcedure(ctx) {
+    this.scopeHandler.enterProcedure(ctx);
+  }
+  exitProcedure(ctx) {
+    this.scopeHandler.exitProcedure(ctx);
+  }
+  enterProcedure_call(ctx) {
+    this.scopeHandler.enterProcedure_call(ctx);
+  }
 
   // ScreenHandler
   enterScreen_open(ctx) {
@@ -209,12 +231,9 @@ class AmosTranslator extends AMOSListener {
   }
 
   // ExpressionHandler
-  handleFactor(accumulator, factorContext) { this.expressionHandler.handleFactor(accumulator, factorContext); }
-  handleArrayAccess(accumulator, arrayStructure) { this.expressionHandler.handleArrayAccess(accumulator, arrayStructure); }
-  handleSymbol(accumulator, symbol) { this.expressionHandler.handleSymbol(accumulator, symbol); }
-  handleTerm(accumulator, termContext) { this.expressionHandler.handleTerm(accumulator, termContext); }
-  handleExpr(accumulator, expressionContext) { this.expressionHandler.handleExpr(accumulator, expressionContext); }
-  handleExpression(expressionContext) { return this.expressionHandler.handleExpression(expressionContext); }
+  handleExpression(expressionContext) {
+    return this.expressionHandler.handleExpression(expressionContext);
+  }
 
   getJavaScript() {
     let result =

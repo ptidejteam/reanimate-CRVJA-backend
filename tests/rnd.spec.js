@@ -20,5 +20,5 @@ test('generate a random number', async () => {
   `;
   const normalizedJS = await translate(amosCode);
   expect(normalizedJS).toContain('let RND_VAR = 0;');
-  expect(normalizedJS).toContain('RND_VAR = Rnd(10);');
+  expect(normalizedJS).toContain('RND_VAR = Math.floor(Math.random() * (10 + 1));');
 });
