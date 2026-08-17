@@ -687,15 +687,29 @@ function renderSprite(spriteNumber, x, y, bankImgIndex) {
 
   let { width, height, depth, planarGraphicData } = bankData[1].sprites[bankImgIndex];
   let colorPalette = bankData[1].palette;
-  width = width * 16; // Convert width in 16-bit words to pixels
+  const pixelWidth = width * 16; // Convert width in 16-bit words to pixels
+  const bytesPerRow = pixelWidth / 8;
 
-  const pixels = [];
-  const bytesPerRow = width / 8;
-  const rowSize = bytesPerRow * depth;
+  let existingCanvas = document.getElementById('sprite' + spriteNumber);
+  if (existingCanvas) {
+    existingCanvas.remove();
+  }
 
-  // Build pixels array with hex color values based on the planar graphic data
+  const canvas = document.createElement('canvas');
+  canvas.id = 'sprite' + spriteNumber;
+  canvas.width = pixelWidth;
+  canvas.height = height;
+  canvas.style.position = 'absolute';
+  canvas.style.left = x + 'px';
+  canvas.style.top = y + 'px';
+  canvas.style.zIndex = 99999;
+
+  const ctx = canvas.getContext('2d');
+  const imgData = ctx.createImageData(pixelWidth, height);
+  const data = imgData.data;
+
   for (let row = 0; row < height; row++) {
-    for (let col = 0; col < width; col++) {
+    for (let col = 0; col < pixelWidth; col++) {
       let colorIndex = 0;
 
       // Build colorIndex by combining bits across planes
@@ -707,47 +721,32 @@ function renderSprite(spriteNumber, x, y, bankImgIndex) {
         colorIndex |= bit << plane;
       }
 
-      const hexColor = colorPalette[colorIndex];
-      pixels.push(hexColor);
+      const pixelOffset = (row * pixelWidth + col) * 4;
+      if (colorIndex === 0) {
+        // Color index 0 is transparent background
+        data[pixelOffset] = 0;
+        data[pixelOffset + 1] = 0;
+        data[pixelOffset + 2] = 0;
+        data[pixelOffset + 3] = 0;
+      } else {
+        const hexColor = colorPalette[colorIndex] || '#000000';
+        const r = parseInt(hexColor.slice(1, 3), 16) || 0;
+        const g = parseInt(hexColor.slice(3, 5), 16) || 0;
+        const b = parseInt(hexColor.slice(5, 7), 16) || 0;
+        data[pixelOffset] = r;
+        data[pixelOffset + 1] = g;
+        data[pixelOffset + 2] = b;
+        data[pixelOffset + 3] = 255;
+      }
     }
   }
-  let spriteContainerCheck = document.getElementById('sprite' + spriteNumber);
 
-  // If the sprite container already exists, remove it from the DOM
-  if (spriteContainerCheck) {
-    spriteContainerCheck.remove();
+  ctx.putImageData(imgData, 0, 0);
+
+  const screen = document.getElementById('amos-screen');
+  if (screen) {
+    screen.appendChild(canvas);
   }
-
-  // Create a container div for the new sprite
-  const spriteContainer = document.createElement('div');
-  spriteContainer.style.display = 'grid';
-  spriteContainer.style.gridTemplateColumns = 'repeat(' + width + ', 1fr)';
-  spriteContainer.style.position = 'absolute';
-  spriteContainer.style.left = x + 'px';
-  spriteContainer.style.top = y + 'px';
-  spriteContainer.id = 'sprite' + spriteNumber; // Assign the ID for future reference
-  spriteContainer.style.zIndex = 99999;
-
-  // TODO: Sprite rendering creates one <div> per pixel -> DOM bloat
-  // Continue rendering the sprite's pixels
-  pixels.forEach((color) => {
-    if (color === colorPalette[0]) {
-      const pixel = document.createElement('div');
-      pixel.style.width = '1px';
-      pixel.style.height = '1px';
-      pixel.style.backgroundColor = 'transparent';
-      spriteContainer.appendChild(pixel);
-    } else {
-      const pixel = document.createElement('div');
-      pixel.style.width = '1px';
-      pixel.style.height = '1px';
-      pixel.style.backgroundColor = color;
-      spriteContainer.appendChild(pixel);
-    }
-  });
-
-  // Append the container to the document body or a specific container element
-  document.getElementById('amos-screen').appendChild(spriteContainer);
 }
 
 function getColour(expression) {

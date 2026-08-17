@@ -31,3 +31,13 @@ test('load_banks with bank id', async () => {
 
   expect(normalizedJS).toContain('loadBank(\'"assets/icons.abk"\', 2);');
 });
+
+test('render sprite translates to renderSprite with canvas runtime', async () => {
+  const amosBasicCode = `Sprite 1, 100, 200, 3`;
+
+  const normalizedJS = await translate(amosBasicCode);
+
+  expect(normalizedJS).toContain('renderSprite(1, 100, 200, 3);');
+  expect(normalizedJS).toContain("document.createElement('canvas')");
+  expect(normalizedJS).toContain('createImageData');
+});
