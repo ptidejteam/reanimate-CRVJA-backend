@@ -8,7 +8,8 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "compile-grammar": "node -e \"const pkg = require('./package.json'); require('child_process').execSync('cd src/transpilers/' + pkg.version + '/grammar && java -jar ../../../../antlr-4.13.2-complete.jar -Dlanguage=JavaScript -visitor -o generated AMOS.g4', { stdio: 'inherit' });\""
+    "compile-grammar": "node -e \"const pkg = require('./package.json'); require('child_process').execSync('cd src/transpilers/' + pkg.version + '/grammar && java -jar ../../../../antlr-4.13.2-complete.jar -Dlanguage=JavaScript -visitor -o generated AMOS.g4', { stdio: 'inherit' });\"",
+    "format": "prettier --write \"**/*.js\""
   },
   "imports": {
     "#root/*.js": "./*.js"
@@ -27,7 +28,8 @@
   "dependencies": {
     "antlr4": "^4.13.2",
     "cors": "^2.8.6",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "multer": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",

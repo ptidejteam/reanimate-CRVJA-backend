@@ -11,7 +11,7 @@ export default class ExpressionVisitor extends AMOSVisitor {
   }
 
   /**
-   * Grammar Rule: 
+   * Grammar Rule:
    * expression: term ((ADD | SUBTRACT) term)* NUMBER?
    * Evaluates addition / subtraction chains.
    */
@@ -43,7 +43,7 @@ export default class ExpressionVisitor extends AMOSVisitor {
   }
 
   /**
-   * Grammar Rule: 
+   * Grammar Rule:
    * term: SUBTRACT? factor ((MULTIPLY | DIVIDE) factor)*
    * Evaluates multiplication / division chains and unary minus.
    */
@@ -108,7 +108,7 @@ export default class ExpressionVisitor extends AMOSVisitor {
   }
 
   /**
-   * Grammar Rule: 
+   * Grammar Rule:
    * array_structure: IDENTIFIER '(' expression (',' expression)* ')'
    * Transpiles AMOS array accesses to JavaScript bracket notation with Math.trunc.
    */
@@ -117,14 +117,14 @@ export default class ExpressionVisitor extends AMOSVisitor {
     const expressions = ctx.expression();
 
     const formattedIndices = expressions
-      .map(exprCtx => `[Math.trunc(${this.visit(exprCtx)})]`)
+      .map((exprCtx) => `[Math.trunc(${this.visit(exprCtx)})]`)
       .join('');
 
     return `${arrayName}${formattedIndices}`;
   }
 
   /**
-   * Grammar Rule: 
+   * Grammar Rule:
    * sin_function: 'Sin' '(' (NUMBER | IDENTIFIER | expression) ')'
    */
   visitSin_function(ctx) {
@@ -133,7 +133,7 @@ export default class ExpressionVisitor extends AMOSVisitor {
   }
 
   /**
-   * Grammar Rule: 
+   * Grammar Rule:
    * cos_function: 'Cos' '(' (NUMBER | IDENTIFIER | expression) ')'
    */
   visitCos_function(ctx) {
@@ -142,7 +142,7 @@ export default class ExpressionVisitor extends AMOSVisitor {
   }
 
   /**
-   * Grammar Rule: 
+   * Grammar Rule:
    * qsin_function: 'Qsin' '(' expression ',' expression ')'
    */
   visitQsin_function(ctx) {
@@ -153,7 +153,7 @@ export default class ExpressionVisitor extends AMOSVisitor {
   }
 
   /**
-   * Grammar Rule: 
+   * Grammar Rule:
    * qcos_function: 'Qcos' '(' expression ',' expression ')'
    */
   visitQcos_function(ctx) {
@@ -164,7 +164,7 @@ export default class ExpressionVisitor extends AMOSVisitor {
   }
 
   /**
-   * Grammar Rule: 
+   * Grammar Rule:
    * rndFunction: 'Rnd' '(' (NUMBER | IDENTIFIER | expression) ')'
    */
   visitRndFunction(ctx) {

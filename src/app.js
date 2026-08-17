@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import transpilerRoutes from './routes/transpiler.routes.js';
 import versionsRoutes from './routes/versions.routes.js';
+import banksRouter from './routes/banks.routes.js'
 
 const app = express();
 
@@ -26,5 +27,7 @@ app.get('/', (req, res) => {
 app.use('/api/transpile', transpilerRoutes);
 
 app.use('/api/versions', versionsRoutes);
+
+app.use('/api/parse-bank-file/', banksRouter);
 
 export default app;
