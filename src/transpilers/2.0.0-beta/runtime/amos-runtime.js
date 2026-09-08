@@ -621,20 +621,7 @@ function loadBank(bankName, bank) {
 
       const color1 = (byte1 << 8) | byte2;
 
-      // Extract the red, green, and blue components (4 bits each)
-      const red = (color1 >> 8) & 0xf;
-      const green = (color1 >> 4) & 0xf;
-      const blue = color1 & 0xf;
-
-      // Convert 4-bit values (0-15) to 8-bit values (0-255) by multiplying by 17
-      const red8 = (red * 17).toString(16).padStart(2, '0');
-      const green8 = (green * 17).toString(16).padStart(2, '0');
-      const blue8 = (blue * 17).toString(16).padStart(2, '0');
-
-      // Format as HTML color code #RRGGBB
-      const color = '#' + red8 + green8 + blue8;
-
-      colorPalette.push(color.toUpperCase());
+      colorPalette.push(amiga12BitToHex(color1));
     }
 
     // TODO: loadBank always merges into bank 1 regardless of target bank

@@ -1,6 +1,6 @@
 # Reanimate-CRVJA Backend
 
-The backend service for Reanimate-CRVJA, providing an API to transpile AMOS BASIC code into executable JavaScript.
+The backend service for Reanimate-CRVJA, providing APIs to transpile AMOS BASIC, detokenize binary AMOS programs, and process AMOS sprite banks.
 
 ## How the Transpiler Works
 
@@ -56,3 +56,19 @@ You can call the API locally (`http://localhost:4000`) or using your deployed pr
 - **URL:** `/api/versions`
 - **Method:** `GET`
 - **Response:** Returns a list of supported transpiler versions.
+
+### 3. Decode a binary AMOS program
+
+- **URL:** `/api/decode-amos`
+- **Method:** `POST`
+- **Content type:** `multipart/form-data`
+- **File field:** `file`
+- **Response:** `{ "sourceCode": "..." }`
+- **Upload limit:** 5 MB
+
+The decoder validates the AMOS container, loads the packaged AMCAF token table, and returns detokenized AMOS source code.
+
+### 4. Parse or generate an AMOS bank
+
+- **Parse:** `POST /api/parse-bank-file` with a `.abk` file in the multipart field `file`
+- **Generate:** `POST /api/generate-bank-file` with `sprites`, `palette`, and an optional `filename` in a JSON body

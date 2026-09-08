@@ -1,3 +1,5 @@
+import { amiga12BitToHex, hexToAmiga12Bit } from '../utils/amiga-color.js';
+
 /**
  * Parses an AMOS .abk sprite or icon bank file.
  * Accepts a Multer file object, Buffer, or Uint8Array.
@@ -98,19 +100,7 @@ export async function parseBankFile(file) {
 
     const color1 = (byte1 << 8) | byte2;
 
-    // Extract the red, green, and blue components (4 bits each)
-    const red = (color1 >> 8) & 0xf;
-    const green = (color1 >> 4) & 0xf;
-    const blue = color1 & 0xf;
-
-    // Convert 4-bit values (0-15) to 8-bit values (0-255) by multiplying by 17
-    const red8 = (red * 17).toString(16).padStart(2, '0');
-    const green8 = (green * 17).toString(16).padStart(2, '0');
-    const blue8 = (blue * 17).toString(16).padStart(2, '0');
-
-    // Format as HTML color code #RRGGBB
-    const color = '#' + red8 + green8 + blue8;
-    colorPalette.push(color.toUpperCase());
+    colorPalette.push(amiga12BitToHex(color1));
   }
 
   return { sprites: objectsArray, palette: colorPalette };
@@ -170,22 +160,9 @@ export function generateBankFile(bankCreator) {
     binaryData.push(...object);
   });
 
-  let newPalette = [...palette];
-  function rgbTo16Bit(rgbColor) {
-    // Extract the red, green, and blue components from the hex color
-    const red = parseInt(rgbColor.slice(1, 3), 16) >> 4; // Red channel (top 4 bits)
-    const green = parseInt(rgbColor.slice(3, 5), 16) >> 4; // Green channel (middle 4 bits)
-    const blue = parseInt(rgbColor.slice(5, 7), 16) >> 4; // Blue channel (bottom 4 bits)
-
-    // Combine red, green, and blue components into a 16-bit color value
-    const color16Bit = (red << 8) | (green << 4) | blue;
-
-    return color16Bit;
-  }
-
   // Convert the palette into 16-bit color values and then add to binaryData
-  newPalette.forEach((color) => {
-    const rgb = rgbTo16Bit(color); // Convert to 16-bit color
+  palette.forEach((color) => {
+    const rgb = hexToAmiga12Bit(color);
     binaryData.push((rgb >> 8) & 0xff); // High byte
     binaryData.push(rgb & 0xff); // Low byte
   });

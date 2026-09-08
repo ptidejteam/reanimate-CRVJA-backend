@@ -1,3 +1,5 @@
+import { amiga12BitToCssRgb } from '../../../utils/amiga-color.js';
+
 export default class ScreenHandler {
   constructor(translator) {
     this.translator = translator;
@@ -141,13 +143,7 @@ if (amosScreen) {
     hexColors.forEach((hex, index) => {
       const hexValue = parseInt(hex.slice(1), 16); // Remove '$' and parse as hex
 
-      // Extract R, G, B components
-      const red = ((hexValue >> 8) & 0xf) * 17;
-      const green = ((hexValue >> 4) & 0xf) * 17;
-      const blue = (hexValue & 0xf) * 17;
-
-      // Map color in `rgb` format
-      this.translator.colorMapping[index] = `rgb(${red}, ${green}, ${blue})`;
+      this.translator.colorMapping[index] = amiga12BitToCssRgb(hexValue);
     });
     this.translator.palette = `const colorMapping = ${JSON.stringify(this.translator.colorMapping, null, 2)};`;
   }

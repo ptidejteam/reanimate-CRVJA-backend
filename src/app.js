@@ -3,6 +3,7 @@ import cors from 'cors';
 import transpilerRoutes from './routes/transpiler.routes.js';
 import versionsRoutes from './routes/versions.routes.js';
 import { parseBankRouter, generateBankRouter } from './routes/banks.routes.js';
+import amosDecoderRoutes from './routes/amos-decoder.routes.js';
 
 const app = express();
 
@@ -31,5 +32,7 @@ app.use('/api/versions', versionsRoutes);
 app.use('/api/parse-bank-file', parseBankRouter);
 
 app.use('/api/generate-bank-file', generateBankRouter);
+
+app.use('/api/decode-amos', amosDecoderRoutes);
 
 export default app;

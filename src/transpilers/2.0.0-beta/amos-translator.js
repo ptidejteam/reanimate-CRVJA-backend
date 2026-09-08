@@ -9,6 +9,7 @@ import DrawingHandler from './handlers/drawing-handler.js';
 import ControlFlowHandler from './handlers/control-flow-handler.js';
 import SoundHandler from './handlers/sound-handler.js';
 import DataHandler from './handlers/data-handler.js';
+import { amiga12BitToHex, amiga12BitToRgb, validateAmigaColor } from '../../utils/amiga-color.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,7 +48,10 @@ class AmosTranslator extends AMOSListener {
     this.scopes = [{}];
     this.globalVariablesSet = new Set();
     this.hasDataMatrix = false;
-    this.preamble = `\n${runtimeScript}\n`;
+    const colorRuntime = [validateAmigaColor, amiga12BitToRgb, amiga12BitToHex]
+      .map((helper) => helper.toString())
+      .join('\n');
+    this.preamble = `\n${colorRuntime}\n${runtimeScript}\n`;
 
     // Delegate modules
     this.scopeHandler = new ScopeHandler(this);

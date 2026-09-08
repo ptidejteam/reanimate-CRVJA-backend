@@ -41,3 +41,10 @@ test('render sprite translates to renderSprite with canvas runtime', async () =>
   expect(normalizedJS).toContain("document.createElement('canvas')");
   expect(normalizedJS).toContain('createImageData');
 });
+
+test('generated runtime uses the shared Amiga color converter', async () => {
+  const normalizedJS = await translate('Load "assets/icons.abk"');
+
+  expect(normalizedJS).toContain('function amiga12BitToHex');
+  expect(normalizedJS).toContain('colorPalette.push(amiga12BitToHex(color1));');
+});
