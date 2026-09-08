@@ -1,4 +1,4 @@
-import { parseBankFile } from '../src/services/banks.service.js';
+import { parseBankFile, generateBankFile } from '../src/services/banks.service.js';
 
 describe('banks.service parseBankFile', () => {
   test('fails when no file is provided', async () => {
@@ -131,5 +131,93 @@ describe('banks.service parseBankFile', () => {
     const result = await parseBankFile({ buffer: fullData });
     expect(result.sprites.length).toBe(0);
     expect(result.palette.length).toBe(32);
+  });
+
+  describe('generateBankFile', () => {
+    test('fails when invalid data is provided', () => {
+      expect(() => generateBankFile(null)).toThrow('Invalid bank data');
+      expect(() => generateBankFile({ sprites: null, palette: [] })).toThrow('Invalid bank data');
+    });
+
+    test('generates valid binary buffer with AmSp header and correct size', () => {
+      const bankData = {
+        sprites: [
+          {
+            width: 1,
+            height: 16,
+            depth: 4,
+            hotspotX: 2,
+            hotspotY: 3,
+            planarGraphicData: Array(128).fill(42),
+          },
+        ],
+        palette: Array(32).fill('#000000'),
+      };
+
+      const buffer = generateBankFile(bankData);
+      expect(Buffer.isBuffer(buffer)).toBe(true);
+
+      // Expected size: 4 (AmSp) + 2 (count) + 10 (sprite header) + 128 (planar data) + 64 (palette) = 208
+      expect(buffer.length).toBe(208);
+      expect(buffer.subarray(0, 4).toString('ascii')).toBe('AmSp');
+      expect(buffer.readUInt16BE(4)).toBe(1); // 1 sprite
+    });
+
+    test('round-trip test: generates buffer and parseBankFile reconstructs identical data', async () => {
+      const originalPalette = Array(32).fill('#000000');
+      originalPalette[0] = '#000000';
+      originalPalette[1] = '#FF8800';
+      originalPalette[2] = '#112233';
+
+      const originalSprites = [
+        {
+          width: 1,
+          height: 16,
+          depth: 4,
+          hotspotX: 5,
+          hotspotY: 7,
+          planarGraphicData: Array.from({ length: 128 }, (_, i) => i % 256),
+        },
+        {
+          width: 2,
+          height: 8,
+          depth: 2,
+          hotspotX: 0,
+          hotspotY: 1,
+          planarGraphicData: Array.from({ length: 2 * 2 * 8 * 2 }, (_, i) => (i * 3) % 256),
+        },
+      ];
+
+      const generatedBuffer = generateBankFile({
+        sprites: originalSprites,
+        palette: originalPalette,
+      });
+
+      const parsed = await parseBankFile({ buffer: generatedBuffer });
+
+      expect(parsed.sprites.length).toBe(2);
+
+      // Verify sprite 0
+      expect(parsed.sprites[0].width).toBe(1);
+      expect(parsed.sprites[0].height).toBe(16);
+      expect(parsed.sprites[0].depth).toBe(4);
+      expect(parsed.sprites[0].hotspotX).toBe(5);
+      expect(parsed.sprites[0].hotspotY).toBe(7);
+      expect(parsed.sprites[0].planarGraphicData).toEqual(originalSprites[0].planarGraphicData);
+
+      // Verify sprite 1
+      expect(parsed.sprites[1].width).toBe(2);
+      expect(parsed.sprites[1].height).toBe(8);
+      expect(parsed.sprites[1].depth).toBe(2);
+      expect(parsed.sprites[1].hotspotX).toBe(0);
+      expect(parsed.sprites[1].hotspotY).toBe(1);
+      expect(parsed.sprites[1].planarGraphicData).toEqual(originalSprites[1].planarGraphicData);
+
+      // Verify palette
+      expect(parsed.palette.length).toBe(32);
+      expect(parsed.palette[0]).toBe('#000000');
+      expect(parsed.palette[1]).toBe('#FF8800');
+      expect(parsed.palette[2]).toBe('#112233');
+    });
   });
 });
