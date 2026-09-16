@@ -111,6 +111,11 @@ if (${variable} < ${valueStarter}) {
     let props = params.join(', ');
 
     this.enterNewScope();
+    for (const param of params) {
+      // A procedure parameter is already a binding in the generated function scope
+      this.currentScope[param] = param.endsWith('$') ? '""' : 0;
+    }
+
     let localDeclarations = '';
     for (let varName of Object.keys(this.translator.scopes[0])) {
       if (!this.translator.globalVariablesSet.has(varName) && !params.includes(varName)) {
