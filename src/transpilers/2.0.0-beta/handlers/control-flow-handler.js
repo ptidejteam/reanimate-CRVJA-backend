@@ -4,7 +4,7 @@ export default class ControlFlowHandler {
   }
 
   enterWhile_wend(ctx) {
-    let leftExpression = ctx.current_Key_State(0)?.expression(0)?.getText();
+    let leftExpression = this.translator.handleExpression(ctx.current_Key_State(0)?.expression(0));
     if (!leftExpression) return;
 
     // Replace all occurrences of $xx with decimal equivalents
@@ -44,9 +44,9 @@ export default class ControlFlowHandler {
   }
 
   enterFor_loop(ctx) {
-    let variable = ctx.children[1]?.getText();
-    let start = ctx.children[3]?.getText();
-    let end = ctx.children[5]?.getText();
+    let variable = ctx.IDENTIFIER(0).getText();
+    let start = this.translator.handleExpression(ctx.expression(0));
+    let end = this.translator.handleExpression(ctx.expression(1));
 
     if (!this.translator.isVariableDeclared(variable)) {
       let defaultValue = variable.endsWith('$') ? '""' : 0;
@@ -104,7 +104,7 @@ export default class ControlFlowHandler {
 
   // TODO: verify open/close brackets
   enterIf_statement_key_state(ctx) {
-    let leftExpression = ctx.current_Key_State(0)?.expression(0)?.getText();
+    let leftExpression = this.translator.handleExpression(ctx.current_Key_State(0)?.expression(0));
 
     if (leftExpression.includes('$')) {
       // Extract the hexadecimal value from the expression

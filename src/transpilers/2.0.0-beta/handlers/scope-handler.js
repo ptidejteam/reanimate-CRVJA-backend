@@ -69,8 +69,8 @@ export default class ScopeHandler {
   }
 
   enterAdd(ctx) {
-    let variable = ctx.children[1]?.getText();
-    let valueExpression = ctx.children[3]?.getText();
+    let variable = ctx.IDENTIFIER().getText();
+    let valueExpression = this.translator.handleExpression(ctx.expression(0));
 
     if (!this.isVariableDeclared(variable)) {
       let defaultValue = variable.endsWith('$') ? '""' : 0;
@@ -86,8 +86,8 @@ export default class ScopeHandler {
     let valueEndIteration;
 
     if (ctx.expression().length > 1) {
-      valueStarter = ctx.expression(1)?.getText();
-      valueEndIteration = ctx.expression(2)?.getText();
+      valueStarter = this.translator.handleExpression(ctx.expression(1));
+      valueEndIteration = this.translator.handleExpression(ctx.expression(2));
 
       this.translator.output += `
 ${variable} = (${variable} + ${valueExpression}) % ${valueEndIteration};
@@ -159,7 +159,7 @@ ${localDeclarations}`;
       // Case 2: Calling a procedure with some parameters
       const args = ctx
         .expression()
-        .map((expr) => expr.getText())
+        .map((expr) => this.translator.handleExpression(expr))
         .join(', ');
       callCode = `${name}(${args});`;
     }

@@ -34,20 +34,20 @@ export default class DataHandler {
   }
 
   enterPrint_something(ctx) {
-    const printConfig = ctx.print_options(0)?.getText();
-    if (printConfig.includes('#')) {
+    const firstOption = ctx.print_options(0);
+    if (firstOption.HASHTAG()) {
       /* WRITE TO FILE */
-      let channel = ctx.print_options(0)?.getText();
-      let content = ctx.print_options(1)?.getText();
+      const channel = firstOption.NUMBER().getText();
+      const content = this.translator.handleExpression(ctx.print_options(1)?.expression());
       this.translator.output += `writeToChannel(${channel}, ${content});`;
       return;
     }
     for (let i = 0; i < ctx.print_options().length; i++) {
-      let text = ctx.print_options(i)?.getText();
+      const expression = ctx.print_options(i)?.expression();
 
-      if (!text.includes('"')) {
-        text = ctx.print_options(i)?.expression(0)?.getText().replace(/["']/g, '');
-        this.translator.output += `\n{\nconst printId = 'printDiv${i}_' + '${text}';\nlet printEl = document.getElementById(printId);\nif (!printEl) {\n    printEl = document.createElement('div');\n    printEl.id = printId;\n    printEl.style.position = 'relative';\n    printEl.style.left = '50%';\n    printEl.style.top = '50%';\n    printEl.style.fontSize = '14px';\n    printEl.style.zIndex = '999';\n    document.getElementById('amos-screen').appendChild(printEl);\n}\nprintEl.innerText = ${text};\nprintEl.style.color = getColour(Ink);\n}`;
+      if (expression) {
+        const text = this.translator.handleExpression(expression);
+        this.translator.output += `\n{\nconst printId = 'printDiv${i}_' + String(${text});\nlet printEl = document.getElementById(printId);\nif (!printEl) {\n    printEl = document.createElement('div');\n    printEl.id = printId;\n    printEl.style.position = 'relative';\n    printEl.style.left = '50%';\n    printEl.style.top = '50%';\n    printEl.style.fontSize = '14px';\n    printEl.style.zIndex = '999';\n    document.getElementById('amos-screen').appendChild(printEl);\n}\nprintEl.innerText = ${text};\nprintEl.style.color = getColour(Ink);\n}`;
       }
     }
   }
@@ -58,11 +58,11 @@ export default class DataHandler {
       const name = struct.IDENTIFIER(0)?.getText();
 
       const numberOfDimensions = struct.expression().length;
-      let dimension = struct.expression()[0].getText();
+      let dimension = this.translator.handleExpression(struct.expression(0));
       this.translator.output += `const ${name} = Array(${dimension}).fill(0)`;
 
       for (let i = 1; i < numberOfDimensions; i++) {
-        let dimension = struct.expression()[i].getText();
+        let dimension = this.translator.handleExpression(struct.expression(i));
         this.translator.output += `.map(x => Array(${dimension}).fill(0)`;
       }
       for (let i = 1; i < numberOfDimensions; i++) {
@@ -80,43 +80,22 @@ export default class DataHandler {
     }
 
     // Data values are "contiguous" and should be read one after the other until no more
-    const values = ctx.expression().map((e) => e.getText());
+    const values = ctx
+      .expression()
+      .map((expression) => this.translator.handleExpression(expression));
     const row = `${values.join(', ')}`;
     this.translator.output += `dataMatrix.push(${row});`;
   }
 
   enterRead_statement(ctx) {
-    const targets = ctx.children.filter(
-      (child) => child.getText() !== 'Read' && child.getText() !== ',',
-    );
+    for (const target of ctx.read_target()) {
+      const arrayTarget = target.array_structure();
+      const targetCode = arrayTarget
+        ? this.translator.handleExpression(arrayTarget)
+        : target.IDENTIFIER().getText();
 
-    for (let i = 0; i < targets.length; i++) {
-      const children = targets[i].children;
-
-      for (let j = 0; j < children.length; j++) {
-        const child = children[j];
-        const childName = child.constructor.name;
-
-        // TODO: AMOS should report an error if dataMatrixPointer > dataMatrix.length
-        if (childName === 'Me' || childName === 'Fe') {
-          this.translator.output += child.getText();
-          this.translator.output += ` = dataMatrix[dataMatrixPointer++];`;
-        } else if (childName === 'Array_structureContext') {
-          const name = child.IDENTIFIER(0).getText();
-          this.translator.output += `${name}`;
-
-          const numberOfDimensions = child.expression().length;
-          for (let j = 0; j < numberOfDimensions; j++) {
-            const indexValue = child.expression(j).getText();
-            this.translator.output += `[${indexValue}]`;
-          }
-
-          // Reading dataMatrix should be independent of x and y
-          this.translator.output += ' = dataMatrix[dataMatrixPointer++];';
-        } else {
-          console.warn(`enterRead_statement: unhandled child type "${childName}"`);
-        }
-      }
+      // TODO: AMOS should report an error if dataMatrixPointer > dataMatrix.length
+      this.translator.output += `${targetCode} = dataMatrix[dataMatrixPointer++];`;
     }
   }
 
@@ -124,17 +103,8 @@ export default class DataHandler {
     // This is NOT a context, it's an Array_updateContext, which contains an array_structure
     const struct = ctx.array_structure();
 
-    const name = struct.IDENTIFIER(0)?.getText();
-    const firstIndex = struct.expression(0).getText();
-    this.translator.output += ` ${name}[Math.trunc(${firstIndex})]`;
-    const numberOfDimensions = struct.expression().length;
-    for (let j = 1; j < numberOfDimensions; j++) {
-      const indexValue = struct.expression(j).getText();
-      this.translator.output += `[Math.trunc(${indexValue})]`;
-    }
-
-    const expression = ctx.expression();
-    const arrayValue = expression.getText();
-    this.translator.output += ` = ${arrayValue};`;
+    const arrayTarget = this.translator.handleExpression(struct);
+    const arrayValue = this.translator.handleExpression(ctx.expression());
+    this.translator.output += ` ${arrayTarget} = ${arrayValue};`;
   }
 }

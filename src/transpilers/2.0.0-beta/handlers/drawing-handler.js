@@ -9,10 +9,10 @@ export default class DrawingHandler {
     // Blitter Clear clears a rectangular region on screen
     // Grammar: 'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression COMMA expression 'To' expression COMMA expression)?
     if (ctx.expression().length >= 4) {
-      const x1 = ctx.expression(0)?.getText();
-      const y1 = ctx.expression(1)?.getText();
-      const x2 = ctx.expression(2)?.getText();
-      const y2 = ctx.expression(3)?.getText();
+      const x1 = this.translator.handleExpression(ctx.expression(0));
+      const y1 = this.translator.handleExpression(ctx.expression(1));
+      const x2 = this.translator.handleExpression(ctx.expression(2));
+      const y2 = this.translator.handleExpression(ctx.expression(3));
 
       this.translator.output += `
 // Blitter Clear - remove elements in the region
@@ -48,8 +48,8 @@ export default class DrawingHandler {
   }
 
   enterLoadBankImgToSprite(ctx) {
-    const option = ctx.children[1]?.getText();
-    if (option === 'Off') {
+    const spriteExpression = ctx.expression();
+    if (!spriteExpression) {
       this.translator.output += `
 {
     const screen = document.getElementById('amos-screen');
@@ -60,7 +60,8 @@ export default class DrawingHandler {
 }`;
       return;
     }
-    const spriteNumber = option;
+
+    const spriteNumber = this.translator.handleExpression(spriteExpression);
     const x = ctx.children[3]?.getText();
     const y = ctx.children[5]?.getText();
     const bankImgIndex = ctx.children[7]?.getText();
@@ -78,13 +79,13 @@ export default class DrawingHandler {
       return id;
     }
 
-    let x1 = ctx.expression(0)?.getText();
-    let y1 = ctx.expression(1)?.getText();
-    let x2 = ctx.expression(2)?.getText();
-    let y2 = ctx.expression(3)?.getText();
-    let color = `colorMapping[(${ctx.expression(4)?.getText()})]`;
+    let x1 = this.translator.handleExpression(ctx.expression(0));
+    let y1 = this.translator.handleExpression(ctx.expression(1));
+    let x2 = this.translator.handleExpression(ctx.expression(2));
+    let y2 = this.translator.handleExpression(ctx.expression(3));
+    let color = `colorMapping[(${this.translator.handleExpression(ctx.expression(4))})]`;
     let the_ID = generateRandomID();
-    let index = ctx.expression(5)?.getText();
+    let index = this.translator.handleExpression(ctx.expression(5));
 
     // Calculate the length and angle of the line
 
@@ -115,8 +116,8 @@ if (lineDiv${the_ID}) {
     lineDiv${the_ID}.style.position = 'absolute';
     lineDiv${the_ID}.style.borderRadius = '1px';
     lineDiv${the_ID}.style.borderColor = ${color};
-    lineDiv${the_ID}.style.zIndex = 1000${index};
-    lineDiv${the_ID}.indexPlacer = 1000${index};
+    lineDiv${the_ID}.style.zIndex = 1000 + (${index});
+    lineDiv${the_ID}.indexPlacer = 1000 + (${index});
 } else {
     // If the div doesn't exist, create it
     lineDiv${the_ID} = document.createElement('div');
@@ -131,18 +132,18 @@ if (lineDiv${the_ID}) {
     lineDiv${the_ID}.style.transformOrigin = '0 0'; // Rotate from the starting point
     lineDiv${the_ID}.style.borderRadius = '1px';
     lineDiv${the_ID}.style.borderColor = ${color};
-    lineDiv${the_ID}.style.zIndex = 1000${index};
-    lineDiv${the_ID}.indexPlacer = 1000${index};
+    lineDiv${the_ID}.style.zIndex = 1000 + (${index});
+    lineDiv${the_ID}.indexPlacer = 1000 + (${index});
     document.getElementById('amos-screen').appendChild(lineDiv${the_ID});
 }`;
   }
 
   enterBar(ctx) {
     // AMOS command: Bar X1,Y1 To X2,Y2
-    const x1 = ctx.expression(0).getText();
-    const y1 = ctx.expression(1).getText();
-    const x2 = ctx.expression(2).getText();
-    const y2 = ctx.expression(3).getText();
+    const x1 = this.translator.handleExpression(ctx.expression(0));
+    const y1 = this.translator.handleExpression(ctx.expression(1));
+    const x2 = this.translator.handleExpression(ctx.expression(2));
+    const y2 = this.translator.handleExpression(ctx.expression(3));
 
     const idBar = `"Bar_" + (${x1}) + "_" + (${y1})`;
 
@@ -175,10 +176,10 @@ screenBarDiv.style.zIndex = 10;
   }
 
   enterBox(ctx) {
-    const x1 = ctx.expression(0).getText();
-    const y1 = ctx.expression(1).getText();
-    const x2 = ctx.expression(2).getText();
-    const y2 = ctx.expression(3).getText();
+    const x1 = this.translator.handleExpression(ctx.expression(0));
+    const y1 = this.translator.handleExpression(ctx.expression(1));
+    const x2 = this.translator.handleExpression(ctx.expression(2));
+    const y2 = this.translator.handleExpression(ctx.expression(3));
 
     const boxID = `"Box_" + ${x1} + "_" + ${y1} + "_" + ${x2} + "_" + ${y2}`;
 
@@ -203,9 +204,9 @@ boxDiv.style.zIndex = 10;
   }
 
   enterCircle(ctx) {
-    const x = ctx.expression(0).getText();
-    const y = ctx.expression(1).getText();
-    const r = ctx.expression(2).getText();
+    const x = this.translator.handleExpression(ctx.expression(0));
+    const y = this.translator.handleExpression(ctx.expression(1));
+    const r = this.translator.handleExpression(ctx.expression(2));
     const circleID = `"Circle_" + (${x}) + "_" + (${y}) + "_" + (${r})`;
 
     this.translator.output += `
@@ -233,8 +234,8 @@ circleDiv.style.backgroundColor = getColour(Ink);
   enterText(ctx) {
     const text = (ctx.STRING() || ctx.IDENTIFIER())?.getText();
 
-    const x = ctx.expression(0)?.getText();
-    const y = ctx.expression(1)?.getText();
+    const x = this.translator.handleExpression(ctx.expression(0));
+    const y = this.translator.handleExpression(ctx.expression(1));
 
     const isNumeric = (str) => /^\d+$/.test(str);
     const xValue = isNumeric(x) ? `'${x}px'` : `(${x}) + 'px'`;

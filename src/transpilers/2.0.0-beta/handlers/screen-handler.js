@@ -37,7 +37,7 @@ if (amosScreen) {
 }`;
     } else if (exprs.length === 1) {
       // Case 2: Cls colour (clear entire screen + set background color to specified color index)
-      const color = exprs[0].getText();
+      const color = this.translator.handleExpression(exprs[0]);
       this.translator.output += `
 const amosScreen = document.getElementById('amos-screen');
 if (amosScreen) {
@@ -46,11 +46,11 @@ if (amosScreen) {
 }`;
     } else if (exprs.length >= 5) {
       // Case 3: Cls colour, x1, y1 To x2, y2 (clear rectangular block + fill with color)
-      const color = exprs[0].getText();
-      const x1 = exprs[1].getText();
-      const y1 = exprs[2].getText();
-      const x2 = exprs[3].getText();
-      const y2 = exprs[4].getText();
+      const color = this.translator.handleExpression(exprs[0]);
+      const x1 = this.translator.handleExpression(exprs[1]);
+      const y1 = this.translator.handleExpression(exprs[2]);
+      const x2 = this.translator.handleExpression(exprs[3]);
+      const y2 = this.translator.handleExpression(exprs[4]);
 
       this.translator.output += `
 {
