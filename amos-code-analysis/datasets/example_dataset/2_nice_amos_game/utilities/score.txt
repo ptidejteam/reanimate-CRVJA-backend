@@ -1,0 +1,8 @@
+' Dummy AMOS file for running the amos-code-analysis example: score utility.
+Dim SCORE(2)
+SCORE(0)=100
+Inc SCORE(0)
+Add SCORE(0),10
+Locate 1,1
+Print SCORE(0)
+Wait 5

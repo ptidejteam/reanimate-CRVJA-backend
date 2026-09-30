@@ -1,0 +1,8 @@
+' Dummy AMOS file for running the amos-code-analysis example: display setup.
+Default
+Screen Open 0,640,256,4,Hires
+Palette $000,$FFF,$F00,$0F0
+Paper 0
+Pen 1
+Cls
+Centre "Another AMOS repository"

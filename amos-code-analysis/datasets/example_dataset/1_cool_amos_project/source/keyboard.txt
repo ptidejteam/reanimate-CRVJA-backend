@@ -1,0 +1,6 @@
+' Dummy AMOS file for running the amos-code-analysis example: keyboard input.
+Do
+If Key State(69) Then Print "Left"
+If Key State(78) Then Print "Right"
+Wait Vbl
+Loop

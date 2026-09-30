@@ -1,0 +1,8 @@
+' Dummy AMOS file for running the amos-code-analysis example: shape commands.
+Circle 80,60,20
+Bar 10,10 To 40,30
+Box 50,20 To 90,50
+Draw 0,0 To 100,100
+Plot 15,15
+Ellipse 120,70,20,10
+Wait 10
