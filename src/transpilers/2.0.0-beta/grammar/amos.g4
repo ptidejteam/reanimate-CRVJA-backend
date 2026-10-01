@@ -128,7 +128,7 @@ onGosub:
 // ---- Control flow ----------------------------------------------------------
 
 ifStatement:
-    (IF expression | IF readTarget) comparisonOperator expression (logicalOperator expression comparisonOperator expression)?
+    (IF expression | IF readTarget) comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
     statement*
     ('End' 'if' | elseStatement | END_IF)
     ;
@@ -150,7 +150,7 @@ comparisonOperator:
     ;
 
 logicalOperator:
-    'or' | 'and'
+    OR | AND
     ;
 
 forLoop:
@@ -498,6 +498,8 @@ PROCEDURE: 'Procedure';
 END_PROC: 'End Proc';
 WAIT_KEY: 'Wait Key';
 KEY_STATE: 'Key State';
+AND: [aA][nN][dD]; // case-insensitive: and, And, AND
+OR: [oO][rR]; // case-insensitive: or, Or, OR
 
 // ---- Comments --------------------------------------------------------------
 

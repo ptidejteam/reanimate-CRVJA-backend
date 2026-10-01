@@ -69,6 +69,71 @@ test('if condition with all parenthesized expressions "if (10 + 1) < (11 + 20) a
   expect(normalizedJS).toContain('if (10 + 1 < 11 + 20 && 1 + 1 > 0 - 1) { }');
 });
 
+test('if condition with "or" "if 1 > 0 or 2 < 1"', async () => {
+  const amosBasicCode = `
+    If 1 > 0 or 2 < 1
+    End If
+  `;
+
+  const normalizedJS = await translate(amosBasicCode);
+
+  expect(normalizedJS).toContain('if (1 > 0 || 2 < 1) { }');
+});
+
+test.each([
+  ['And', '&&'],
+  ['AND', '&&'],
+  ['Or', '||'],
+  ['OR', '||'],
+])('logical operator is case-insensitive "if 1 > 0 %s 2 > 1"', async (operator, jsOperator) => {
+  const amosBasicCode = `
+    If 1 > 0 ${operator} 2 > 1
+    End If
+  `;
+
+  const normalizedJS = await translate(amosBasicCode);
+
+  expect(normalizedJS).toContain(`if (1 > 0 ${jsOperator} 2 > 1) { }`);
+});
+
+test('if condition chaining three comparisons "if 1 > 0 and 2 > 1 and 3 > 2"', async () => {
+  const amosBasicCode = `
+    If 1 > 0 and 2 > 1 and 3 > 2
+    End If
+  `;
+
+  const normalizedJS = await translate(amosBasicCode);
+
+  expect(normalizedJS).toContain('if (1 > 0 && 2 > 1 && 3 > 2) { }');
+});
+
+test('"and" binds tighter than "or" "if 1 > 0 or 2 > 1 and 3 > 2"', async () => {
+  const amosBasicCode = `
+    If 1 > 0 or 2 > 1 and 3 > 2
+    End If
+  `;
+
+  const normalizedJS = await translate(amosBasicCode);
+
+  expect(normalizedJS).toContain('if (1 > 0 || (2 > 1 && 3 > 2)) { }');
+});
+
+test('if-else statement with "and" condition', async () => {
+  const amosBasicCode = `
+    If 1 > 0 and 2 > 1
+      Curs Off
+    Else
+      Curs On
+    End If
+  `;
+
+  const normalizedJS = await translate(amosBasicCode);
+
+  expect(normalizedJS).toContain(
+    "if (1 > 0 && 2 > 1) { document.getElementById('amos-screen').style.cursor = 'none'; } else { document.getElementById('amos-screen').style.cursor = 'auto'; }",
+  );
+});
+
 test('if-else statement execution branches', async () => {
   const amosBasicCode = `
     If 1 > 0

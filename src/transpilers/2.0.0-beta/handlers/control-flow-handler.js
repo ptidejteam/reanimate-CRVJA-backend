@@ -74,7 +74,7 @@ export default class ControlFlowHandler {
       if (ctx.children[i].constructor.name == 'ExpressionContext') {
         statement += this.translator.handleExpression(ctx.children[i]);
       } else if (ctx.children[i].constructor.name == 'LogicalOperatorContext') {
-        logicalOperator = ctx.children[i].getText();
+        logicalOperator = ctx.children[i].getText().toLowerCase();
         if (logicalOperator == 'and') {
           statement += ' && ';
         } else if (logicalOperator == 'or') {
