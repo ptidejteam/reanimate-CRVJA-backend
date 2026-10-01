@@ -78,8 +78,8 @@ export default class ExpressionVisitor extends AMOSVisitor {
 
   /**
    * Grammar Rule:
-   * factor: NUMBER | STRING | array_structure | sin_function | cos_function
-   *       | qsin_function | qcos_function | rndFunction | IDENTIFIER
+   * factor: NUMBER | STRING | arrayStructure | sinFunction | cosFunction
+   *       | qsinFunction | qcosFunction | rndFunction | IDENTIFIER
    *       | '(' expression ')' | HEX_NUMBER
    */
   visitFactor(ctx) {
@@ -92,15 +92,15 @@ export default class ExpressionVisitor extends AMOSVisitor {
     }
 
     // Case 2: Array access (e.g. Arr(1, 2))
-    if (ctx.array_structure()) {
-      return this.visit(ctx.array_structure());
+    if (ctx.arrayStructure()) {
+      return this.visit(ctx.arrayStructure());
     }
 
     // Case 3: Math / trig functions
-    if (ctx.sin_function()) return this.visit(ctx.sin_function());
-    if (ctx.cos_function()) return this.visit(ctx.cos_function());
-    if (ctx.qsin_function()) return this.visit(ctx.qsin_function());
-    if (ctx.qcos_function()) return this.visit(ctx.qcos_function());
+    if (ctx.sinFunction()) return this.visit(ctx.sinFunction());
+    if (ctx.cosFunction()) return this.visit(ctx.cosFunction());
+    if (ctx.qsinFunction()) return this.visit(ctx.qsinFunction());
+    if (ctx.qcosFunction()) return this.visit(ctx.qcosFunction());
     if (ctx.rndFunction()) return this.visit(ctx.rndFunction());
 
     // Case 4: Terminal literal (NUMBER, STRING, IDENTIFIER, HEX_NUMBER)
@@ -109,10 +109,10 @@ export default class ExpressionVisitor extends AMOSVisitor {
 
   /**
    * Grammar Rule:
-   * array_structure: IDENTIFIER '(' expression (',' expression)* ')'
+   * arrayStructure: IDENTIFIER '(' expression (',' expression)* ')'
    * Transpiles AMOS array accesses to JavaScript bracket notation with Math.trunc.
    */
-  visitArray_structure(ctx) {
+  visitArrayStructure(ctx) {
     const arrayName = ctx.IDENTIFIER().getText();
     const expressions = ctx.expression();
 
@@ -125,27 +125,27 @@ export default class ExpressionVisitor extends AMOSVisitor {
 
   /**
    * Grammar Rule:
-   * sin_function: 'Sin' '(' (NUMBER | IDENTIFIER | expression) ')'
+   * sinFunction: 'Sin' '(' (NUMBER | IDENTIFIER | expression) ')'
    */
-  visitSin_function(ctx) {
+  visitSinFunction(ctx) {
     const arg = this._extractFunctionArg(ctx);
     return `Math.sin(${arg})`;
   }
 
   /**
    * Grammar Rule:
-   * cos_function: 'Cos' '(' (NUMBER | IDENTIFIER | expression) ')'
+   * cosFunction: 'Cos' '(' (NUMBER | IDENTIFIER | expression) ')'
    */
-  visitCos_function(ctx) {
+  visitCosFunction(ctx) {
     const arg = this._extractFunctionArg(ctx);
     return `Math.cos(${arg})`;
   }
 
   /**
    * Grammar Rule:
-   * qsin_function: 'Qsin' '(' expression ',' expression ')'
+   * qsinFunction: 'Qsin' '(' expression ',' expression ')'
    */
-  visitQsin_function(ctx) {
+  visitQsinFunction(ctx) {
     const expressions = ctx.expression();
     const arg1 = this.visit(expressions[0]);
     const arg2 = this.visit(expressions[1]);
@@ -154,9 +154,9 @@ export default class ExpressionVisitor extends AMOSVisitor {
 
   /**
    * Grammar Rule:
-   * qcos_function: 'Qcos' '(' expression ',' expression ')'
+   * qcosFunction: 'Qcos' '(' expression ',' expression ')'
    */
-  visitQcos_function(ctx) {
+  visitQcosFunction(ctx) {
     const expressions = ctx.expression();
     const arg1 = this.visit(expressions[0]);
     const arg2 = this.visit(expressions[1]);

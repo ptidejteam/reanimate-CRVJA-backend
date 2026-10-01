@@ -3,8 +3,8 @@ export default class ControlFlowHandler {
     this.translator = translator;
   }
 
-  enterWhile_wend(ctx) {
-    let leftExpression = this.translator.handleExpression(ctx.current_Key_State(0)?.expression(0));
+  enterWhileWend(ctx) {
+    let leftExpression = this.translator.handleExpression(ctx.keyStateFunction(0)?.expression(0));
     if (!leftExpression) return;
 
     // Replace all occurrences of $xx with decimal equivalents
@@ -16,34 +16,34 @@ export default class ControlFlowHandler {
     this.translator.output += `\nif (currentPressedKey === keyMapping[${leftExpression}]) {`;
   }
 
-  exitWhile_wend(ctx) {
+  exitWhileWend(ctx) {
     this.translator.output += '}';
   }
 
-  enterWait_key(ctx) {
+  enterWait(ctx) {
     const waitTicks = ctx.NUMBER().getText();
     const ms = parseInt(waitTicks) * 20; // AMOS = ~50fps
 
     this.translator.output += `await new Promise(r => setTimeout(r, ${ms}));`;
   }
 
-  enterDo_loop(ctx) {
+  enterDoLoop(ctx) {
     this.translator.output += 'while(true) {';
   }
 
-  exitDo_loop(ctx) {
+  exitDoLoop(ctx) {
     this.translator.output += 'await new Promise(r => setTimeout(r, 16));}';
   }
 
-  enterRepeat_key(ctx) {
+  enterRepeatUntil(ctx) {
     this.translator.output += 'setInterval(() => { currentTimer = Date.now(); Timer++;';
   }
 
-  exitRepeat_key(ctx) {
+  exitRepeatUntil(ctx) {
     this.translator.output += 'Timer = 9; }, 16);';
   }
 
-  enterFor_loop(ctx) {
+  enterForLoop(ctx) {
     let variable = ctx.IDENTIFIER(0).getText();
     let start = this.translator.handleExpression(ctx.expression(0));
     let end = this.translator.handleExpression(ctx.expression(1));
@@ -61,11 +61,11 @@ export default class ControlFlowHandler {
     this.translator.output += `for (${variable} = ${start}; ${variable} <= ${end}; ${variable}++) {`;
   }
 
-  exitFor_loop(ctx) {
+  exitForLoop(ctx) {
     this.translator.output += '}';
   }
 
-  enterIf_statement(ctx) {
+  enterIfStatement(ctx) {
     let statement = '';
     let logicalOperator = '';
     let comparator = '';
@@ -73,7 +73,7 @@ export default class ControlFlowHandler {
     for (let i = 0; i < ctx.children.length; i++) {
       if (ctx.children[i].constructor.name == 'ExpressionContext') {
         statement += this.translator.handleExpression(ctx.children[i]);
-      } else if (ctx.children[i].constructor.name == 'Or_andContext') {
+      } else if (ctx.children[i].constructor.name == 'LogicalOperatorContext') {
         logicalOperator = ctx.children[i].getText();
         if (logicalOperator == 'and') {
           statement += ' && ';
@@ -82,7 +82,7 @@ export default class ControlFlowHandler {
         } else {
           console.log('Unrecognized logicalOperator in IF Statement');
         }
-      } else if (ctx.children[i].constructor.name == 'Expressions_comparatorsContext') {
+      } else if (ctx.children[i].constructor.name == 'ComparisonOperatorContext') {
         comparator = ctx.children[i].getText();
         // Special cases for = and <>
         if (comparator === '=') {
@@ -98,13 +98,13 @@ export default class ControlFlowHandler {
     this.translator.output += `if (${statement}) {`;
   }
 
-  exitIf_statement(ctx) {
+  exitIfStatement(ctx) {
     this.translator.output += '}';
   }
 
   // TODO: verify open/close brackets
-  enterIf_statement_key_state(ctx) {
-    let leftExpression = this.translator.handleExpression(ctx.current_Key_State(0)?.expression(0));
+  enterIfKeyStateStatement(ctx) {
+    let leftExpression = this.translator.handleExpression(ctx.keyStateFunction(0)?.expression(0));
 
     if (leftExpression.includes('$')) {
       // Extract the hexadecimal value from the expression
@@ -128,15 +128,15 @@ export default class ControlFlowHandler {
     this.translator.output += `if (currentPressedKey === ${leftExpression}]) {`;
   }
 
-  exitIf_statement_key_state(ctx) {
+  exitIfKeyStateStatement(ctx) {
     this.translator.output += '}';
   }
 
-  enterElse_statement(ctx) {
+  enterElseStatement(ctx) {
     this.translator.output += '} else {';
   }
 
-  exitElse_statement(ctx) {
+  exitElseStatement(ctx) {
     this.translator.output += '';
   }
 }

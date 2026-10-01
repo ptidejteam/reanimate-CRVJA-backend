@@ -72,8 +72,8 @@ describe('AMOS instruction counting', () => {
       { COMMAND: 'LOAD IFF', CATEGORY: 'Instruction', COUNT: 0 },
     ];
 
-    // The current program rule does not include load_iff.
-    const analyser = analyse('Load Iff FileName 1', rows, 'load_iff');
+    // The current program rule does not include loadIff.
+    const analyser = analyse('Load Iff FileName 1', rows, 'loadIff');
 
     expect(analyser.summaryTable.map(row => row.COUNT)).toEqual([0, 1]);
   });

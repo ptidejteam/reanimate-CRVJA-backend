@@ -36,10 +36,6 @@ class AMOSAnalyser extends AMOSListener {
     }
   }
 
-  enterScreen_open() {
-    this.screenOpenCount++;
-    console.log(this.screenOpenCount);
-  }
 }
 
 export default AMOSAnalyser;

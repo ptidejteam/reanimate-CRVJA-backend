@@ -5,7 +5,7 @@ export default class ScreenHandler {
     this.translator = translator;
   }
 
-  enterScreen_open(ctx) {
+  enterScreenOpen(ctx) {
     const width = ctx.children[3]?.getText();
     const height = ctx.children[5]?.getText();
     const color = ctx.children[7]?.getText();
@@ -83,11 +83,11 @@ if (amosScreen) {
     }
   }
 
-  enterCurs_off(ctx) {
+  enterCursOff(ctx) {
     this.translator.output += "document.getElementById('amos-screen').style.cursor = 'none';";
   }
 
-  enterCurs_on(ctx) {
+  enterCursOn(ctx) {
     this.translator.output += "document.getElementById('amos-screen').style.cursor = 'auto';";
   }
 

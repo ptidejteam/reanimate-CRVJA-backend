@@ -3,7 +3,7 @@ export default class SoundHandler {
     this.translator = translator;
   }
 
-  enterPlay_sound(ctx) {
+  enterPlaySound(ctx) {
     const soundIndex = ctx.expression()
       ? this.translator.handleExpression(ctx.expression())
       : ctx.children[1]?.getText();

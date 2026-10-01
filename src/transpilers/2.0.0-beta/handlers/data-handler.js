@@ -3,21 +3,21 @@ export default class DataHandler {
     this.translator = translator;
   }
 
-  enterOpen_out_readfile(ctx) {
+  enterOpenOut(ctx) {
     const channel = ctx.children[2]?.getText();
     const fileName = ctx.children[4]?.getText();
 
     this.translator.output += `openFile('${fileName}', ${channel}, 'r');`;
   }
 
-  enterOpen_in_writefile(ctx) {
+  enterOpenIn(ctx) {
     const channel = ctx.children[2]?.getText();
     const fileName = ctx.children[4]?.getText();
 
     this.translator.output += `openFile('${fileName}', ${channel}, 'w');`;
   }
 
-  enterInput_variable(ctx) {
+  enterInputVariable(ctx) {
     let channel = ctx.children[1]?.getText() || '';
     if (ctx.children[2]) channel += ctx.children[2].getText();
 
@@ -27,23 +27,23 @@ export default class DataHandler {
     this.translator.output += `\nlet ${variable} = '';\nreadFromChannel(${channel}, (data) => {\n    ${variable} = data;\n});`;
   }
 
-  enterClose_file(ctx) {
+  enterCloseFile(ctx) {
     const channel = ctx.children[1]?.getText();
 
     this.translator.output += `closeChannel(${channel});`;
   }
 
-  enterPrint_something(ctx) {
-    const firstOption = ctx.print_options(0);
-    if (firstOption.HASHTAG()) {
+  enterPrintStatement(ctx) {
+    const firstOption = ctx.printItem(0);
+    if (firstOption.HASH()) {
       /* WRITE TO FILE */
       const channel = firstOption.NUMBER().getText();
-      const content = this.translator.handleExpression(ctx.print_options(1)?.expression());
+      const content = this.translator.handleExpression(ctx.printItem(1)?.expression());
       this.translator.output += `writeToChannel(${channel}, ${content});`;
       return;
     }
-    for (let i = 0; i < ctx.print_options().length; i++) {
-      const expression = ctx.print_options(i)?.expression();
+    for (let i = 0; i < ctx.printItem().length; i++) {
+      const expression = ctx.printItem(i)?.expression();
 
       if (expression) {
         const text = this.translator.handleExpression(expression);
@@ -52,9 +52,9 @@ export default class DataHandler {
     }
   }
 
-  enterArray_create(ctx) {
-    for (let i = 0; i < ctx.array_structure().length; i++) {
-      const struct = ctx.array_structure(i);
+  enterArrayDeclaration(ctx) {
+    for (let i = 0; i < ctx.arrayStructure().length; i++) {
+      const struct = ctx.arrayStructure(i);
       const name = struct.IDENTIFIER(0)?.getText();
 
       const numberOfDimensions = struct.expression().length;
@@ -73,7 +73,7 @@ export default class DataHandler {
     }
   }
 
-  enterData_statement(ctx) {
+  enterDataStatement(ctx) {
     if (!this.translator.hasDataMatrix) {
       this.translator.hasDataMatrix = true;
       this.translator.output += 'const dataMatrix = [];';
@@ -87,9 +87,9 @@ export default class DataHandler {
     this.translator.output += `dataMatrix.push(${row});`;
   }
 
-  enterRead_statement(ctx) {
-    for (const target of ctx.read_target()) {
-      const arrayTarget = target.array_structure();
+  enterReadStatement(ctx) {
+    for (const target of ctx.readTarget()) {
+      const arrayTarget = target.arrayStructure();
       const targetCode = arrayTarget
         ? this.translator.handleExpression(arrayTarget)
         : target.IDENTIFIER().getText();
@@ -99,9 +99,9 @@ export default class DataHandler {
     }
   }
 
-  enterArray_update(ctx) {
-    // This is NOT a context, it's an Array_updateContext, which contains an array_structure
-    const struct = ctx.array_structure();
+  enterArrayAssignment(ctx) {
+    // This is NOT a context, it's an ArrayAssignmentContext, which contains an arrayStructure
+    const struct = ctx.arrayStructure();
 
     const arrayTarget = this.translator.handleExpression(struct);
     const arrayValue = this.translator.handleExpression(ctx.expression());

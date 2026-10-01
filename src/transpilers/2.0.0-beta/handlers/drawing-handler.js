@@ -3,11 +3,11 @@ export default class DrawingHandler {
     this.translator = translator;
   }
 
-  enterBlitter_fill(ctx) {}
+  enterBlitterFill(ctx) {}
 
-  enterBlitter_clear(ctx) {
+  enterBlitterClear(ctx) {
     // Blitter Clear clears a rectangular region on screen
-    // Grammar: 'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression COMMA expression 'To' expression COMMA expression)?
+    // Grammar: 'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression COMMA expression TO expression COMMA expression)?
     if (ctx.expression().length >= 4) {
       const x1 = this.translator.handleExpression(ctx.expression(0));
       const y1 = this.translator.handleExpression(ctx.expression(1));
@@ -47,7 +47,7 @@ export default class DrawingHandler {
     }
   }
 
-  enterLoadBankImgToSprite(ctx) {
+  enterSprite(ctx) {
     const spriteExpression = ctx.expression();
     if (!spriteExpression) {
       this.translator.output += `
@@ -68,7 +68,7 @@ export default class DrawingHandler {
     this.translator.output += `renderSprite(${spriteNumber}, ${x}, ${y}, ${bankImgIndex});`;
   }
 
-  enterTurbo_draw(ctx) {
+  enterTurboDraw(ctx) {
     function generateRandomID() {
       let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let id = '';

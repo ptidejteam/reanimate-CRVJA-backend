@@ -82,8 +82,8 @@ class AmosTranslator extends AMOSListener {
   enterGlobal(ctx) {
     this.scopeHandler.enterGlobal(ctx);
   }
-  enterVariable_starter(ctx) {
-    this.scopeHandler.enterVariable_starter(ctx);
+  enterVariableAssignment(ctx) {
+    this.scopeHandler.enterVariableAssignment(ctx);
   }
   enterAdd(ctx) {
     this.scopeHandler.enterAdd(ctx);
@@ -94,22 +94,22 @@ class AmosTranslator extends AMOSListener {
   exitProcedure(ctx) {
     this.scopeHandler.exitProcedure(ctx);
   }
-  enterProcedure_call(ctx) {
-    this.scopeHandler.enterProcedure_call(ctx);
+  enterProcedureCall(ctx) {
+    this.scopeHandler.enterProcedureCall(ctx);
   }
 
   // ScreenHandler
-  enterScreen_open(ctx) {
-    this.screenHandler.enterScreen_open(ctx);
+  enterScreenOpen(ctx) {
+    this.screenHandler.enterScreenOpen(ctx);
   }
   enterCls(ctx) {
     this.screenHandler.enterCls(ctx);
   }
-  enterCurs_off(ctx) {
-    this.screenHandler.enterCurs_off(ctx);
+  enterCursOff(ctx) {
+    this.screenHandler.enterCursOff(ctx);
   }
-  enterCurs_on(ctx) {
-    this.screenHandler.enterCurs_on(ctx);
+  enterCursOn(ctx) {
+    this.screenHandler.enterCursOn(ctx);
   }
   enterPalette(ctx) {
     this.screenHandler.enterPalette(ctx);
@@ -137,101 +137,101 @@ class AmosTranslator extends AMOSListener {
   enterText(ctx) {
     this.drawingHandler.enterText(ctx);
   }
-  enterTurbo_draw(ctx) {
-    this.drawingHandler.enterTurbo_draw(ctx);
+  enterTurboDraw(ctx) {
+    this.drawingHandler.enterTurboDraw(ctx);
   }
-  enterBlitter_fill(ctx) {
-    this.drawingHandler.enterBlitter_fill(ctx);
+  enterBlitterFill(ctx) {
+    this.drawingHandler.enterBlitterFill(ctx);
   }
-  enterBlitter_clear(ctx) {
-    this.drawingHandler.enterBlitter_clear(ctx);
+  enterBlitterClear(ctx) {
+    this.drawingHandler.enterBlitterClear(ctx);
   }
   enterLoadBank(ctx) {
     this.drawingHandler.enterLoadBank(ctx);
   }
-  enterLoadBankImgToSprite(ctx) {
-    this.drawingHandler.enterLoadBankImgToSprite(ctx);
+  enterSprite(ctx) {
+    this.drawingHandler.enterSprite(ctx);
   }
 
   // ControlFlowHandler
-  enterIf_statement(ctx) {
-    this.controlFlowHandler.enterIf_statement(ctx);
+  enterIfStatement(ctx) {
+    this.controlFlowHandler.enterIfStatement(ctx);
   }
-  exitIf_statement(ctx) {
-    this.controlFlowHandler.exitIf_statement(ctx);
+  exitIfStatement(ctx) {
+    this.controlFlowHandler.exitIfStatement(ctx);
   }
-  enterElse_statement(ctx) {
-    this.controlFlowHandler.enterElse_statement(ctx);
+  enterElseStatement(ctx) {
+    this.controlFlowHandler.enterElseStatement(ctx);
   }
-  exitElse_statement(ctx) {
-    this.controlFlowHandler.exitElse_statement(ctx);
+  exitElseStatement(ctx) {
+    this.controlFlowHandler.exitElseStatement(ctx);
   }
-  enterIf_statement_key_state(ctx) {
-    this.controlFlowHandler.enterIf_statement_key_state(ctx);
+  enterIfKeyStateStatement(ctx) {
+    this.controlFlowHandler.enterIfKeyStateStatement(ctx);
   }
-  exitIf_statement_key_state(ctx) {
-    this.controlFlowHandler.exitIf_statement_key_state(ctx);
+  exitIfKeyStateStatement(ctx) {
+    this.controlFlowHandler.exitIfKeyStateStatement(ctx);
   }
-  enterFor_loop(ctx) {
-    this.controlFlowHandler.enterFor_loop(ctx);
+  enterForLoop(ctx) {
+    this.controlFlowHandler.enterForLoop(ctx);
   }
-  exitFor_loop(ctx) {
-    this.controlFlowHandler.exitFor_loop(ctx);
+  exitForLoop(ctx) {
+    this.controlFlowHandler.exitForLoop(ctx);
   }
-  enterDo_loop(ctx) {
-    this.controlFlowHandler.enterDo_loop(ctx);
+  enterDoLoop(ctx) {
+    this.controlFlowHandler.enterDoLoop(ctx);
   }
-  exitDo_loop(ctx) {
-    this.controlFlowHandler.exitDo_loop(ctx);
+  exitDoLoop(ctx) {
+    this.controlFlowHandler.exitDoLoop(ctx);
   }
-  enterWhile_wend(ctx) {
-    this.controlFlowHandler.enterWhile_wend(ctx);
+  enterWhileWend(ctx) {
+    this.controlFlowHandler.enterWhileWend(ctx);
   }
-  exitWhile_wend(ctx) {
-    this.controlFlowHandler.exitWhile_wend(ctx);
+  exitWhileWend(ctx) {
+    this.controlFlowHandler.exitWhileWend(ctx);
   }
-  enterRepeat_key(ctx) {
-    this.controlFlowHandler.enterRepeat_key(ctx);
+  enterRepeatUntil(ctx) {
+    this.controlFlowHandler.enterRepeatUntil(ctx);
   }
-  exitRepeat_key(ctx) {
-    this.controlFlowHandler.exitRepeat_key(ctx);
+  exitRepeatUntil(ctx) {
+    this.controlFlowHandler.exitRepeatUntil(ctx);
   }
-  enterWait_key(ctx) {
-    this.controlFlowHandler.enterWait_key(ctx);
+  enterWait(ctx) {
+    this.controlFlowHandler.enterWait(ctx);
   }
 
   // SoundHandler
-  enterPlay_sound(ctx) {
-    this.soundHandler.enterPlay_sound(ctx);
+  enterPlaySound(ctx) {
+    this.soundHandler.enterPlaySound(ctx);
   }
 
   // DataHandler
-  enterOpen_out_readfile(ctx) {
-    this.dataHandler.enterOpen_out_readfile(ctx);
+  enterOpenOut(ctx) {
+    this.dataHandler.enterOpenOut(ctx);
   }
-  enterOpen_in_writefile(ctx) {
-    this.dataHandler.enterOpen_in_writefile(ctx);
+  enterOpenIn(ctx) {
+    this.dataHandler.enterOpenIn(ctx);
   }
-  enterInput_variable(ctx) {
-    this.dataHandler.enterInput_variable(ctx);
+  enterInputVariable(ctx) {
+    this.dataHandler.enterInputVariable(ctx);
   }
-  enterClose_file(ctx) {
-    this.dataHandler.enterClose_file(ctx);
+  enterCloseFile(ctx) {
+    this.dataHandler.enterCloseFile(ctx);
   }
-  enterPrint_something(ctx) {
-    this.dataHandler.enterPrint_something(ctx);
+  enterPrintStatement(ctx) {
+    this.dataHandler.enterPrintStatement(ctx);
   }
-  enterData_statement(ctx) {
-    this.dataHandler.enterData_statement(ctx);
+  enterDataStatement(ctx) {
+    this.dataHandler.enterDataStatement(ctx);
   }
-  enterRead_statement(ctx) {
-    this.dataHandler.enterRead_statement(ctx);
+  enterReadStatement(ctx) {
+    this.dataHandler.enterReadStatement(ctx);
   }
-  enterArray_create(ctx) {
-    this.dataHandler.enterArray_create(ctx);
+  enterArrayDeclaration(ctx) {
+    this.dataHandler.enterArrayDeclaration(ctx);
   }
-  enterArray_update(ctx) {
-    this.dataHandler.enterArray_update(ctx);
+  enterArrayAssignment(ctx) {
+    this.dataHandler.enterArrayAssignment(ctx);
   }
 
   // ExpressionHandler

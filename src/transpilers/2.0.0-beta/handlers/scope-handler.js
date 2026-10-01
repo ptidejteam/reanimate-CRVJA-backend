@@ -31,12 +31,12 @@ export default class ScopeHandler {
     for (let i = 0; i < ctx.IDENTIFIER().length; i++) {
       this.translator.globalVariablesSet.add(ctx.IDENTIFIER(i).getText());
     }
-    for (let i = 0; i < ctx.array_structure().length; i++) {
-      this.translator.globalVariablesSet.add(ctx.array_structure(i).IDENTIFIER(0).getText());
+    for (let i = 0; i < ctx.arrayStructure().length; i++) {
+      this.translator.globalVariablesSet.add(ctx.arrayStructure(i).IDENTIFIER(0).getText());
     }
   }
 
-  enterVariable_starter(ctx) {
+  enterVariableAssignment(ctx) {
     let name = ctx.children[0].getText();
     let value = this.translator.handleExpression(ctx.children[2]);
 
@@ -148,7 +148,7 @@ ${localDeclarations}`;
     this.translator.output += '}';
   }
 
-  enterProcedure_call(ctx) {
+  enterProcedureCall(ctx) {
     const name = ctx.IDENTIFIER().getText();
     let callCode = '';
 
