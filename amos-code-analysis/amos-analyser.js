@@ -4,7 +4,6 @@ import AMOSLexer from '#root/src/transpilers/2.0.0-beta/grammar/generated/AMOSLe
 class AMOSAnalyser extends AMOSListener {
   constructor(summaryTable) {
     super();
-    this.screenOpenCount = 0;
     this.summaryTable = summaryTable.filter(row => row.CATEGORY === 'Instruction');
     this.rowsByCommand = new Map();
 
