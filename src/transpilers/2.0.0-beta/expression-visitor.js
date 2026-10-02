@@ -1,8 +1,12 @@
-import AMOSVisitor from '../grammar/generated/AMOSVisitor.js';
+import AMOSVisitor from './grammar/generated/AMOSVisitor.js';
 
 /**
  * ExpressionVisitor transpiles AMOS expression AST nodes into JavaScript
  * expression strings using ANTLR's standard Visitor pattern.
+ *
+ * It handles the expression core itself (operators, parentheses, arrays).
+ * AMOS functions (Sin, Rnd, ...) are forwarded to their category file in
+ * commands/, like the translator does for instructions and structures.
  */
 export default class ExpressionVisitor extends AMOSVisitor {
   constructor(translator) {
@@ -96,7 +100,7 @@ export default class ExpressionVisitor extends AMOSVisitor {
       return this.visit(ctx.arrayStructure());
     }
 
-    // Case 3: Math / trig functions
+    // Case 3: AMOS functions (forwarded to commands/ below)
     if (ctx.sinFunction()) return this.visit(ctx.sinFunction());
     if (ctx.cosFunction()) return this.visit(ctx.cosFunction());
     if (ctx.qsinFunction()) return this.visit(ctx.qsinFunction());
@@ -123,67 +127,32 @@ export default class ExpressionVisitor extends AMOSVisitor {
     return `${arrayName}${formattedIndices}`;
   }
 
-  /**
-   * Grammar Rule:
-   * sinFunction: 'Sin' '(' (NUMBER | IDENTIFIER | expression) ')'
-   */
-  visitSinFunction(ctx) {
-    const arg = this._extractFunctionArg(ctx);
-    return `Math.sin(${arg})`;
-  }
+  // ---- Functions (commands/functions.js) -----------------------------------
 
-  /**
-   * Grammar Rule:
-   * cosFunction: 'Cos' '(' (NUMBER | IDENTIFIER | expression) ')'
-   */
+  // COS
   visitCosFunction(ctx) {
-    const arg = this._extractFunctionArg(ctx);
-    return `Math.cos(${arg})`;
+    return this.translator.functions.visitCosFunction(ctx);
   }
 
-  /**
-   * Grammar Rule:
-   * qsinFunction: 'Qsin' '(' expression ',' expression ')'
-   */
-  visitQsinFunction(ctx) {
-    const expressions = ctx.expression();
-    const arg1 = this.visit(expressions[0]);
-    const arg2 = this.visit(expressions[1]);
-    return `Math.sin(${arg1}, ${arg2})`;
-  }
-
-  /**
-   * Grammar Rule:
-   * qcosFunction: 'Qcos' '(' expression ',' expression ')'
-   */
-  visitQcosFunction(ctx) {
-    const expressions = ctx.expression();
-    const arg1 = this.visit(expressions[0]);
-    const arg2 = this.visit(expressions[1]);
-    return `Math.cos(${arg1}, ${arg2})`;
-  }
-
-  /**
-   * Grammar Rule:
-   * rndFunction: 'Rnd' '(' (NUMBER | IDENTIFIER | expression) ')'
-   */
+  // RND
   visitRndFunction(ctx) {
-    const arg = this._extractFunctionArg(ctx);
-    return `Math.floor(Math.random() * (${arg} + 1))`;
+    return this.translator.functions.visitRndFunction(ctx);
   }
 
-  /**
-   * Extracts the argument from math function rules that use
-   * (NUMBER | IDENTIFIER | expression) — prefers `expression()` if present,
-   * otherwise falls back to the raw token text (NUMBER or IDENTIFIER).
-   */
-  _extractFunctionArg(ctx) {
-    if (ctx.expression()) {
-      return this.visit(ctx.expression());
-    }
-    // Fallback for bare NUMBER or IDENTIFIER alternatives
-    if (ctx.NUMBER()) return ctx.NUMBER().getText();
-    if (ctx.IDENTIFIER()) return ctx.IDENTIFIER().getText();
-    return ctx.getText();
+  // SIN
+  visitSinFunction(ctx) {
+    return this.translator.functions.visitSinFunction(ctx);
+  }
+
+  // ---- AMCAF extension (commands/amcaf.js) ---------------------------------
+
+  // QCOS
+  visitQcosFunction(ctx) {
+    return this.translator.amcaf.visitQcosFunction(ctx);
+  }
+
+  // QSIN
+  visitQsinFunction(ctx) {
+    return this.translator.amcaf.visitQsinFunction(ctx);
   }
 }

@@ -18,158 +18,8 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#procedure.
-	visitProcedure(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#procedureCall.
-	visitProcedureCall(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#global.
-	visitGlobal(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#variableAssignment.
-	visitVariableAssignment(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
 	// Visit a parse tree produced by AMOSParser#add.
 	visitAdd(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#label.
-	visitLabel(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#gosub.
-	visitGosub(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#gotoLabel.
-	visitGotoLabel(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#onGosub.
-	visitOnGosub(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#ifStatement.
-	visitIfStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#ifKeyStateStatement.
-	visitIfKeyStateStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#elseStatement.
-	visitElseStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#comparisonOperator.
-	visitComparisonOperator(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#logicalOperator.
-	visitLogicalOperator(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#forLoop.
-	visitForLoop(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#doLoop.
-	visitDoLoop(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#whileWend.
-	visitWhileWend(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#repeatUntil.
-	visitRepeatUntil(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#wait.
-	visitWait(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#waitKey.
-	visitWaitKey(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#waitVbl.
-	visitWaitVbl(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#screenOpen.
-	visitScreenOpen(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#chooseScreen.
-	visitChooseScreen(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#screenOffset.
-	visitScreenOffset(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#screenSwap.
-	visitScreenSwap(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#doubleBuffer.
-	visitDoubleBuffer(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -180,14 +30,44 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#setBuffer.
-	visitSetBuffer(ctx) {
+	// Visit a parse tree produced by AMOSParser#bar.
+	visitBar(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#loadIff.
-	visitLoadIff(ctx) {
+	// Visit a parse tree produced by AMOSParser#bobOff.
+	visitBobOff(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#bobUpdateOn.
+	visitBobUpdateOn(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#box.
+	visitBox(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#circle.
+	visitCircle(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#clearKey.
+	visitClearKey(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#closeFile.
+	visitCloseFile(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -210,26 +90,20 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#palette.
-	visitPalette(ctx) {
+	// Visit a parse tree produced by AMOSParser#degree.
+	visitDegree(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#ink.
-	visitInk(ctx) {
+	// Visit a parse tree produced by AMOSParser#arrayDeclaration.
+	visitArrayDeclaration(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#pen.
-	visitPen(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#paper.
-	visitPaper(ctx) {
+	// Visit a parse tree produced by AMOSParser#doubleBuffer.
+	visitDoubleBuffer(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -246,116 +120,14 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#setRainbow.
-	visitSetRainbow(ctx) {
+	// Visit a parse tree produced by AMOSParser#hide.
+	visitHide(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#rainbow.
-	visitRainbow(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#bar.
-	visitBar(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#box.
-	visitBox(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#circle.
-	visitCircle(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#text.
-	visitText(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#locate.
-	visitLocate(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#turboDraw.
-	visitTurboDraw(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#blitterCopy.
-	visitBlitterCopy(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#blitterFill.
-	visitBlitterFill(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#blitterClear.
-	visitBlitterClear(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#loadBank.
-	visitLoadBank(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#sprite.
-	visitSprite(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#bobOff.
-	visitBobOff(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#bobUpdateOn.
-	visitBobUpdateOn(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#playSound.
-	visitPlaySound(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#samBank.
-	visitSamBank(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#samLoopOff.
-	visitSamLoopOff(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#ledOff.
-	visitLedOff(ctx) {
+	// Visit a parse tree produced by AMOSParser#ink.
+	visitInk(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -366,44 +138,62 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#clearKey.
-	visitClearKey(ctx) {
+	// Visit a parse tree produced by AMOSParser#ledOff.
+	visitLedOff(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#hide.
-	visitHide(ctx) {
+	// Visit a parse tree produced by AMOSParser#loadBank.
+	visitLoadBank(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#arrayDeclaration.
-	visitArrayDeclaration(ctx) {
+	// Visit a parse tree produced by AMOSParser#loadIff.
+	visitLoadIff(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#arrayAssignment.
-	visitArrayAssignment(ctx) {
+	// Visit a parse tree produced by AMOSParser#locate.
+	visitLocate(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#dataStatement.
-	visitDataStatement(ctx) {
+	// Visit a parse tree produced by AMOSParser#openIn.
+	visitOpenIn(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#readStatement.
-	visitReadStatement(ctx) {
+	// Visit a parse tree produced by AMOSParser#openOut.
+	visitOpenOut(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#readTarget.
-	visitReadTarget(ctx) {
+	// Visit a parse tree produced by AMOSParser#palette.
+	visitPalette(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#paper.
+	visitPaper(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#pen.
+	visitPen(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#playSound.
+	visitPlaySound(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -420,26 +210,284 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#openOut.
-	visitOpenOut(ctx) {
+	// Visit a parse tree produced by AMOSParser#rainbow.
+	visitRainbow(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#openIn.
-	visitOpenIn(ctx) {
+	// Visit a parse tree produced by AMOSParser#samBank.
+	visitSamBank(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by AMOSParser#closeFile.
-	visitCloseFile(ctx) {
+	// Visit a parse tree produced by AMOSParser#samLoopOff.
+	visitSamLoopOff(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#chooseScreen.
+	visitChooseScreen(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#screenOffset.
+	visitScreenOffset(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#screenOpen.
+	visitScreenOpen(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#screenSwap.
+	visitScreenSwap(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#setBuffer.
+	visitSetBuffer(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#setRainbow.
+	visitSetRainbow(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#sprite.
+	visitSprite(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#text.
+	visitText(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#wait.
+	visitWait(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#waitKey.
+	visitWaitKey(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#waitVbl.
+	visitWaitVbl(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#dataStatement.
+	visitDataStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#doLoop.
+	visitDoLoop(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#elseStatement.
+	visitElseStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#forLoop.
+	visitForLoop(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#global.
+	visitGlobal(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#gosub.
+	visitGosub(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#gotoLabel.
+	visitGotoLabel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#ifStatement.
+	visitIfStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#comparisonOperator.
+	visitComparisonOperator(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#logicalOperator.
+	visitLogicalOperator(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#ifKeyStateStatement.
+	visitIfKeyStateStatement(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
 	// Visit a parse tree produced by AMOSParser#inputVariable.
 	visitInputVariable(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#onGosub.
+	visitOnGosub(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#procedureCall.
+	visitProcedureCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#procedure.
+	visitProcedure(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#readStatement.
+	visitReadStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#readTarget.
+	visitReadTarget(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#repeatUntil.
+	visitRepeatUntil(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#whileWend.
+	visitWhileWend(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#arrayAssignment.
+	visitArrayAssignment(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#label.
+	visitLabel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#variableAssignment.
+	visitVariableAssignment(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#btstFunction.
+	visitBtstFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#cosFunction.
+	visitCosFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#keyStateFunction.
+	visitKeyStateFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#rndFunction.
+	visitRndFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#sinFunction.
+	visitSinFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#blitterClear.
+	visitBlitterClear(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#blitterCopy.
+	visitBlitterCopy(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#blitterFill.
+	visitBlitterFill(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#qcosFunction.
+	visitQcosFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#qsinFunction.
+	visitQsinFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#turboDraw.
+	visitTurboDraw(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -470,54 +518,6 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by AMOSParser#arrayStructure.
 	visitArrayStructure(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#sinFunction.
-	visitSinFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#cosFunction.
-	visitCosFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#qsinFunction.
-	visitQsinFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#qcosFunction.
-	visitQcosFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#rndFunction.
-	visitRndFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#btstFunction.
-	visitBtstFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#keyStateFunction.
-	visitKeyStateFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by AMOSParser#degree.
-	visitDegree(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

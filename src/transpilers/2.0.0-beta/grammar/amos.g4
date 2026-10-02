@@ -3,6 +3,9 @@ grammar AMOS;
 // ============================================================================
 // Parser rules
 // ============================================================================
+// Rules are grouped by the CATEGORY of the AMOS command (tracking spreadsheet /
+// https://amospromanual.dev/99-appendix-g-command-index.html) and sorted A-Z by
+// AMOS command name: the same order as in amos-translator.js and commands/.
 
 // ---- Program ---------------------------------------------------------------
 
@@ -84,65 +87,287 @@ statement:
     | screenSwap
     ;
 
-// ---- Procedures, variables and jumps ---------------------------------------
+// ---- Instructions ----------------------------------------------------------
 
-procedure:
-    PROCEDURE IDENTIFIER (SQUARE_BRACKET_OPEN IDENTIFIER (COMMA IDENTIFIER)* SQUARE_BRACKET_CLOSE)?
-    statement*
-    END_PROC
-    ;
-
-procedureCall:
-    IDENTIFIER SQUARE_BRACKET_OPEN expression (COMMA expression)* SQUARE_BRACKET_CLOSE
-    | IDENTIFIER
-    ;
-
-global:
-    'Global' (arrayStructure | IDENTIFIER) (COMMA (arrayStructure | IDENTIFIER))*?
-    ;
-
-variableAssignment:
-    IDENTIFIER '=' (expression | btstFunction)
-    ;
-
+// ADD
 add:
     'Add' IDENTIFIER COMMA expression (COMMA expression TO expression)?
     ;
 
-label:
-    IDENTIFIER COLON
+// AUTOBACK
+autoback:
+    'Autoback' NUMBER
     ;
 
-gosub:
-    'Gosub' IDENTIFIER
+// BAR
+bar:
+    BAR expression COMMA expression TO expression COMMA expression
     ;
 
-gotoLabel:
-    'Goto' IDENTIFIER
+// BOB OFF
+bobOff:
+    'Bob' 'Off'
     ;
 
-onGosub:
-    'On' IDENTIFIER ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE 'Gosub' IDENTIFIER (COMMA IDENTIFIER)*
+// BOB UPDATE ON
+bobUpdateOn:
+    'Bob' 'Update' 'On'
     ;
 
-// ---- Control flow ----------------------------------------------------------
+// BOX
+box:
+    'Box' expression COMMA expression TO expression COMMA expression
+    ;
 
-ifStatement:
-    (IF expression | IF readTarget) comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
+// CIRCLE
+circle:
+    'Circle' expression COMMA expression COMMA expression
+    ;
+
+// CLEAR KEY
+clearKey:
+    'Clear' 'Key'
+    ;
+
+// CLOSE
+closeFile:
+    'Close' NUMBER
+    ;
+
+// CLS
+cls:
+    'Cls' (expression (COMMA expression COMMA expression TO expression COMMA expression)?)?
+    ;
+
+// CURS OFF
+cursOff:
+    CURS_OFF
+    ;
+
+// CURS ON
+cursOn:
+    CURS_ON
+    ;
+
+// DEGREE
+degree:
+    'Degree'
+    ;
+
+// DIM
+arrayDeclaration:
+    'Dim' arrayStructure (COMMA arrayStructure)*
+    ;
+
+// DOUBLE BUFFER
+doubleBuffer:
+    'Double' 'Buffer'
+    ;
+
+// FLASH OFF
+flashOff:
+    'Flash' 'Off'
+    ;
+
+// FLASH ON
+flashOn:
+    'Flash' 'On'
+    ;
+
+// HIDE
+hide:
+    'Hide' 'On'?
+    ;
+
+// INK
+ink:
+    INK expression
+    ;
+
+// KEY SPEED
+keySpeed:
+    'Key' 'Speed' NUMBER COMMA NUMBER
+    ;
+
+// LED OFF
+ledOff:
+    'LED' 'OFF'
+    ;
+
+// LOAD
+loadBank:
+    'Load' STRING (COMMA (IDENTIFIER | NUMBER))?
+    ;
+
+// LOAD IFF
+loadIff:
+    LOAD_IFF IDENTIFIER expression
+    ;
+
+// LOCATE
+locate:
+    'Locate' NUMBER COMMA? NUMBER?
+    ;
+
+// OPEN IN
+openIn:
+    'Open' 'In' NUMBER COMMA IDENTIFIER
+    ;
+
+// OPEN OUT
+openOut:
+    'Open' 'Out' NUMBER COMMA IDENTIFIER
+    ;
+
+// PALETTE
+palette:
+    'Palette' (HEX_NUMBER COMMA?)*
+    ;
+
+// PAPER
+paper:
+    'Paper' expression
+    ;
+
+// PEN
+pen:
+    'Pen' expression
+    ;
+
+// PLAY
+playSound:
+    PLAY (HEX_NUMBER NUMBER | expression | IDENTIFIER) COMMA NUMBER
+    ;
+
+// PRINT (and PRINT #)
+printStatement:
+    'Print' printItem ((COMMA | SEMICOLON) printItem)*?
+    ;
+
+printItem:
+    expression
+    | HASH NUMBER
+    ;
+
+// RAINBOW
+rainbow:
+    'Rainbow' (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA? (expression | NUMBER | STRING)? COMMA? (expression | NUMBER | STRING)?
+    ;
+
+// SAM BANK
+samBank:
+    'SAM' 'BANK' NUMBER
+    ;
+
+// SAM LOOP OFF
+samLoopOff:
+    'SAM' 'LOOP' 'OFF'
+    ;
+
+// SCREEN
+chooseScreen:
+    'Screen' NUMBER
+    ;
+
+// SCREEN OFFSET
+screenOffset:
+    'Screen' 'Offset' NUMBER COMMA NUMBER COMMA NUMBER
+    ;
+
+// SCREEN OPEN
+screenOpen:
+    SCREEN_OPEN NUMBER COMMA NUMBER COMMA NUMBER COMMA NUMBER COMMA (LOWRES | HIRES)
+    ;
+
+// SCREEN SWAP
+screenSwap:
+    'Screen' 'Swap'
+    ;
+
+// SET BUFFER
+setBuffer:
+    'Set' 'Buffer' NUMBER
+    ;
+
+// SET RAINBOW
+setRainbow:
+    'Set' 'Rainbow' (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING)? COMMA? (expression | NUMBER | STRING)?
+    ;
+
+// SPRITE
+sprite:
+    'Sprite' expression COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER)
+    | 'Off'
+    ;
+
+// TEXT
+text:
+    TEXT expression COMMA expression COMMA (STRING | IDENTIFIER)
+    ;
+
+// WAIT
+wait:
+    'Wait' NUMBER
+    ;
+
+// WAIT KEY
+waitKey:
+    WAIT_KEY
+    ;
+
+// WAIT VBL
+waitVbl:
+    'Wait' 'Vbl'
+    ;
+
+// ---- Structures ------------------------------------------------------------
+
+// DATA
+dataStatement:
+    'Data' expression (COMMA expression)*
+    ;
+
+// DO ... LOOP
+doLoop:
+    DO
     statement*
-    ('End' 'if' | elseStatement | END_IF)
+    LOOP
     ;
 
-ifKeyStateStatement:
-    IF keyStateFunction
-    statement*
-    (elseStatement | END_IF)
-    ;
-
+// ELSE
 elseStatement:
     ELSE
     statement*
     END_IF
+    ;
+
+// FOR ... NEXT
+forLoop:
+    FOR IDENTIFIER '=' expression TO expression
+    statement*
+    (NEXT IDENTIFIER | NEXT)
+    ;
+
+// GLOBAL
+global:
+    'Global' (arrayStructure | IDENTIFIER) (COMMA (arrayStructure | IDENTIFIER))*?
+    ;
+
+// GOSUB
+gosub:
+    'Gosub' IDENTIFIER
+    ;
+
+// GOTO
+gotoLabel:
+    'Goto' IDENTIFIER
+    ;
+
+// IF ... END IF
+ifStatement:
+    (IF expression | IF readTarget) comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
+    statement*
+    ('End' 'if' | elseStatement | END_IF)
     ;
 
 comparisonOperator:
@@ -153,221 +378,37 @@ logicalOperator:
     OR | AND
     ;
 
-forLoop:
-    FOR IDENTIFIER '=' expression TO expression
+// IF KEY STATE(...) ... END IF
+ifKeyStateStatement:
+    IF keyStateFunction
     statement*
-    (NEXT IDENTIFIER | NEXT)
+    (elseStatement | END_IF)
     ;
 
-doLoop:
-    DO
+// INPUT #
+inputVariable:
+    'Input' HASH NUMBER COMMA IDENTIFIER HEX_NUMBER?
+    ;
+
+// ON ... GOSUB
+onGosub:
+    'On' IDENTIFIER ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE 'Gosub' IDENTIFIER (COMMA IDENTIFIER)*
+    ;
+
+// PROC (procedure call)
+procedureCall:
+    IDENTIFIER SQUARE_BRACKET_OPEN expression (COMMA expression)* SQUARE_BRACKET_CLOSE
+    | IDENTIFIER
+    ;
+
+// PROCEDURE ... END PROC
+procedure:
+    PROCEDURE IDENTIFIER (SQUARE_BRACKET_OPEN IDENTIFIER (COMMA IDENTIFIER)* SQUARE_BRACKET_CLOSE)?
     statement*
-    LOOP
+    END_PROC
     ;
 
-whileWend:
-    WHILE keyStateFunction
-    statement*
-    WEND
-    ;
-
-repeatUntil:
-    'Repeat'
-    statement*
-    'Until' 'Mouse' 'Key' '=' NUMBER
-    ;
-
-wait:
-    'Wait' NUMBER
-    ;
-
-waitKey:
-    WAIT_KEY
-    ;
-
-waitVbl:
-    'Wait' 'Vbl'
-    ;
-
-// ---- Screen ----------------------------------------------------------------
-
-screenOpen:
-    SCREEN_OPEN NUMBER COMMA NUMBER COMMA NUMBER COMMA NUMBER COMMA (LOWRES | HIRES)
-    ;
-
-chooseScreen:
-    'Screen' NUMBER
-    ;
-
-screenOffset:
-    'Screen' 'Offset' NUMBER COMMA NUMBER COMMA NUMBER
-    ;
-
-screenSwap:
-    'Screen' 'Swap'
-    ;
-
-doubleBuffer:
-    'Double' 'Buffer'
-    ;
-
-autoback:
-    'Autoback' NUMBER
-    ;
-
-setBuffer:
-    'Set' 'Buffer' NUMBER
-    ;
-
-loadIff:
-    LOAD_IFF IDENTIFIER expression
-    ;
-
-cls:
-    'Cls' (expression (COMMA expression COMMA expression TO expression COMMA expression)?)?
-    ;
-
-cursOff:
-    CURS_OFF
-    ;
-
-cursOn:
-    CURS_ON
-    ;
-
-palette:
-    'Palette' (HEX_NUMBER COMMA?)*
-    ;
-
-ink:
-    INK expression
-    ;
-
-pen:
-    'Pen' expression
-    ;
-
-paper:
-    'Paper' expression
-    ;
-
-flashOff:
-    'Flash' 'Off'
-    ;
-
-flashOn:
-    'Flash' 'On'
-    ;
-
-setRainbow:
-    'Set' 'Rainbow' (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING)? COMMA? (expression | NUMBER | STRING)?
-    ;
-
-rainbow:
-    'Rainbow' (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA? (expression | NUMBER | STRING)? COMMA? (expression | NUMBER | STRING)?
-    ;
-
-// ---- Drawing, sprites and bobs ---------------------------------------------
-
-bar:
-    BAR expression COMMA expression TO expression COMMA expression
-    ;
-
-box:
-    'Box' expression COMMA expression TO expression COMMA expression
-    ;
-
-circle:
-    'Circle' expression COMMA expression COMMA expression
-    ;
-
-text:
-    TEXT expression COMMA expression COMMA (STRING | IDENTIFIER)
-    ;
-
-locate:
-    'Locate' NUMBER COMMA? NUMBER?
-    ;
-
-turboDraw:
-    'Turbo' 'Draw' expression COMMA expression TO expression COMMA expression COMMA expression COMMA expression
-    ;
-
-blitterCopy:
-    'Blitter' 'Copy' 'Limit'? NUMBER COMMA NUMBER TO NUMBER COMMA NUMBER
-    ;
-
-blitterFill:
-    'Blitter' 'Fill' NUMBER COMMA NUMBER (COMMA expression COMMA expression COMMA expression COMMA expression)?
-    ;
-
-blitterClear:
-    'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression COMMA expression TO expression COMMA expression)?
-    ;
-
-loadBank:
-    'Load' STRING (COMMA (IDENTIFIER | NUMBER))?
-    ;
-
-sprite:
-    'Sprite' expression COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER)
-    | 'Off'
-    ;
-
-bobOff:
-    'Bob' 'Off'
-    ;
-
-bobUpdateOn:
-    'Bob' 'Update' 'On'
-    ;
-
-// ---- Sound -----------------------------------------------------------------
-
-playSound:
-    PLAY (HEX_NUMBER NUMBER | expression | IDENTIFIER) COMMA NUMBER
-    ;
-
-samBank:
-    'SAM' 'BANK' NUMBER
-    ;
-
-samLoopOff:
-    'SAM' 'LOOP' 'OFF'
-    ;
-
-ledOff:
-    'LED' 'OFF'
-    ;
-
-// ---- Keyboard and mouse ----------------------------------------------------
-
-keySpeed:
-    'Key' 'Speed' NUMBER COMMA NUMBER
-    ;
-
-clearKey:
-    'Clear' 'Key'
-    ;
-
-hide:
-    'Hide' 'On'?
-    ;
-
-// ---- Data, arrays and file I/O ---------------------------------------------
-
-arrayDeclaration:
-    'Dim' arrayStructure (COMMA arrayStructure)*
-    ;
-
-arrayAssignment:
-    arrayStructure '=' expression
-    ;
-
-dataStatement:
-    'Data' expression (COMMA expression)*
-    ;
-
+// READ
 readStatement:
     'Read' readTarget (COMMA readTarget)*
     ;
@@ -377,32 +418,97 @@ readTarget:
     | IDENTIFIER
     ;
 
-printStatement:
-    'Print' printItem ((COMMA | SEMICOLON) printItem)*?
+// REPEAT ... UNTIL
+repeatUntil:
+    'Repeat'
+    statement*
+    'Until' 'Mouse' 'Key' '=' NUMBER
     ;
 
-printItem:
-    expression
-    | HASH NUMBER
+// WHILE ... WEND
+whileWend:
+    WHILE keyStateFunction
+    statement*
+    WEND
     ;
 
-openOut:
-    'Open' 'Out' NUMBER COMMA IDENTIFIER
+// ---- Not in the command index ----------------------------------------------
+
+// Array assignment: A(1) = 2
+arrayAssignment:
+    arrayStructure '=' expression
     ;
 
-openIn:
-    'Open' 'In' NUMBER COMMA IDENTIFIER
+// Label: MyLabel:
+label:
+    IDENTIFIER COLON
     ;
 
-closeFile:
-    'Close' NUMBER
+// Variable assignment: X = 1
+variableAssignment:
+    IDENTIFIER '=' (expression | btstFunction)
     ;
 
-inputVariable:
-    'Input' HASH NUMBER COMMA IDENTIFIER HEX_NUMBER?
+// ---- Functions -------------------------------------------------------------
+
+// BTST
+btstFunction:
+    'Btst' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
     ;
 
-// ---- Expressions and math --------------------------------------------------
+// COS
+cosFunction:
+    'Cos' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE
+    ;
+
+// KEY STATE
+keyStateFunction:
+    KEY_STATE ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
+// RND
+rndFunction:
+    'Rnd' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE
+    ;
+
+// SIN
+sinFunction:
+    'Sin' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE
+    ;
+
+// ---- AMCAF extension -------------------------------------------------------
+
+// BLITTER CLEAR
+blitterClear:
+    'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression COMMA expression TO expression COMMA expression)?
+    ;
+
+// BLITTER COPY
+blitterCopy:
+    'Blitter' 'Copy' 'Limit'? NUMBER COMMA NUMBER TO NUMBER COMMA NUMBER
+    ;
+
+// BLITTER FILL
+blitterFill:
+    'Blitter' 'Fill' NUMBER COMMA NUMBER (COMMA expression COMMA expression COMMA expression COMMA expression)?
+    ;
+
+// QCOS
+qcosFunction:
+    'Qcos' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
+    ;
+
+// QSIN
+qsinFunction:
+    'Qsin' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
+    ;
+
+// TURBO DRAW
+turboDraw:
+    'Turbo' 'Draw' expression COMMA expression TO expression COMMA expression COMMA expression COMMA expression
+    ;
+
+// ---- Expressions -----------------------------------------------------------
 
 value:
     expression
@@ -432,38 +538,6 @@ factor:
 
 arrayStructure:
     IDENTIFIER ROUND_BRACKET_OPEN expression (COMMA expression)* ROUND_BRACKET_CLOSE
-    ;
-
-sinFunction:
-    'Sin' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE
-    ;
-
-cosFunction:
-    'Cos' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE
-    ;
-
-qsinFunction:
-    'Qsin' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
-    ;
-
-qcosFunction:
-    'Qcos' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
-    ;
-
-rndFunction:
-    'Rnd' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE
-    ;
-
-btstFunction:
-    'Btst' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
-    ;
-
-keyStateFunction:
-    KEY_STATE ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
-    ;
-
-degree:
-    'Degree'
     ;
 
 // ============================================================================

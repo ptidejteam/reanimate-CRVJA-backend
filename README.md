@@ -6,6 +6,8 @@ The backend service for Reanimate-CRVJA, providing APIs to transpile AMOS BASIC,
 
 The core transpiler relies on **ANTLR4**. It processes AMOS BASIC code by generating a lexer and parser, which tokenize the code and build an Abstract Syntax Tree (AST). The AST is then walked and translated into JavaScript code designed to run in a web browser using HTML5 APIs.
 
+**Adding or changing an AMOS command?** Follow the [transpiler developer tutorial](src/transpilers/2.0.0-beta/README.md). It explains how the `2.0.0-beta` transpiler is organized (one file per AMOS command category) and walks you through adding a command, step by step.
+
 ## Version Handling
 
 The transpiler logic is modularized by versions (located in `src/transpilers/`). When requesting a transpilation, you can specify the target `version` (e.g., `1.1.0`, `1.2.0`, `2.0.0-beta`). This ensures backward compatibility for older games while allowing testing of new features in newer versions.
