@@ -22,6 +22,14 @@ export default async function transpile(amosCode) {
 
   const tree = parser.program();
 
+  if (lexicalErrors.errors.length || syntaxErrors.errors.length) {
+    return {
+      lexicalErrors,
+      syntaxErrors,
+      translatedCode: '',
+    };
+  }
+
   const translator = new AmosTranslator();
   const walker = new antlr4.tree.ParseTreeWalker();
   walker.walk(translator, tree);

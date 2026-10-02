@@ -146,3 +146,5 @@ vite.config.ts.timestamp-*
 tmp/
 
 *.antlr
+.vscode/
+.DS_Store

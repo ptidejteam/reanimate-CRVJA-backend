@@ -10,7 +10,11 @@ grammar AMOS;
 // ---- Program ---------------------------------------------------------------
 
 program:
-    statement* EOF
+    statementList EOF
+    ;
+
+statementList:
+    (statement | NEWLINE)*
     ;
 
 // The order of the alternatives matters: ANTLR resolves ambiguities in favour
@@ -85,6 +89,7 @@ statement:
     | waitVbl
     | wait
     | screenSwap
+    | exitLoop
     ;
 
 // ---- Instructions ----------------------------------------------------------
@@ -330,21 +335,26 @@ dataStatement:
 // DO ... LOOP
 doLoop:
     DO
-    statement*
+    statementList
     LOOP
     ;
 
 // ELSE
 elseStatement:
     ELSE
-    statement*
+    statementList
     END_IF
+    ;
+
+// EXIT
+exitLoop:
+    'Exit' NUMBER?
     ;
 
 // FOR ... NEXT
 forLoop:
     FOR IDENTIFIER '=' expression TO expression
-    statement*
+    statementList
     (NEXT IDENTIFIER | NEXT)
     ;
 
@@ -366,7 +376,7 @@ gotoLabel:
 // IF ... END IF
 ifStatement:
     (IF expression | IF readTarget) comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
-    statement*
+    statementList
     ('End' 'if' | elseStatement | END_IF)
     ;
 
@@ -381,7 +391,7 @@ logicalOperator:
 // IF KEY STATE(...) ... END IF
 ifKeyStateStatement:
     IF keyStateFunction
-    statement*
+    statementList
     (elseStatement | END_IF)
     ;
 
@@ -404,7 +414,7 @@ procedureCall:
 // PROCEDURE ... END PROC
 procedure:
     PROCEDURE IDENTIFIER (SQUARE_BRACKET_OPEN IDENTIFIER (COMMA IDENTIFIER)* SQUARE_BRACKET_CLOSE)?
-    statement*
+    statementList
     END_PROC
     ;
 
@@ -421,14 +431,14 @@ readTarget:
 // REPEAT ... UNTIL
 repeatUntil:
     'Repeat'
-    statement*
+    statementList
     'Until' 'Mouse' 'Key' '=' NUMBER
     ;
 
 // WHILE ... WEND
 whileWend:
     WHILE keyStateFunction
-    statement*
+    statementList
     WEND
     ;
 
@@ -515,7 +525,7 @@ value:
     ;
 
 expression:
-    term ((ADD | SUBTRACT) term)* NUMBER? // Handle addition and subtraction
+    term ((ADD | SUBTRACT) term)* // Handle addition and subtraction
     ;
 
 term:
@@ -613,4 +623,12 @@ CURLY_BRACKET_CLOSE: '}';
 
 // ---- Whitespace ------------------------------------------------------------
 
-WS: [ \t\n\r]+ -> skip;
+NEWLINE:
+    '\r\n'
+    | '\n'
+    | '\r'
+    ;
+
+WS:
+    [ \t]+ -> skip
+    ;

@@ -16,7 +16,7 @@ export default class ExpressionVisitor extends AMOSVisitor {
 
   /**
    * Grammar Rule:
-   * expression: term ((ADD | SUBTRACT) term)* NUMBER?
+   * expression: term ((ADD | SUBTRACT) term)*
    * Evaluates addition / subtraction chains.
    */
   visitExpression(ctx) {
@@ -36,11 +36,6 @@ export default class ExpressionVisitor extends AMOSVisitor {
       const operator = ctx.children[2 * i - 1].getText();
       const rightTerm = this.visit(terms[i]);
       result += ` ${operator} ${rightTerm}`;
-    }
-
-    // Handle trailing NUMBER (e.g. "expression: term ... NUMBER?")
-    if (ctx.NUMBER()) {
-      result += ctx.NUMBER().getText();
     }
 
     return result;
