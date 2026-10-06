@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { aggregateRows } from '../amos-code-analysis/amos-aggregate.js';
+import { aggregateRows } from '../amos-aggregate.js';
 
 function row(command, count, project, filePath, category = 'Instruction') {
   return { COMMAND: command, CATEGORY: category, COUNT: count, PROJECT: project, FILE_PATH: filePath };

@@ -3,15 +3,11 @@ import BaseHandler from './base-handler.js';
 /**
  * Commands of the AMCAF extension, sorted A-Z by AMOS name. AMCAF is an AMOS
  * Professional extension, so its commands are not in the AMOS command index.
- *
- * Instructions (enterX) are called by the forwarders in amos-translator.js;
- * functions (visitX) by the forwarders in expression-visitor.js.
  */
 export default class Amcaf extends BaseHandler {
-  // ---- BLITTER CLEAR ----
+  // BLITTER CLEAR
   enterBlitterClear(ctx) {
     // Blitter Clear clears a rectangular region on screen
-    // Grammar: 'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression COMMA expression TO expression COMMA expression)?
     if (ctx.expression().length >= 4) {
       const x1 = this.expr(ctx.expression(0));
       const y1 = this.expr(ctx.expression(1));
@@ -41,14 +37,10 @@ export default class Amcaf extends BaseHandler {
     }
   }
 
-  // ---- BLITTER FILL ----
+  // BLITTER FILL
   enterBlitterFill(ctx) {}
 
-  // ---- QCOS ----
-  /**
-   * Grammar Rule:
-   * qcosFunction: 'Qcos' '(' expression ',' expression ')'
-   */
+  // QCOS
   visitQcosFunction(ctx) {
     const expressions = ctx.expression();
     const arg1 = this.expr(expressions[0]);
@@ -56,11 +48,7 @@ export default class Amcaf extends BaseHandler {
     return `Math.cos(${arg1}, ${arg2})`;
   }
 
-  // ---- QSIN ----
-  /**
-   * Grammar Rule:
-   * qsinFunction: 'Qsin' '(' expression ',' expression ')'
-   */
+  // QSIN
   visitQsinFunction(ctx) {
     const expressions = ctx.expression();
     const arg1 = this.expr(expressions[0]);
@@ -68,7 +56,7 @@ export default class Amcaf extends BaseHandler {
     return `Math.sin(${arg1}, ${arg2})`;
   }
 
-  // ---- TURBO DRAW ----
+  // TURBO DRAW
   enterTurboDraw(ctx) {
     function generateRandomID() {
       let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -87,8 +75,6 @@ export default class Amcaf extends BaseHandler {
     let color = `colorMapping[(${this.expr(ctx.expression(4))})]`;
     let the_ID = generateRandomID();
     let index = this.expr(ctx.expression(5));
-
-    // Calculate the length and angle of the line
 
     this.emit(`
 // Calculate the length and angle of the line

@@ -1,11 +1,10 @@
 /**
- * Parent class of the command files in this folder (one file per command
- * category, see ../README.md).
+ * Parent class of the command files in this folder, one per AMOS command category.
  *
- * The methods of a command file are named after the grammar rule they
- * translate (rule `cls` -> `enterCls(ctx)`) and are called by the forwarder
- * with the same name in amos-translator.js (or expression-visitor.js for
- * functions).
+ * Their methods are named after the grammar rule they translate, and the translator calls
+ * them automatically (forwardToCommands in amos-translator.js):
+ * - enterX(ctx) / exitX(ctx) emit the code of an instruction or structure: rule `cls` -> enterCls;
+ * - visitX(ctx) returns the code of a function inside an expression: rule `absFunction` -> visitAbsFunction.
  */
 export default class BaseHandler {
   constructor(translator) {
@@ -17,7 +16,7 @@ export default class BaseHandler {
     this.translator.output += code;
   }
 
-  /** Transpiles an expression subtree into a JavaScript expression string. */
+  /** Returns the JavaScript of an expression node ('' if ctx is missing). */
   expr(ctx) {
     return this.translator.handleExpression(ctx);
   }

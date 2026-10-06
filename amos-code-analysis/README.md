@@ -58,3 +58,8 @@ An empty dataset or files without counted commands produce two header-only CSVs.
 Invalid arguments or filesystem failures produce an error on stderr and a nonzero
 exit code. Analysis finishes before writing, so an analysis failure leaves the
 previous reports intact.
+
+## Tests
+
+The tests are in `tests/`. From the backend root, run them with
+`npm test -- amos-code-analysis` (or `npm test` for the whole backend).

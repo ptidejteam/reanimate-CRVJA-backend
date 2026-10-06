@@ -1,4 +1,4 @@
-import transpile from '#root/src/transpilers/2.0.0-beta/transpiler.js';
+import transpile from '../transpiler.js';
 
 test('palette converts AMOS 12-bit colors through the shared converter', async () => {
   const { lexicalErrors, syntaxErrors, translatedCode } = await transpile('Palette $000,$F80,$FFF');

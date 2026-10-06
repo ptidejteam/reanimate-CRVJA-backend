@@ -5,7 +5,7 @@ grammar AMOS;
 // ============================================================================
 // Rules are grouped by the CATEGORY of the AMOS command (tracking spreadsheet /
 // https://amospromanual.dev/99-appendix-g-command-index.html) and sorted A-Z by
-// AMOS command name: the same order as in amos-translator.js and commands/.
+// AMOS command name: the same order as in commands/.
 
 // ---- Program ---------------------------------------------------------------
 
@@ -90,6 +90,7 @@ statement:
     | wait
     | screenSwap
     | exitLoop
+    | plot
     ;
 
 // ---- Instructions ----------------------------------------------------------
@@ -242,6 +243,11 @@ pen:
 // PLAY
 playSound:
     PLAY (HEX_NUMBER NUMBER | expression | IDENTIFIER) COMMA NUMBER
+    ;
+
+// PLOT
+plot:
+    'Plot' expression COMMA expression
     ;
 
 // PRINT (and PRINT #)
@@ -402,7 +408,7 @@ inputVariable:
 
 // ON ... GOSUB
 onGosub:
-    'On' IDENTIFIER ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE 'Gosub' IDENTIFIER (COMMA IDENTIFIER)*
+    'On' IDENTIFIER ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE 'Gosub' IDENTIFIER (COMMA IDENTIFIER)*
     ;
 
 // PROC (procedure call)
@@ -473,7 +479,7 @@ btstFunction:
 
 // COS
 cosFunction:
-    'Cos' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE
+    'Cos' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // KEY STATE
@@ -483,12 +489,12 @@ keyStateFunction:
 
 // RND
 rndFunction:
-    'Rnd' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE
+    'Rnd' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // SIN
 sinFunction:
-    'Sin' ROUND_BRACKET_OPEN (NUMBER | IDENTIFIER | expression) ROUND_BRACKET_CLOSE
+    'Sin' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // ---- AMCAF extension -------------------------------------------------------

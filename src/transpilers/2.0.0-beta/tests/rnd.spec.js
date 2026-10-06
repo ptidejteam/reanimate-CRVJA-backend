@@ -1,4 +1,4 @@
-import transpile from '#root/src/transpilers/2.0.0-beta/transpiler.js';
+import transpile from '../transpiler.js';
 
 async function translate(code) {
   const {
@@ -21,4 +21,12 @@ test('generate a random number', async () => {
   const normalizedJS = await translate(amosCode);
   expect(normalizedJS).toContain('let RND_VAR = 0;');
   expect(normalizedJS).toContain('RND_VAR = Math.floor(Math.random() * (10 + 1));');
+});
+
+test('generate a random number up to a variable', async () => {
+  const amosCode = `
+    RND_VAR = Rnd(MAX_VALUE)
+  `;
+  const normalizedJS = await translate(amosCode);
+  expect(normalizedJS).toContain('RND_VAR = Math.floor(Math.random() * (MAX_VALUE + 1));');
 });

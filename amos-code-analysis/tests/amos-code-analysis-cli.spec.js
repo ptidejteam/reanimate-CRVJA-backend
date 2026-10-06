@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const script = fileURLToPath(new URL('../amos-code-analysis/main.js', import.meta.url));
+const script = fileURLToPath(new URL('../main.js', import.meta.url));
 const outputDirectory = join(dirname(script), 'output');
 const outputFile = join(outputDirectory, 'analysis.csv');
 const aggregateFile = join(outputDirectory, 'aggregate.csv');

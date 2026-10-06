@@ -1,5 +1,5 @@
 import fs from 'fs';
-import transpile from '#root/src/transpilers/2.0.0-beta/transpiler.js';
+import transpile from '../transpiler.js';
 
 async function translate(code) {
   const {

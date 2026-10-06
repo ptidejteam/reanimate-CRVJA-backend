@@ -1,15 +1,9 @@
 import { amiga12BitToCssRgb } from '../../../utils/amiga-color.js';
 import BaseHandler from './base-handler.js';
 
-/**
- * AMOS commands of the category "Instruction", sorted A-Z by AMOS name.
- *
- * The category comes from the tracking spreadsheet, which follows the AMOS
- * Professional command index: https://amospromanual.dev/99-appendix-g-command-index.html
- * Each method is called by the forwarder with the same name in amos-translator.js.
- */
+/** AMOS commands of the category "Instruction", sorted A-Z by AMOS name. */
 export default class Instructions extends BaseHandler {
-  // ---- ADD: https://amospromanual.dev/05-03-maths.html#i-add ----
+  // ADD
   enterAdd(ctx) {
     let variable = ctx.IDENTIFIER().getText();
     let valueExpression = this.expr(ctx.expression(0));
@@ -33,9 +27,8 @@ if (${variable} < ${valueStarter}) {
     }
   }
 
-  // ---- BAR: https://amospromanual.dev/06-04-graphics.html#i-bar ----
+  // BAR
   enterBar(ctx) {
-    // AMOS command: Bar X1,Y1 To X2,Y2
     const x1 = this.expr(ctx.expression(0));
     const y1 = this.expr(ctx.expression(1));
     const x2 = this.expr(ctx.expression(2));
@@ -71,7 +64,7 @@ screenBarDiv.style.zIndex = 10;
 }`);
   }
 
-  // ---- BOX: https://amospromanual.dev/06-04-graphics.html#i-box ----
+  // BOX
   enterBox(ctx) {
     const x1 = this.expr(ctx.expression(0));
     const y1 = this.expr(ctx.expression(1));
@@ -100,7 +93,7 @@ boxDiv.style.zIndex = 10;
 }`);
   }
 
-  // ---- CIRCLE: https://amospromanual.dev/06-04-graphics.html#i-circle ----
+  // CIRCLE
   enterCircle(ctx) {
     const x = this.expr(ctx.expression(0));
     const y = this.expr(ctx.expression(1));
@@ -129,19 +122,19 @@ circleDiv.style.backgroundColor = getColour(Ink);
 }`);
   }
 
-  // ---- CLOSE: https://amospromanual.dev/10-02-disc-access.html#i-close ----
+  // CLOSE
   enterCloseFile(ctx) {
     const channel = ctx.children[1]?.getText();
 
     this.emit(`closeChannel(${channel});`);
   }
 
-  // ---- CLS: https://amospromanual.dev/06-01-setting-up-screens.html#i-cls ----
+  // CLS
   enterCls(ctx) {
     const exprs = ctx.expression();
 
     if (exprs.length === 0) {
-      // Case 1: Parameterless Cls (clear entire screen + set background color to current paper color)
+      // Cls: clear the screen with the Paper colour
       this.emit(`
 const amosScreen = document.getElementById('amos-screen');
 if (amosScreen) {
@@ -149,7 +142,7 @@ if (amosScreen) {
     amosScreen.style.backgroundColor = colorMapping[Paper];
 }`);
     } else if (exprs.length === 1) {
-      // Case 2: Cls colour (clear entire screen + set background color to specified color index)
+      // Cls colour: clear the screen with that colour
       const color = this.expr(exprs[0]);
       this.emit(`
 const amosScreen = document.getElementById('amos-screen');
@@ -158,7 +151,7 @@ if (amosScreen) {
     amosScreen.style.backgroundColor = colorMapping[${color}];
 }`);
     } else if (exprs.length >= 5) {
-      // Case 3: Cls colour, x1, y1 To x2, y2 (clear rectangular block + fill with color)
+      // Cls colour, x1, y1 To x2, y2: clear that rectangle and fill it with the colour
       const color = this.expr(exprs[0]);
       const x1 = this.expr(exprs[1]);
       const y1 = this.expr(exprs[2]);
@@ -196,17 +189,17 @@ if (amosScreen) {
     }
   }
 
-  // ---- CURS OFF: https://amospromanual.dev/05-06-text.html#i-curs-on-off ----
+  // CURS OFF
   enterCursOff(ctx) {
     this.emit("document.getElementById('amos-screen').style.cursor = 'none';");
   }
 
-  // ---- CURS ON: https://amospromanual.dev/05-06-text.html#i-curs-on-off ----
+  // CURS ON
   enterCursOn(ctx) {
     this.emit("document.getElementById('amos-screen').style.cursor = 'auto';");
   }
 
-  // ---- DIM: https://amospromanual.dev/05-01-the-bare-bones.html#i-dim ----
+  // DIM
   enterArrayDeclaration(ctx) {
     for (let i = 0; i < ctx.arrayStructure().length; i++) {
       const struct = ctx.arrayStructure(i);
@@ -228,14 +221,14 @@ if (amosScreen) {
     }
   }
 
-  // ---- INK: https://amospromanual.dev/06-04-graphics.html#i-ink ----
+  // INK
   enterInk(ctx) {
     const colorIndexExp = this.expr(ctx.children[1]);
 
     this.emit(`Ink = ${colorIndexExp};`);
   }
 
-  // ---- LOAD: https://amospromanual.dev/05-09-memory-banks.html#i-load ----
+  // LOAD
   enterLoadBank(ctx) {
     const fileName = ctx.children[1]?.getText();
     const bankId = ctx.children[3]?.getText();
@@ -246,7 +239,7 @@ if (amosScreen) {
     }
   }
 
-  // ---- OPEN IN: https://amospromanual.dev/10-02-disc-access.html#i-open-in ----
+  // OPEN IN
   enterOpenIn(ctx) {
     const channel = ctx.children[2]?.getText();
     const fileName = ctx.children[4]?.getText();
@@ -254,7 +247,7 @@ if (amosScreen) {
     this.emit(`openFile('${fileName}', ${channel}, 'w');`);
   }
 
-  // ---- OPEN OUT: https://amospromanual.dev/10-02-disc-access.html#i-open-out ----
+  // OPEN OUT
   enterOpenOut(ctx) {
     const channel = ctx.children[2]?.getText();
     const fileName = ctx.children[4]?.getText();
@@ -262,61 +255,56 @@ if (amosScreen) {
     this.emit(`openFile('${fileName}', ${channel}, 'r');`);
   }
 
-  // ---- PALETTE: https://amospromanual.dev/06-04-graphics.html#i-palette ----
+  // PALETTE
   enterPalette(ctx) {
-    // Array to collect complete hex colour values from the Palette
+    // Collect the hex colours ($RGB) of the Palette, separated by commas
     const hexColors = [];
     let currentHex = '';
 
-    // Loop through each child in `ctx` to gather colors
     for (const child of ctx.children) {
       const text = child.getText().trim();
 
       if (text.toLowerCase() === 'palette') continue;
       if (text === '$') {
-        // Start of a new hex color, initialize currentHex
         currentHex = '$';
       } else if (text === ',') {
-        // End of a hex color, parse it if currentHex has a complete hex value
         if (currentHex.length > 1) {
           hexColors.push(currentHex);
-          currentHex = ''; // Reset for the next hex color
+          currentHex = '';
         }
       } else {
-        // Append hex digits to currentHex
         currentHex += text;
       }
     }
 
-    // Handle the last hex color if there's no trailing comma
+    // The last colour has no trailing comma
     if (currentHex.length > 1) {
       hexColors.push(currentHex);
     }
 
-    // Convert and map hex colors
     this.translator.colorMapping = {};
     hexColors.forEach((hex, index) => {
-      const hexValue = parseInt(hex.slice(1), 16); // Remove '$' and parse as hex
+      const hexValue = parseInt(hex.slice(1), 16); // without the '$'
 
       this.translator.colorMapping[index] = amiga12BitToCssRgb(hexValue);
     });
     this.translator.palette = `const colorMapping = ${JSON.stringify(this.translator.colorMapping, null, 2)};`;
   }
 
-  // ---- PAPER: https://amospromanual.dev/05-06-text.html#i-paper ----
+  // PAPER
   enterPaper(ctx) {
     const color = this.expr(ctx.children[1]);
     this.emit(`Paper = ${color};`);
   }
 
-  // ---- PEN: https://amospromanual.dev/05-06-text.html#i-pen ----
+  // PEN
   enterPen(ctx) {
     const colorIndexExp = this.expr(ctx.children[1]);
 
     this.emit(`Ink = ${colorIndexExp};`);
   }
 
-  // ---- PLAY: https://amospromanual.dev/08-01-music.html#i-play ----
+  // PLAY
   enterPlaySound(ctx) {
     const soundIndex = ctx.expression() ? this.expr(ctx.expression()) : ctx.children[1]?.getText();
     const duration = ctx.children[3]?.getText();
@@ -324,13 +312,31 @@ if (amosScreen) {
     this.emit(`soundPlayer(${soundIndex}, ${duration} * 1000);`);
   }
 
-  // ---- PRINT (and PRINT #): https://amospromanual.dev/05-06-text.html#i-print ----
-  // PRINT # (https://amospromanual.dev/10-02-disc-access.html#str-print-pound) is a Structure, but it
-  // shares the printStatement grammar rule with PRINT, so it is translated here.
+  // PLOT
+  enterPlot(ctx) {
+    const x = this.expr(ctx.expression(0));
+    const y = this.expr(ctx.expression(1));
+
+    this.emit(`
+{
+const plotDiv = document.createElement('div');
+plotDiv.style.position = 'absolute';
+plotDiv.style.left = (${x}) + 'px';
+plotDiv.style.top = (${y}) + 'px';
+plotDiv.style.width = '1px';
+plotDiv.style.height = '1px';
+plotDiv.style.backgroundColor = getColour(Ink);
+document.getElementById('amos-screen').appendChild(plotDiv);
+}`);
+  }
+
+  // PRINT (and PRINT #)
+  // PRINT # is a Structure, but it shares the printStatement rule with PRINT,
+  // so it is translated here.
   enterPrintStatement(ctx) {
     const firstOption = ctx.printItem(0);
     if (firstOption.HASH()) {
-      /* WRITE TO FILE */
+      // PRINT #: write to a file
       const channel = firstOption.NUMBER().getText();
       const content = this.expr(ctx.printItem(1)?.expression());
       this.emit(`writeToChannel(${channel}, ${content});`);
@@ -348,7 +354,7 @@ if (amosScreen) {
     }
   }
 
-  // ---- SCREEN OPEN: https://amospromanual.dev/06-01-setting-up-screens.html#i-screen-open ----
+  // SCREEN OPEN
   enterScreenOpen(ctx) {
     const width = ctx.children[3]?.getText();
     const height = ctx.children[5]?.getText();
@@ -368,7 +374,7 @@ document.getElementById('game-container').appendChild(screenDiv);
 document.getElementById('amos-screen').style.backgroundColor = 'black';`);
   }
 
-  // ---- SPRITE: https://amospromanual.dev/07-01-hardware-sprites.html#i-sprite ----
+  // SPRITE
   enterSprite(ctx) {
     const spriteExpression = ctx.expression();
     if (!spriteExpression) {
@@ -390,7 +396,7 @@ document.getElementById('amos-screen').style.backgroundColor = 'black';`);
     this.emit(`renderSprite(${spriteNumber}, ${x}, ${y}, ${bankImgIndex});`);
   }
 
-  // ---- TEXT: https://amospromanual.dev/11-01-fonts.html#i-text ----
+  // TEXT
   enterText(ctx) {
     const text = (ctx.STRING() || ctx.IDENTIFIER())?.getText();
 
@@ -423,7 +429,7 @@ textEl.style.backgroundColor = getColour(Paper);
 }`);
   }
 
-  // ---- WAIT: https://amospromanual.dev/07-06-amal.html#i-wait-amal ----
+  // WAIT
   enterWait(ctx) {
     const waitTicks = ctx.NUMBER().getText();
     const ms = parseInt(waitTicks) * 20; // AMOS = ~50fps

@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { serializeCsv } from '../amos-code-analysis/amos-csv.js';
+import { serializeCsv } from '../amos-csv.js';
 
 describe('AMOS CSV serialization', () => {
   test('writes the exact header and a trailing newline for empty reports', () => {

@@ -3,7 +3,7 @@ import antlr4 from 'antlr4';
 import AMOSLexer from '#root/src/transpilers/2.0.0-beta/grammar/generated/AMOSLexer.js';
 import AMOSParser from '#root/src/transpilers/2.0.0-beta/grammar/generated/AMOSParser.js';
 import CollectingErrorListener from '#root/src/transpilers/2.0.0-beta/error-listener.js';
-import AMOSAnalyser from '#root/amos-code-analysis/amos-analyser.js';
+import AMOSAnalyser from '../amos-analyser.js';
 
 function analyse(code, summaryTable, entryRule = 'program') {
   const lexer = new AMOSLexer(new antlr4.InputStream(code));

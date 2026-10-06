@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import AMOSListener from './grammar/generated/AMOSListener.js';
+import AMOSParser from './grammar/generated/AMOSParser.js';
 import ExpressionVisitor from './expression-visitor.js';
 import Instructions from './commands/instructions.js';
 import Structures from './commands/structures.js';
@@ -34,12 +35,8 @@ const DEFAULT_COLOR_MAPPING = {
 };
 
 /**
- * Walks the AMOS parse tree and builds the JavaScript program.
- *
- * ANTLR calls enterX(ctx) / exitX(ctx) for every grammar rule X. Each AMOS
- * command has a forwarder at the bottom of this class that calls the method
- * with the same name in its category file (commands/), where the actual
- * translation lives. See README.md for how to add or change a command.
+ * Walks the AMOS parse tree and builds the JavaScript program. The translation of
+ * each command is in commands/, one file per category (see TRANSPILER.md at the backend root).
  */
 class AmosTranslator extends AMOSListener {
   constructor() {
@@ -62,11 +59,35 @@ class AmosTranslator extends AMOSListener {
     this.hasDataMatrix = false;
     this.expressionVisitor = new ExpressionVisitor(this);
 
-    // One object per command category (see commands/)
-    this.instructions = new Instructions(this);
-    this.structures = new Structures(this);
-    this.functions = new Functions(this);
-    this.amcaf = new Amcaf(this);
+    // One object per command category
+    this.commandFiles = [
+      new Instructions(this),
+      new Structures(this),
+      new Functions(this),
+      new Amcaf(this),
+    ];
+  }
+
+  // ---- Command dispatch ----------------------------------------------------
+
+  // ANTLR calls enterEveryRule / exitEveryRule for every node of the parse tree.
+  enterEveryRule(ctx) {
+    this.forwardToCommands('enter', ctx);
+  }
+
+  exitEveryRule(ctx) {
+    this.forwardToCommands('exit', ctx);
+  }
+
+  /**
+   * Calls the method of commands/ named after the grammar rule of ctx, if there is one:
+   * rule `cls` -> enterCls(ctx) and exitCls(ctx), rule `absFunction` -> visitAbsFunction(ctx).
+   */
+  forwardToCommands(prefix, ctx) {
+    const rule = AMOSParser.ruleNames[ctx.ruleIndex];
+    const method = prefix + rule[0].toUpperCase() + rule.slice(1);
+    const commandFile = this.commandFiles.find((file) => file[method]);
+    return commandFile?.[method](ctx);
   }
 
   // ---- Helpers used by the command files -----------------------------------
@@ -120,253 +141,6 @@ class AmosTranslator extends AMOSListener {
       this.preamble +
       this.output
     );
-  }
-
-  // ==========================================================================
-  // AMOS commands
-  // One forwarder per grammar rule, grouped by command category and sorted A-Z
-  // by AMOS name (same order as amos.g4 and the files in commands/).
-  // Functions (Sin, Rnd, ...) are forwarded from expression-visitor.js instead.
-  // ==========================================================================
-
-  // ---- Instructions (commands/instructions.js) -----------------------------
-
-  // ADD
-  enterAdd(ctx) {
-    this.instructions.enterAdd(ctx);
-  }
-
-  // BAR
-  enterBar(ctx) {
-    this.instructions.enterBar(ctx);
-  }
-
-  // BOX
-  enterBox(ctx) {
-    this.instructions.enterBox(ctx);
-  }
-
-  // CIRCLE
-  enterCircle(ctx) {
-    this.instructions.enterCircle(ctx);
-  }
-
-  // CLOSE
-  enterCloseFile(ctx) {
-    this.instructions.enterCloseFile(ctx);
-  }
-
-  // CLS
-  enterCls(ctx) {
-    this.instructions.enterCls(ctx);
-  }
-
-  // CURS OFF
-  enterCursOff(ctx) {
-    this.instructions.enterCursOff(ctx);
-  }
-
-  // CURS ON
-  enterCursOn(ctx) {
-    this.instructions.enterCursOn(ctx);
-  }
-
-  // DIM
-  enterArrayDeclaration(ctx) {
-    this.instructions.enterArrayDeclaration(ctx);
-  }
-
-  // INK
-  enterInk(ctx) {
-    this.instructions.enterInk(ctx);
-  }
-
-  // LOAD
-  enterLoadBank(ctx) {
-    this.instructions.enterLoadBank(ctx);
-  }
-
-  // OPEN IN
-  enterOpenIn(ctx) {
-    this.instructions.enterOpenIn(ctx);
-  }
-
-  // OPEN OUT
-  enterOpenOut(ctx) {
-    this.instructions.enterOpenOut(ctx);
-  }
-
-  // PALETTE
-  enterPalette(ctx) {
-    this.instructions.enterPalette(ctx);
-  }
-
-  // PAPER
-  enterPaper(ctx) {
-    this.instructions.enterPaper(ctx);
-  }
-
-  // PEN
-  enterPen(ctx) {
-    this.instructions.enterPen(ctx);
-  }
-
-  // PLAY
-  enterPlaySound(ctx) {
-    this.instructions.enterPlaySound(ctx);
-  }
-
-  // PRINT (and PRINT #)
-  enterPrintStatement(ctx) {
-    this.instructions.enterPrintStatement(ctx);
-  }
-
-  // SCREEN OPEN
-  enterScreenOpen(ctx) {
-    this.instructions.enterScreenOpen(ctx);
-  }
-
-  // SPRITE
-  enterSprite(ctx) {
-    this.instructions.enterSprite(ctx);
-  }
-
-  // TEXT
-  enterText(ctx) {
-    this.instructions.enterText(ctx);
-  }
-
-  // WAIT
-  enterWait(ctx) {
-    this.instructions.enterWait(ctx);
-  }
-
-  // ---- Structures (commands/structures.js) ---------------------------------
-
-  // DATA
-  enterDataStatement(ctx) {
-    this.structures.enterDataStatement(ctx);
-  }
-
-  // DO ... LOOP
-  enterDoLoop(ctx) {
-    this.structures.enterDoLoop(ctx);
-  }
-
-  exitDoLoop(ctx) {
-    this.structures.exitDoLoop(ctx);
-  }
-
-  // ELSE
-  enterElseStatement(ctx) {
-    this.structures.enterElseStatement(ctx);
-  }
-
-  exitElseStatement(ctx) {
-    this.structures.exitElseStatement(ctx);
-  }
-
-  // FOR ... NEXT
-  enterForLoop(ctx) {
-    this.structures.enterForLoop(ctx);
-  }
-
-  exitForLoop(ctx) {
-    this.structures.exitForLoop(ctx);
-  }
-
-  // GLOBAL
-  enterGlobal(ctx) {
-    this.structures.enterGlobal(ctx);
-  }
-
-  // IF ... END IF
-  enterIfStatement(ctx) {
-    this.structures.enterIfStatement(ctx);
-  }
-
-  exitIfStatement(ctx) {
-    this.structures.exitIfStatement(ctx);
-  }
-
-  // IF KEY STATE(...) ... END IF
-  enterIfKeyStateStatement(ctx) {
-    this.structures.enterIfKeyStateStatement(ctx);
-  }
-
-  exitIfKeyStateStatement(ctx) {
-    this.structures.exitIfKeyStateStatement(ctx);
-  }
-
-  // INPUT #
-  enterInputVariable(ctx) {
-    this.structures.enterInputVariable(ctx);
-  }
-
-  // PROC (procedure call)
-  enterProcedureCall(ctx) {
-    this.structures.enterProcedureCall(ctx);
-  }
-
-  // PROCEDURE ... END PROC
-  enterProcedure(ctx) {
-    this.structures.enterProcedure(ctx);
-  }
-
-  exitProcedure(ctx) {
-    this.structures.exitProcedure(ctx);
-  }
-
-  // READ
-  enterReadStatement(ctx) {
-    this.structures.enterReadStatement(ctx);
-  }
-
-  // REPEAT ... UNTIL
-  enterRepeatUntil(ctx) {
-    this.structures.enterRepeatUntil(ctx);
-  }
-
-  exitRepeatUntil(ctx) {
-    this.structures.exitRepeatUntil(ctx);
-  }
-
-  // WHILE ... WEND
-  enterWhileWend(ctx) {
-    this.structures.enterWhileWend(ctx);
-  }
-
-  exitWhileWend(ctx) {
-    this.structures.exitWhileWend(ctx);
-  }
-
-  // Not in the command index: language syntax without a category.
-
-  // Array assignment: A(1) = 2
-  enterArrayAssignment(ctx) {
-    this.structures.enterArrayAssignment(ctx);
-  }
-
-  // Variable assignment: X = 1
-  enterVariableAssignment(ctx) {
-    this.structures.enterVariableAssignment(ctx);
-  }
-
-  // ---- AMCAF extension (commands/amcaf.js) ---------------------------------
-
-  // BLITTER CLEAR
-  enterBlitterClear(ctx) {
-    this.amcaf.enterBlitterClear(ctx);
-  }
-
-  // BLITTER FILL
-  enterBlitterFill(ctx) {
-    this.amcaf.enterBlitterFill(ctx);
-  }
-
-  // TURBO DRAW
-  enterTurboDraw(ctx) {
-    this.amcaf.enterTurboDraw(ctx);
   }
 }
 
