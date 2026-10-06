@@ -1,3 +1,4 @@
+import AMOSParser from '../grammar/generated/AMOSParser.js';
 import BaseHandler from './base-handler.js';
 
 /**
@@ -62,34 +63,22 @@ export default class Structures extends BaseHandler {
 
   // IF ... END IF
   enterIfStatement(ctx) {
-    let statement = '';
-    let logicalOperator = '';
-    let comparator = '';
+    let condition = '';
 
-    for (let i = 0; i < ctx.children.length; i++) {
-      if (ctx.children[i].constructor.name == 'ExpressionContext') {
-        statement += this.expr(ctx.children[i]);
-      } else if (ctx.children[i].constructor.name == 'LogicalOperatorContext') {
-        logicalOperator = ctx.children[i].getText().toLowerCase();
-        if (logicalOperator == 'and') {
-          statement += ' && ';
-        } else if (logicalOperator == 'or') {
-          statement += ' || ';
-        } else {
-          console.log('Unrecognized logicalOperator in IF Statement');
-        }
-      } else if (ctx.children[i].constructor.name == 'ComparisonOperatorContext') {
-        comparator = ctx.children[i].getText();
+    for (const child of ctx.children) {
+      if (child instanceof AMOSParser.ExpressionContext) {
+        condition += this.expr(child);
+      } else if (child instanceof AMOSParser.LogicalOperatorContext) {
+        condition += child.AND() ? ' && ' : ' || ';
+      } else if (child instanceof AMOSParser.ComparisonOperatorContext) {
+        let comparator = child.getText();
         // Special cases for = and <>
-        if (comparator === '=') {
-          comparator = '==';
-        } else if (comparator === '<>') {
-          comparator = '!=';
-        }
-        statement += ` ${comparator} `;
+        if (comparator === '=') comparator = '==';
+        if (comparator === '<>') comparator = '!=';
+        condition += ` ${comparator} `;
       }
     }
-    this.emit(`if (${statement}) {`);
+    this.emit(`if (${condition}) {`);
   }
 
   exitIfStatement(ctx) {

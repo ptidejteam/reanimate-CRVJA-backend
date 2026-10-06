@@ -306,8 +306,8 @@ if (amosScreen) {
 
   // PLAY
   enterPlaySound(ctx) {
-    const soundIndex = ctx.expression() ? this.expr(ctx.expression()) : ctx.children[1]?.getText();
-    const duration = ctx.children[3]?.getText();
+    const soundIndex = this.expr(ctx.expression());
+    const duration = ctx.NUMBER().getText();
 
     this.emit(`soundPlayer(${soundIndex}, ${duration} * 1000);`);
   }

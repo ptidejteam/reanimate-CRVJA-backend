@@ -7,25 +7,25 @@ import BaseHandler from './base-handler.js';
 export default class Functions extends BaseHandler {
   // ABS
   visitAbsFunction(ctx) {
-    const argument = this.expr(ctx.expression());
-    return `Math.abs(${argument})`;
+    const value = this.expr(ctx.expression());
+    return `Math.abs(${value})`;
   }
 
   // COS
   visitCosFunction(ctx) {
-    const argument = this.expr(ctx.expression());
-    return `Math.cos(${argument})`;
+    const angle = this.expr(ctx.expression());
+    return `Math.cos(${angle})`;
   }
 
   // RND
   visitRndFunction(ctx) {
-    const argument = this.expr(ctx.expression());
-    return `Math.floor(Math.random() * (${argument} + 1))`;
+    const angle = this.expr(ctx.expression());
+    return `Math.floor(Math.random() * (${angle} + 1))`;
   }
 
   // SIN
   visitSinFunction(ctx) {
-    const argument = this.expr(ctx.expression());
-    return `Math.sin(${argument})`;
+    const angle = this.expr(ctx.expression());
+    return `Math.sin(${angle})`;
   }
 }

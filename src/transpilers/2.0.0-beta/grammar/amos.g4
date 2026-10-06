@@ -242,7 +242,7 @@ pen:
 
 // PLAY
 playSound:
-    PLAY (HEX_NUMBER NUMBER | expression | IDENTIFIER) COMMA NUMBER
+    PLAY expression COMMA NUMBER
     ;
 
 // PLOT
@@ -262,7 +262,7 @@ printItem:
 
 // RAINBOW
 rainbow:
-    'Rainbow' (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA? (expression | NUMBER | STRING)? COMMA? (expression | NUMBER | STRING)?
+    'Rainbow' expression COMMA expression COMMA expression COMMA expression
     ;
 
 // SAM BANK
@@ -302,7 +302,7 @@ setBuffer:
 
 // SET RAINBOW
 setRainbow:
-    'Set' 'Rainbow' (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING) COMMA (expression | NUMBER | STRING)? COMMA? (expression | NUMBER | STRING)?
+    'Set' 'Rainbow' expression COMMA expression COMMA expression COMMA expression COMMA expression COMMA expression
     ;
 
 // SPRITE
@@ -381,7 +381,7 @@ gotoLabel:
 
 // IF ... END IF
 ifStatement:
-    (IF expression | IF readTarget) comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
+    IF expression comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
     statementList
     ('End' 'if' | elseStatement | END_IF)
     ;

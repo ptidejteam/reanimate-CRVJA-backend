@@ -341,6 +341,11 @@ Reading the parse tree (`ctx`):
 - **Keywords.** A literal in a parser rule (`'Plot'`) becomes a keyword, so a variable can no
   longer be named `Plot`. Multi-word keywords that must be a single token (`'Screen Open'`) are
   lexer rules in the Keywords section, above `IDENTIFIER`.
+- **Write each argument as `expression`, with a required `COMMA` between arguments.** An
+  alternative that `expression` already covers (`expression | NUMBER`), or an optional comma
+  (`COMMA? expression?`), makes ANTLR fall back to a much slower prediction, even in other
+  statements: an optional comma in `Rainbow` used to slow down every `A(1)` and `X-1`.
+  `tests/grammar-fast-path.spec.js` checks the common statements.
 - **Error messages.** Adding or moving grammar rules changes the order of the
   `expecting {…}` list in syntax errors. This is expected.
 - **Formatting.** The generated program is formatted by prettier, so tests must compare against

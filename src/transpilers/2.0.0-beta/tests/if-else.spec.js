@@ -25,6 +25,41 @@ test('simple "if 1 > 0" condition', async () => {
   expect(normalizedJS).toContain('if (1 > 0) { }');
 });
 
+test('if condition on a variable "if X > 1"', async () => {
+  const amosBasicCode = `
+    If X > 1
+    End If
+  `;
+
+  const normalizedJS = await translate(amosBasicCode);
+
+  expect(normalizedJS).toContain('if (X > 1) { }');
+});
+
+test('if condition on an array element "if A(1) <> 2"', async () => {
+  const amosBasicCode = `
+    Dim A(3)
+    If A(1) <> 2
+    End If
+  `;
+
+  const normalizedJS = await translate(amosBasicCode);
+
+  expect(normalizedJS).toContain('if (A[Math.trunc(1)] != 2) { }');
+});
+
+test('if condition mixing variables and array elements "if X = 1 and A(2) <= Y"', async () => {
+  const amosBasicCode = `
+    Dim A(3)
+    If X = 1 and A(2) <= Y
+    End If
+  `;
+
+  const normalizedJS = await translate(amosBasicCode);
+
+  expect(normalizedJS).toContain('if (X == 1 && A[Math.trunc(2)] <= Y) { }');
+});
+
 test('if condition with math expressions "if 10 + 1 < 11 + 20"', async () => {
   const amosBasicCode = `
     If 10 + 1 < 11 + 20
@@ -150,7 +185,7 @@ test('if-else statement execution branches', async () => {
   );
 });
 
-// NOTE: "If _ Then" clause is not implemented in amos-translator.js yet.
+// NOTE: "If _ Then" clause is not implemented in commands/structures.js yet.
 // Currently, "Then" is treated as an identifier/procedure call (Then()) inside the IF block.
 test('if_then_not_implemented_yet', async () => {
   const amosBasicCode = `
@@ -160,7 +195,7 @@ test('if_then_not_implemented_yet', async () => {
 
   const normalizedJS = await translate(amosBasicCode);
 
-  // Documents that "If _ Then" is not implemented yet in amos-translator.js
+  // Documents that "If _ Then" is not implemented yet in commands/structures.js
   // (Translates 'Then' to 'Then()' instead of consuming it as an IF clause keyword)
   expect(normalizedJS).toContain('Then();');
 });
