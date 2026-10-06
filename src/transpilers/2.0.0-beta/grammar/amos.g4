@@ -206,6 +206,8 @@ loadBank:
     ;
 
 // LOAD IFF
+// TODO: not in `statement:` yet (`Load Iff` is a syntax error) and not translated. The manual's
+// syntax is `Load Iff "filename"[,screen number]`. amos-code-analysis tests parse from this rule.
 loadIff:
     LOAD_IFF IDENTIFIER expression
     ;
@@ -530,10 +532,6 @@ turboDraw:
     ;
 
 // ---- Expressions -----------------------------------------------------------
-
-value:
-    expression
-    ;
 
 expression:
     term ((ADD | SUBTRACT) term)* // Handle addition and subtraction
