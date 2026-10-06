@@ -489,6 +489,16 @@ keyStateFunction:
     KEY_STATE ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
+// MAX
+maxFunction:
+    'Max' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
+    ;
+
+// MIN
+minFunction:
+    'Min' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
+    ;
+
 // RND
 rndFunction:
     'Rnd' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
@@ -545,12 +555,14 @@ factor:
     NUMBER                                                  // A number
     | STRING
     | arrayStructure
-    | sinFunction
+    | absFunction
     | cosFunction
+    | sinFunction
+    | maxFunction
+    | minFunction
     | qsinFunction
     | qcosFunction
     | rndFunction
-    | absFunction
     | IDENTIFIER                                            // A variable
     | ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE     // Parentheses for grouping
     | HEX_NUMBER
@@ -593,6 +605,8 @@ END_PROC: 'End Proc';
 WAIT_KEY: 'Wait Key';
 KEY_STATE: 'Key State';
 ABS: 'Abs';
+MAX: 'Max';
+MIN: 'Min';
 AND: [aA][nN][dD]; // case-insensitive: and, And, AND
 OR: [oO][rR]; // case-insensitive: or, Or, OR
 

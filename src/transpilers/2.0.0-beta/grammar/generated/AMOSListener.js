@@ -698,6 +698,24 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by AMOSParser#maxFunction.
+	enterMaxFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#maxFunction.
+	exitMaxFunction(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#minFunction.
+	enterMinFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#minFunction.
+	exitMinFunction(ctx) {
+	}
+
+
 	// Enter a parse tree produced by AMOSParser#rndFunction.
 	enterRndFunction(ctx) {
 	}
