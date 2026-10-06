@@ -148,3 +148,5 @@ tmp/
 *.antlr
 .vscode/
 .DS_Store
+
+amos-code-analysis/datasets/*

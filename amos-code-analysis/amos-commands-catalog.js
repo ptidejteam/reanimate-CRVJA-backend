@@ -4,6 +4,7 @@ class AMOSCommandsCatalog {
   constructor(amosCommandsCatalog) {
     this.AMOSCatalog = '';
 
+    // This simple CSV reader assumes fields contain no quoted commas or newlines.
     const lines = amosCommandsCatalog.trim().split('\n');
     const headers = lines[0].split(',');
     const result = []
