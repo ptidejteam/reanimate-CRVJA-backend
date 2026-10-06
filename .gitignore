@@ -150,3 +150,4 @@ tmp/
 .DS_Store
 
 amos-code-analysis/datasets/*
+amos-code-analysis/output/
