@@ -461,6 +461,11 @@ variableAssignment:
 
 // ---- Functions -------------------------------------------------------------
 
+// ABS
+absFunction:
+    'Abs' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
 // BTST
 btstFunction:
     'Btst' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
@@ -541,6 +546,7 @@ factor:
     | qsinFunction
     | qcosFunction
     | rndFunction
+    | absFunction
     | IDENTIFIER                                            // A variable
     | ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE     // Parentheses for grouping
     | HEX_NUMBER
@@ -582,6 +588,7 @@ PROCEDURE: 'Procedure';
 END_PROC: 'End Proc';
 WAIT_KEY: 'Wait Key';
 KEY_STATE: 'Key State';
+ABS: 'Abs';
 AND: [aA][nN][dD]; // case-insensitive: and, And, AND
 OR: [oO][rR]; // case-insensitive: or, Or, OR
 

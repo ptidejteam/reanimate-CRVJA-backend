@@ -438,6 +438,12 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by AMOSParser#absFunction.
+	visitAbsFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by AMOSParser#btstFunction.
 	visitBtstFunction(ctx) {
 	  return this.visitChildren(ctx);

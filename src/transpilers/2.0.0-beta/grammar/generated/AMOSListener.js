@@ -653,6 +653,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by AMOSParser#absFunction.
+	enterAbsFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#absFunction.
+	exitAbsFunction(ctx) {
+	}
+
+
 	// Enter a parse tree produced by AMOSParser#btstFunction.
 	enterBtstFunction(ctx) {
 	}

@@ -101,6 +101,7 @@ export default class ExpressionVisitor extends AMOSVisitor {
     if (ctx.qsinFunction()) return this.visit(ctx.qsinFunction());
     if (ctx.qcosFunction()) return this.visit(ctx.qcosFunction());
     if (ctx.rndFunction()) return this.visit(ctx.rndFunction());
+    if (ctx.absFunction()) return this.visit(ctx.absFunction());
 
     // Case 4: Terminal literal (NUMBER, STRING, IDENTIFIER, HEX_NUMBER)
     return ctx.getText();
@@ -123,6 +124,11 @@ export default class ExpressionVisitor extends AMOSVisitor {
   }
 
   // ---- Functions (commands/functions.js) -----------------------------------
+
+  // ABS
+  visitAbsFunction(ctx) {
+    return this.translator.functions.visitAbsFunction(ctx);
+  }
 
   // COS
   visitCosFunction(ctx) {

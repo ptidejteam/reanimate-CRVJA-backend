@@ -9,6 +9,12 @@ import BaseHandler from './base-handler.js';
  * Category source: tracking spreadsheet / https://amospromanual.dev/99-appendix-g-command-index.html
  */
 export default class Functions extends BaseHandler {
+
+  visitAbsFunction(ctx) {
+    const arg = this._extractFunctionArg(ctx);
+    return `Math.abs(${arg})`;
+  }
+
   // ---- COS: https://amospromanual.dev/05-03-maths.html#fn-cos ----
   /**
    * Grammar Rule:
