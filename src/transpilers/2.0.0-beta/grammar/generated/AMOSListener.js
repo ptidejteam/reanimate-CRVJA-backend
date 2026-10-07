@@ -518,6 +518,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by AMOSParser#exitIf.
+	enterExitIf(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#exitIf.
+	exitExitIf(ctx) {
+	}
+
+
 	// Enter a parse tree produced by AMOSParser#fnCall.
 	enterFnCall(ctx) {
 	}
@@ -587,6 +596,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by AMOSParser#logicalOperator.
 	exitLogicalOperator(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#condition.
+	enterCondition(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#condition.
+	exitCondition(ctx) {
 	}
 
 
@@ -668,6 +686,33 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by AMOSParser#repeatUntil.
 	exitRepeatUntil(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#swap.
+	enterSwap(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#swap.
+	exitSwap(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#ifThenStatement.
+	enterIfThenStatement(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#ifThenStatement.
+	exitIfThenStatement(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#ifThenElse.
+	enterIfThenElse(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#ifThenElse.
+	exitIfThenElse(ctx) {
 	}
 
 

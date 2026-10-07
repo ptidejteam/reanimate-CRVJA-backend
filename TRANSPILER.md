@@ -115,6 +115,8 @@ naming rule, when the first command is implemented
 
 - `PRINT #` is a Structure, but it shares the grammar rule of `PRINT`, so it is translated in
   `instructions.js` under `PRINT`.
+- `STEP` is a Structure, but it is part of the grammar rule of `FOR` (`For I=1 To 9 Step 2`), so
+  it is translated in `structures.js` under `FOR ... NEXT`.
 - `KEY STATE` is a Function, but the grammar only accepts it as the condition of `If` / `While`,
   so it is translated in `structures.js` under `IF KEY STATE` and `WHILE`.
 - `NOT` and `FN` are Structures, but they return a value inside an expression (`X = Not Y`,

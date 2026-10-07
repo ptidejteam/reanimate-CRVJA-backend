@@ -42,6 +42,16 @@ export default class Structures extends BaseHandler {
     this.emit('');
   }
 
+  // EXIT
+  enterExitLoop(ctx) {
+    console.log('To be implemented...');
+  }
+
+  // EXIT IF
+  enterExitIf(ctx) {
+    console.log('To be implemented...');
+  }
+
   // FN
   // FN is a Structure, but it returns a value inside an expression (Print Fn X(1,10,100)),
   // so it is translated by a visitX method.
@@ -50,11 +60,17 @@ export default class Structures extends BaseHandler {
     return `0`;
   }
 
-  // FOR ... NEXT
+  // FOR ... NEXT (and STEP)
+  // STEP is a Structure, but it is part of the forLoop rule (For I=1 To 9 Step 2),
+  // so it is translated here.
   enterForLoop(ctx) {
     let variable = ctx.IDENTIFIER(0).getText();
     let start = this.expr(ctx.expression(0));
     let end = this.expr(ctx.expression(1));
+
+    if (ctx.STEP()) {
+      console.log('To be implemented...');
+    }
 
     this.declareVariable(variable);
     this.emit(`for (${variable} = ${start}; ${variable} <= ${end}; ${variable}++) {`);
@@ -240,6 +256,17 @@ ${localDeclarations}`);
 
   exitRepeatUntil(ctx) {
     this.emit('Timer = 9; }, 16);');
+  }
+
+  // SWAP
+  enterSwap(ctx) {
+    console.log('To be implemented...');
+  }
+
+  // THEN
+  // Single-line If: If X=1 Then Print "A" Else Print "B"
+  enterIfThenStatement(ctx) {
+    console.log('To be implemented...');
   }
 
   // WHILE ... WEND

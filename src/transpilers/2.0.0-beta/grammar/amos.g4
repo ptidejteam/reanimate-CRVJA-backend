@@ -13,8 +13,9 @@ program:
     statementList EOF
     ;
 
+// ifThenStatement (THEN) is listed here and not in `statement:`: see THEN.
 statementList:
-    (statement | NEWLINE)*
+    (statement | ifThenStatement | NEWLINE)*
     ;
 
 // The order of the alternatives matters: ANTLR resolves ambiguities in favour
@@ -94,6 +95,8 @@ statement:
     | dec
     | inc
     | defFn
+    | exitIf
+    | swap
     ;
 
 // ---- Instructions ----------------------------------------------------------
@@ -377,15 +380,20 @@ exitLoop:
     'Exit' NUMBER?
     ;
 
+// EXIT IF
+exitIf:
+    EXIT_IF condition (COMMA NUMBER)?
+    ;
+
 // FN
 // FN is a Structure, but it returns a value, so it is listed in `factor:`.
 fnCall:
     'Fn' IDENTIFIER ROUND_BRACKET_OPEN expression (COMMA expression)* ROUND_BRACKET_CLOSE
     ;
 
-// FOR ... NEXT
+// FOR ... NEXT (and STEP)
 forLoop:
-    FOR IDENTIFIER '=' expression TO expression
+    FOR IDENTIFIER '=' expression TO expression (STEP expression)?
     statementList
     (NEXT IDENTIFIER | NEXT)
     ;
@@ -418,6 +426,12 @@ comparisonOperator:
 
 logicalOperator:
     OR | AND
+    ;
+
+// Condition of EXIT IF and THEN: the conditions that IF ... END IF and IF KEY STATE accept.
+condition:
+    expression comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
+    | keyStateFunction
     ;
 
 // IF KEY STATE(...) ... END IF
@@ -472,6 +486,23 @@ repeatUntil:
     'Repeat'
     statementList
     'Until' 'Mouse' 'Key' '=' NUMBER
+    ;
+
+// SWAP
+swap:
+    'Swap' IDENTIFIER COMMA IDENTIFIER
+    ;
+
+// THEN
+// Single-line If: If condition Then statements [Else statements], all on one line. It is listed
+// in `statementList:` and not in `statement:`, so the statements of a Then can't be another
+// single-line If: it would take the end of the line, and this Then would go on to the next line.
+ifThenStatement:
+    IF condition THEN statement+ ifThenElse? (NEWLINE | EOF)
+    ;
+
+ifThenElse:
+    ELSE statement+
     ;
 
 // WHILE ... WEND
@@ -705,10 +736,13 @@ DO: 'Do';
 LOOP: 'Loop';
 FOR: 'For';
 TO: 'To';
+STEP: 'Step';
 NEXT: 'Next';
 IF: 'If';
+THEN: 'Then';
 ELSE: 'Else';
 END_IF: 'End If';
+EXIT_IF: 'Exit If';
 WHILE: 'While';
 WEND: 'Wend';
 PROCEDURE: 'Procedure';

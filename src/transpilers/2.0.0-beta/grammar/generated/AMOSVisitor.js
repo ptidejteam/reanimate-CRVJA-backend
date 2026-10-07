@@ -348,6 +348,12 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by AMOSParser#exitIf.
+	visitExitIf(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by AMOSParser#fnCall.
 	visitFnCall(ctx) {
 	  return this.visitChildren(ctx);
@@ -392,6 +398,12 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by AMOSParser#logicalOperator.
 	visitLogicalOperator(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#condition.
+	visitCondition(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -446,6 +458,24 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by AMOSParser#repeatUntil.
 	visitRepeatUntil(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#swap.
+	visitSwap(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#ifThenStatement.
+	visitIfThenStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#ifThenElse.
+	visitIfThenElse(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

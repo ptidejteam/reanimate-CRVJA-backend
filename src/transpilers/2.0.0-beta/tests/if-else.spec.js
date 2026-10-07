@@ -185,17 +185,15 @@ test('if-else statement execution branches', async () => {
   );
 });
 
-// NOTE: "If _ Then" clause is not implemented in commands/structures.js yet.
-// Currently, "Then" is treated as an identifier/procedure call (Then()) inside the IF block.
+// NOTE: "If _ Then" is parsed as a single-line If (rule ifThenStatement), but it is not
+// translated yet: enterIfThenStatement in commands/structures.js is a placeholder.
 test('if_then_not_implemented_yet', async () => {
   const amosBasicCode = `
     If 1 > 0 Then Curs Off
-    End If
   `;
 
   const normalizedJS = await translate(amosBasicCode);
 
-  // Documents that "If _ Then" is not implemented yet in commands/structures.js
-  // (Translates 'Then' to 'Then()' instead of consuming it as an IF clause keyword)
-  expect(normalizedJS).toContain('Then();');
+  // "Then" is a keyword: it is no longer translated as a procedure call (Then())
+  expect(normalizedJS).not.toContain('Then();');
 });
