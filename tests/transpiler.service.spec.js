@@ -22,6 +22,30 @@ describe('Transpiler Service', () => {
     expect(result.translatedCode).toContain('amos-screen');
   });
 
+  test.each(['1.1.0', '1.2.0'])(
+    'should transpile successfully with version %s',
+    async (version) => {
+      const result = await transpileCode(amosCode, version);
+      expect(result).toBeDefined();
+      expect(result.lexicalErrors.errors).toEqual([]);
+      expect(result.syntaxErrors.errors).toEqual([]);
+      expect(result.translatedCode).toContain(`Version ${version}`);
+      expect(result.translatedCode).toContain('amos-screen');
+    },
+  );
+
+  test('should keep diagnostics separate between concurrent requests', async () => {
+    const [failed, succeeded] = await Promise.all([
+      transpileCode('A=1+\n2', '2.0.0-beta'),
+      transpileCode(amosCode, '2.0.0-beta'),
+    ]);
+    expect(failed.syntaxErrors.errors.length).toBeGreaterThan(0);
+    expect(failed.translatedCode).toBe('');
+    expect(succeeded.lexicalErrors.errors).toEqual([]);
+    expect(succeeded.syntaxErrors.errors).toEqual([]);
+    expect(succeeded.translatedCode).toContain('amos-screen');
+  });
+
   test('should fall back to default version when version is missing or undefined', async () => {
     // Falls back to default version (2.0.0-beta) and should transpile successfully
     const result = await transpileCode(amosCode, undefined);

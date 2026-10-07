@@ -1,7 +1,9 @@
-import transpile from '../transpiler.js';
+import AMOSTranspiler from '../AMOSTranspiler.js';
 
 test('palette converts AMOS 12-bit colors through the shared converter', async () => {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await transpile('Palette $000,$F80,$FFF');
+  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
+    'Palette $000,$F80,$FFF',
+  );
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);

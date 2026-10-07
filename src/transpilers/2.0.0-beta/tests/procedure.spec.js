@@ -1,7 +1,9 @@
-import transpile from '../transpiler.js';
+import AMOSTranspiler from '../AMOSTranspiler.js';
 
 async function translate(code) {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await transpile(code);
+  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
+    code,
+  );
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);

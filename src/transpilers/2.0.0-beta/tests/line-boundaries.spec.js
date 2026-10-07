@@ -1,7 +1,9 @@
-import transpile from '../transpiler.js';
+import AMOSTranspiler from '../AMOSTranspiler.js';
 
 async function translate(code) {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await transpile(code);
+  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
+    code,
+  );
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
@@ -197,7 +199,7 @@ describe('line boundaries in transpiler 2.0.0-beta', () => {
     ['an incomplete Print expression', 'Print 1+', 'syntaxErrors', { line: 1, column: 8 }],
     ['an invalid character', 'A=1@', 'lexicalErrors', { line: 1, column: 3 }],
   ])('returns diagnostics and no JavaScript for %s', async (_name, source, errorKind, position) => {
-    const response = await transpile(source);
+    const response = await new AMOSTranspiler().transpile(source);
 
     expect(response.translatedCode).toBe('');
     expect(response[errorKind].errors.length).toBeGreaterThan(0);
@@ -219,7 +221,9 @@ describe('line boundaries in transpiler 2.0.0-beta', () => {
     ['CRLF', '\r\n'],
     ['CR', '\r'],
   ])('rejects an incomplete expression at a %s boundary', async (_name, newline) => {
-    const { lexicalErrors, syntaxErrors, translatedCode } = await transpile(`A=1+${newline}2`);
+    const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
+      `A=1+${newline}2`,
+    );
 
     expect(lexicalErrors.errors).toEqual([]);
     expect(syntaxErrors.errors.length).toBeGreaterThan(0);
@@ -231,7 +235,9 @@ describe('line boundaries in transpiler 2.0.0-beta', () => {
     ['LF', '\n'],
     ['CRLF', '\r\n'],
   ])('preserves diagnostic positions on later lines with %s', async (_name, newline) => {
-    const { lexicalErrors, syntaxErrors, translatedCode } = await transpile(`A=1${newline}B=2@`);
+    const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
+      `A=1${newline}B=2@`,
+    );
 
     expect(lexicalErrors.errors[0]).toMatchObject({ line: 2, column: 3 });
     expect(syntaxErrors.errors).toEqual([]);

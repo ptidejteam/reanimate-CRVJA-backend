@@ -23,10 +23,9 @@ export async function transpileCode(amosCode, version) {
     selectedVersion = defaultVersion;
   }
 
-  const transpilerPromise = import(`../transpilers/${selectedVersion}/transpiler.js`);
+  const { default: AMOSTranspiler } = await import(
+    `../transpilers/${selectedVersion}/AMOSTranspiler.js`
+  );
 
-  return transpilerPromise.then((transpiler) => {
-    const results = transpiler.default(amosCode);
-    return results;
-  });
+  return new AMOSTranspiler().transpile(amosCode);
 }

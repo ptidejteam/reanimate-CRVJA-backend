@@ -59,6 +59,7 @@ export default class Amcaf extends BaseHandler {
   // TURBO DRAW
   enterTurboDraw(ctx) {
     function generateRandomID() {
+      // TODO: this is generating a random id. This can be solved just like the "Text" command was 
       let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let id = '';
       for (let i = 0; i < 9; i++) {

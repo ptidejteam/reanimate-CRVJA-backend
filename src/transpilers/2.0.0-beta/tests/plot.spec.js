@@ -1,7 +1,9 @@
-import transpile from '../transpiler.js';
+import AMOSTranspiler from '../AMOSTranspiler.js';
 
 test('plot translation', async () => {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await transpile('Plot 10,20');
+  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
+    'Plot 10,20',
+  );
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
