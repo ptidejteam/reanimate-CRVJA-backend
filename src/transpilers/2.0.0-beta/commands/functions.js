@@ -71,6 +71,12 @@ export default class Functions extends BaseHandler {
     return `0`;
   }
 
+  // INT
+  visitIntFunction(ctx) {
+    console.log('To be implemented...');
+    return `0`;
+  }
+
   // LN
   visitLnFunction(ctx) {
     console.log('To be implemented...');

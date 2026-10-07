@@ -628,6 +628,11 @@ htanFunction:
     'Htan' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
+// INT
+intFunction:
+    'Int' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
 // KEY STATE
 keyStateFunction:
     KEY_STATE ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
@@ -736,6 +741,7 @@ factor:
     | hcosFunction
     | hsinFunction
     | htanFunction
+    | intFunction
     | lnFunction
     | logFunction
     | maxFunction
@@ -819,6 +825,7 @@ ELLIPSE: 'Ellipse';
 INC: 'Inc';
 SORT: 'Sort';
 SWAP: 'Swap';
+INT: 'Int';
 AND: [aA][nN][dD]; // case-insensitive: and, And, AND
 OR: [oO][rR]; // case-insensitive: or, Or, OR
 
