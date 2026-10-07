@@ -505,6 +505,21 @@ absFunction:
     'Abs' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
+// ACOS
+acosFunction:
+    'Acos' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
+// ASIN
+asinFunction:
+    'Asin' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
+// ATAN
+atanFunction:
+    'Atan' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
 // BTST
 btstFunction:
     'Btst' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
@@ -523,6 +538,21 @@ expFunction:
 // FALSE
 falseFunction:
     'False'
+    ;
+
+// HCOS
+hcosFunction:
+    'Hcos' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
+// HSIN
+hsinFunction:
+    'Hsin' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
+// HTAN
+htanFunction:
+    'Htan' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // KEY STATE
@@ -622,10 +652,16 @@ factor:
     | STRING
     | arrayStructure
     | absFunction
+    | acosFunction
+    | asinFunction
+    | atanFunction
     | cosFunction
     | expFunction
     | falseFunction
     | fnCall
+    | hcosFunction
+    | hsinFunction
+    | htanFunction
     | lnFunction
     | logFunction
     | maxFunction
@@ -692,6 +728,12 @@ FALSE: 'False';
 NOT: 'Not';
 DEF_FN: 'Def Fn';
 FN: 'Fn';
+ACOS: 'Acos';
+ASIN: 'Asin';
+ATAN: 'Atan';
+HCOS: 'Hcos';
+HSIN: 'Hsin';
+HTAN: 'Htan';
 AND: [aA][nN][dD]; // case-insensitive: and, And, AND
 OR: [oO][rR]; // case-insensitive: or, Or, OR
 

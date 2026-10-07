@@ -480,6 +480,24 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by AMOSParser#acosFunction.
+	visitAcosFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#asinFunction.
+	visitAsinFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#atanFunction.
+	visitAtanFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by AMOSParser#btstFunction.
 	visitBtstFunction(ctx) {
 	  return this.visitChildren(ctx);
@@ -500,6 +518,24 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by AMOSParser#falseFunction.
 	visitFalseFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#hcosFunction.
+	visitHcosFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#hsinFunction.
+	visitHsinFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#htanFunction.
+	visitHtanFunction(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

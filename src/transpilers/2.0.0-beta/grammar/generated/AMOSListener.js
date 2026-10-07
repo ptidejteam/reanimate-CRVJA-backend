@@ -716,6 +716,33 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by AMOSParser#acosFunction.
+	enterAcosFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#acosFunction.
+	exitAcosFunction(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#asinFunction.
+	enterAsinFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#asinFunction.
+	exitAsinFunction(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#atanFunction.
+	enterAtanFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#atanFunction.
+	exitAtanFunction(ctx) {
+	}
+
+
 	// Enter a parse tree produced by AMOSParser#btstFunction.
 	enterBtstFunction(ctx) {
 	}
@@ -749,6 +776,33 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by AMOSParser#falseFunction.
 	exitFalseFunction(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#hcosFunction.
+	enterHcosFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#hcosFunction.
+	exitHcosFunction(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#hsinFunction.
+	enterHsinFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#hsinFunction.
+	exitHsinFunction(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#htanFunction.
+	enterHtanFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#htanFunction.
+	exitHtanFunction(ctx) {
 	}
 
 

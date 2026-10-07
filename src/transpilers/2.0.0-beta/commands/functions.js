@@ -11,6 +11,24 @@ export default class Functions extends BaseHandler {
     return `Math.abs(${value})`;
   }
 
+  // ACOS
+  visitAcosFunction(ctx) {
+    console.log('To be implemented...');
+    return `0`;
+  }
+
+  // ASIN
+  visitAsinFunction(ctx) {
+    console.log('To be implemented...');
+    return `0`;
+  }
+
+  // ATAN
+  visitAtanFunction(ctx) {
+    console.log('To be implemented...');
+    return `0`;
+  }
+
   // COS
   visitCosFunction(ctx) {
     const angle = this.expr(ctx.expression());
@@ -25,6 +43,24 @@ export default class Functions extends BaseHandler {
 
   // FALSE
   visitFalseFunction(ctx) {
+    console.log('To be implemented...');
+    return `0`;
+  }
+
+  // HCOS
+  visitHcosFunction(ctx) {
+    console.log('To be implemented...');
+    return `0`;
+  }
+
+  // HSIN
+  visitHsinFunction(ctx) {
+    console.log('To be implemented...');
+    return `0`;
+  }
+
+  // HTAN
+  visitHtanFunction(ctx) {
     console.log('To be implemented...');
     return `0`;
   }
