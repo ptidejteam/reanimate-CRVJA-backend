@@ -140,6 +140,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by AMOSParser#dec.
+	enterDec(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#dec.
+	exitDec(ctx) {
+	}
+
+
 	// Enter a parse tree produced by AMOSParser#degree.
 	enterDegree(ctx) {
 	}
@@ -191,6 +200,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by AMOSParser#hide.
 	exitHide(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#inc.
+	enterInc(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#inc.
+	exitInc(ctx) {
 	}
 
 
@@ -464,6 +482,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by AMOSParser#defFn.
+	enterDefFn(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#defFn.
+	exitDefFn(ctx) {
+	}
+
+
 	// Enter a parse tree produced by AMOSParser#doLoop.
 	enterDoLoop(ctx) {
 	}
@@ -488,6 +515,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by AMOSParser#exitLoop.
 	exitExitLoop(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#fnCall.
+	enterFnCall(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#fnCall.
+	exitFnCall(ctx) {
 	}
 
 
@@ -569,6 +605,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by AMOSParser#inputVariable.
 	exitInputVariable(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#notOperator.
+	enterNotOperator(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#notOperator.
+	exitNotOperator(ctx) {
 	}
 
 
@@ -698,6 +743,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by AMOSParser#falseFunction.
+	enterFalseFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#falseFunction.
+	exitFalseFunction(ctx) {
+	}
+
+
 	// Enter a parse tree produced by AMOSParser#keyStateFunction.
 	enterKeyStateFunction(ctx) {
 	}
@@ -743,6 +797,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by AMOSParser#piFunction.
+	enterPiFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#piFunction.
+	exitPiFunction(ctx) {
+	}
+
+
 	// Enter a parse tree produced by AMOSParser#rndFunction.
 	enterRndFunction(ctx) {
 	}
@@ -767,6 +830,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by AMOSParser#sqrFunction.
 	exitSqrFunction(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#trueFunction.
+	enterTrueFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#trueFunction.
+	exitTrueFunction(ctx) {
 	}
 
 

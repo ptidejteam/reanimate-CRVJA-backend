@@ -199,6 +199,11 @@ if (amosScreen) {
     this.emit("document.getElementById('amos-screen').style.cursor = 'auto';");
   }
 
+  // DEC
+  enterDec(ctx) {
+    console.log('To be implemented...');
+  }
+
   // DIM
   enterArrayDeclaration(ctx) {
     for (let i = 0; i < ctx.arrayStructure().length; i++) {
@@ -219,6 +224,11 @@ if (amosScreen) {
 
       this.emit(';');
     }
+  }
+
+  // INC
+  enterInc(ctx) {
+    console.log('To be implemented...');
   }
 
   // INK

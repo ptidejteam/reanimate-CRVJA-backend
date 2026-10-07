@@ -19,6 +19,11 @@ export default class Structures extends BaseHandler {
     this.emit(`dataMatrix.push(${row});`);
   }
 
+  // DEF FN
+  enterDefFn(ctx) {
+    console.log('To be implemented...');
+  }
+
   // DO ... LOOP
   enterDoLoop(ctx) {
     this.emit('while(true) {');
@@ -35,6 +40,14 @@ export default class Structures extends BaseHandler {
 
   exitElseStatement(ctx) {
     this.emit('');
+  }
+
+  // FN
+  // FN is a Structure, but it returns a value inside an expression (Print Fn X(1,10,100)),
+  // so it is translated by a visitX method.
+  visitFnCall(ctx) {
+    console.log('To be implemented...');
+    return `0`;
   }
 
   // FOR ... NEXT
@@ -129,6 +142,14 @@ export default class Structures extends BaseHandler {
     this.emit(
       `\nlet ${variable} = '';\nreadFromChannel(${channel}, (data) => {\n    ${variable} = data;\n});`,
     );
+  }
+
+  // NOT
+  // NOT is a Structure, but it returns a value inside an expression (X = Not Y),
+  // so it is translated by a visitX method.
+  visitNotOperator(ctx) {
+    console.log('To be implemented...');
+    return `0`;
   }
 
   // PROC (procedure call)

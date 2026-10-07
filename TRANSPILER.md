@@ -117,6 +117,9 @@ naming rule, when the first command is implemented
   `instructions.js` under `PRINT`.
 - `KEY STATE` is a Function, but the grammar only accepts it as the condition of `If` / `While`,
   so it is translated in `structures.js` under `IF KEY STATE` and `WHILE`.
+- `NOT` and `FN` are Structures, but they return a value inside an expression (`X = Not Y`,
+  `Print Fn X(1,10,100)`), so their rules are listed in `factor:` and they are translated by
+  `visitX` methods in `structures.js`.
 - Variable and array assignments (`X = 1`, `A(1) = 2`) and labels have no category. They are at
   the end of `structures.js` and of the Structures part of `amos.g4`, under _Not in the command
   index_.

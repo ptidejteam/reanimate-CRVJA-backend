@@ -91,6 +91,9 @@ statement:
     | screenSwap
     | exitLoop
     | plot
+    | dec
+    | inc
+    | defFn
     ;
 
 // ---- Instructions ----------------------------------------------------------
@@ -155,6 +158,11 @@ cursOn:
     CURS_ON
     ;
 
+// DEC
+dec:
+    'Dec' IDENTIFIER
+    ;
+
 // DEGREE
 degree:
     'Degree'
@@ -183,6 +191,11 @@ flashOn:
 // HIDE
 hide:
     'Hide' 'On'?
+    ;
+
+// INC
+inc:
+    'Inc' IDENTIFIER
     ;
 
 // INK
@@ -340,6 +353,11 @@ dataStatement:
     'Data' expression (COMMA expression)*
     ;
 
+// DEF FN
+defFn:
+    DEF_FN IDENTIFIER ROUND_BRACKET_OPEN IDENTIFIER (COMMA IDENTIFIER)* ROUND_BRACKET_CLOSE '=' expression
+    ;
+
 // DO ... LOOP
 doLoop:
     DO
@@ -357,6 +375,12 @@ elseStatement:
 // EXIT
 exitLoop:
     'Exit' NUMBER?
+    ;
+
+// FN
+// FN is a Structure, but it returns a value, so it is listed in `factor:`.
+fnCall:
+    'Fn' IDENTIFIER ROUND_BRACKET_OPEN expression (COMMA expression)* ROUND_BRACKET_CLOSE
     ;
 
 // FOR ... NEXT
@@ -406,6 +430,13 @@ ifKeyStateStatement:
 // INPUT #
 inputVariable:
     'Input' HASH NUMBER COMMA IDENTIFIER HEX_NUMBER?
+    ;
+
+// NOT
+// NOT is a Structure, but it returns a value, so it is listed in `factor:`. It applies to the
+// operand that follows it (`Not X+1` is `(Not X)+1`), like a unary minus.
+notOperator:
+    'Not' factor
     ;
 
 // ON ... GOSUB
@@ -489,6 +520,11 @@ expFunction:
     'Exp' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
+// FALSE
+falseFunction:
+    'False'
+    ;
+
 // KEY STATE
 keyStateFunction:
     KEY_STATE ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
@@ -514,6 +550,11 @@ minFunction:
     'Min' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
     ;
 
+// PI#
+piFunction:
+    'Pi#'
+    ;
+
 // RND
 rndFunction:
     'Rnd' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
@@ -527,6 +568,11 @@ sinFunction:
 // SQR
 sqrFunction:
     'Sqr' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
+// TRUE
+trueFunction:
+    'True'
     ;
 
 // ---- AMCAF extension -------------------------------------------------------
@@ -578,15 +624,20 @@ factor:
     | absFunction
     | cosFunction
     | expFunction
-    | sinFunction
+    | falseFunction
+    | fnCall
     | lnFunction
     | logFunction
     | maxFunction
     | minFunction
-    | qsinFunction
+    | notOperator
+    | piFunction
     | qcosFunction
+    | qsinFunction
     | rndFunction
+    | sinFunction
     | sqrFunction
+    | trueFunction
     | IDENTIFIER                                            // A variable
     | ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE     // Parentheses for grouping
     | HEX_NUMBER
@@ -635,6 +686,12 @@ LOG: 'Log';
 LN: 'Ln';
 SQR: 'Sqr';
 EXP: 'Exp';
+PI: 'Pi#';
+TRUE: 'True';
+FALSE: 'False';
+NOT: 'Not';
+DEF_FN: 'Def Fn';
+FN: 'Fn';
 AND: [aA][nN][dD]; // case-insensitive: and, And, AND
 OR: [oO][rR]; // case-insensitive: or, Or, OR
 

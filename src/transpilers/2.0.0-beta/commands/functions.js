@@ -19,20 +19,25 @@ export default class Functions extends BaseHandler {
 
   // EXP
   visitExpFunction(ctx) {
-    console.log("To be implemented...");
+    console.log('To be implemented...');
     return `0`;
   }
 
-
-  // LOG
-  visitLogFunction(ctx) {
-    console.log("To be implemented...");
+  // FALSE
+  visitFalseFunction(ctx) {
+    console.log('To be implemented...');
     return `0`;
   }
 
   // LN
   visitLnFunction(ctx) {
-    console.log("To be implemented...");
+    console.log('To be implemented...');
+    return `0`;
+  }
+
+  // LOG
+  visitLogFunction(ctx) {
+    console.log('To be implemented...');
     return `0`;
   }
 
@@ -52,6 +57,12 @@ export default class Functions extends BaseHandler {
     return `Math.min(${value1}, ${value2})`;
   }
 
+  // PI#
+  visitPiFunction(ctx) {
+    console.log('To be implemented...');
+    return `0`;
+  }
+
   // RND
   visitRndFunction(ctx) {
     const angle = this.expr(ctx.expression());
@@ -66,7 +77,13 @@ export default class Functions extends BaseHandler {
 
   // SQR
   visitSqrFunction(ctx) {
-    console.log("To be implemented...");
+    console.log('To be implemented...');
+    return `0`;
+  }
+
+  // TRUE
+  visitTrueFunction(ctx) {
+    console.log('To be implemented...');
     return `0`;
   }
 }
