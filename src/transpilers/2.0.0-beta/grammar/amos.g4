@@ -836,10 +836,10 @@ REM: 'Rem' ~[\n\r]* -> skip;
 
 // ---- Literals and identifiers ----------------------------------------------
 
-NUMBER: [0-9]+;
+NUMBER: [0-9]+ ('.' [0-9]+)?; // 42 or 3.14
 HEX_NUMBER: '$' [0-9A-Fa-f]+;
 STRING: '"' (~["\r\n])* '"';
-IDENTIFIER: [a-zA-Z_] [a-zA-Z_0-9]* '$'?;
+IDENTIFIER: [a-zA-Z_] [a-zA-Z_0-9]* [$#]?; // A, A$ (string) or A# (float)
 
 // ---- Operators -------------------------------------------------------------
 

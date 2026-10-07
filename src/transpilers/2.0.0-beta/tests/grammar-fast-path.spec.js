@@ -12,6 +12,7 @@ test.each([
   'If X>1\nY=1\nEnd If',
   'Play X,2',
   'Rainbow 1,2,3,4',
+  'X#=Y#*2.5',
 ])('%j parses without full-context prediction', (code) => {
   const parser = new AMOSParser(
     new antlr4.CommonTokenStream(new AMOSLexer(new antlr4.InputStream(code))),

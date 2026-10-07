@@ -30,6 +30,14 @@ export default async function transpile(amosCode) {
     };
   }
 
+  // A float variable (A#) is not a valid JavaScript name: rename it A_f. The commands read
+  // names from these tokens, so they all get the JavaScript name.
+  for (const token of tokens.tokens) {
+    if (token.type === AMOSLexer.IDENTIFIER && token.text.endsWith('#')) {
+      token.text = `${token.text.slice(0, -1)}_f`;
+    }
+  }
+
   const translator = new AmosTranslator();
   const walker = new antlr4.tree.ParseTreeWalker();
   walker.walk(translator, tree);

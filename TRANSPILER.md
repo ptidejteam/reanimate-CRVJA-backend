@@ -317,6 +317,11 @@ Without a position, you get all of them as an array (`ctx.expression().length`).
 - **Tokens**, the names in capitals (`NUMBER`, `STRING`, `IDENTIFIER`, `HEX_NUMBER`): `.getText()`
   returns their text as written. A `STRING` keeps its quotes (`"Hello"`), so it is already a
   JavaScript string. An `IDENTIFIER` is a name, such as the variable of `ADD`.
+- **Floats**: a `NUMBER` can be decimal (`3.14`). A float variable (`A#`) is the one name not
+  returned as written: `#` is not valid in JavaScript, so `transpiler.js` renames `A#` to `A_f`
+  before the translation, and `.getText()` returns `A_f`. Commands need nothing special for it.
+- **Strings**: a string variable (`A$`) keeps its name, since `$` is valid in JavaScript.
+  `this.declareVariable` gives it `""` instead of `0`.
 - **Other rules** (`printItem`, `arrayStructure`…) have their own methods: `PRINT` reads
   `ctx.printItem(0).expression()`.
 - **Keywords and punctuation** (`'Plot'`, `COMMA`, `TO`) are parts too (`ctx.COMMA()`), but you
