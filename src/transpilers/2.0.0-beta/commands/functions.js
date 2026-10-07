@@ -17,6 +17,25 @@ export default class Functions extends BaseHandler {
     return `Math.cos(${angle})`;
   }
 
+  // EXP
+  visitExpFunction(ctx) {
+    console.log("To be implemented...");
+    return `0`;
+  }
+
+
+  // LOG
+  visitLogFunction(ctx) {
+    console.log("To be implemented...");
+    return `0`;
+  }
+
+  // LN
+  visitLnFunction(ctx) {
+    console.log("To be implemented...");
+    return `0`;
+  }
+
   // MAX
   visitMaxFunction(ctx) {
     const value1 = this.expr(ctx.expression(0));
@@ -43,5 +62,11 @@ export default class Functions extends BaseHandler {
   visitSinFunction(ctx) {
     const angle = this.expr(ctx.expression());
     return `Math.sin(${angle})`;
+  }
+
+  // SQR
+  visitSqrFunction(ctx) {
+    console.log("To be implemented...");
+    return `0`;
   }
 }

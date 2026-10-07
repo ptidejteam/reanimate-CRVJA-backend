@@ -484,9 +484,24 @@ cosFunction:
     'Cos' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
+// EXP
+expFunction:
+    'Exp' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
 // KEY STATE
 keyStateFunction:
     KEY_STATE ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
+// LN
+lnFunction:
+    'Ln' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
+// LOG
+logFunction:
+    'Log' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // MAX
@@ -507,6 +522,11 @@ rndFunction:
 // SIN
 sinFunction:
     'Sin' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
+// SQR
+sqrFunction:
+    'Sqr' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // ---- AMCAF extension -------------------------------------------------------
@@ -557,12 +577,16 @@ factor:
     | arrayStructure
     | absFunction
     | cosFunction
+    | expFunction
     | sinFunction
+    | lnFunction
+    | logFunction
     | maxFunction
     | minFunction
     | qsinFunction
     | qcosFunction
     | rndFunction
+    | sqrFunction
     | IDENTIFIER                                            // A variable
     | ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE     // Parentheses for grouping
     | HEX_NUMBER
@@ -607,6 +631,10 @@ KEY_STATE: 'Key State';
 ABS: 'Abs';
 MAX: 'Max';
 MIN: 'Min';
+LOG: 'Log';
+LN: 'Ln';
+SQR: 'Sqr';
+EXP: 'Exp';
 AND: [aA][nN][dD]; // case-insensitive: and, And, AND
 OR: [oO][rR]; // case-insensitive: or, Or, OR
 

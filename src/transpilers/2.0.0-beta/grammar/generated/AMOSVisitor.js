@@ -462,8 +462,26 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by AMOSParser#expFunction.
+	visitExpFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by AMOSParser#keyStateFunction.
 	visitKeyStateFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#lnFunction.
+	visitLnFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#logFunction.
+	visitLogFunction(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -488,6 +506,12 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by AMOSParser#sinFunction.
 	visitSinFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#sqrFunction.
+	visitSqrFunction(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
