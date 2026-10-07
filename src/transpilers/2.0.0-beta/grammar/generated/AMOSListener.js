@@ -122,6 +122,24 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by AMOSParser#colour.
+	enterColour(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#colour.
+	exitColour(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#colourBack.
+	enterColourBack(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#colourBack.
+	exitColourBack(ctx) {
+	}
+
+
 	// Enter a parse tree produced by AMOSParser#cursOff.
 	enterCursOff(ctx) {
 	}
@@ -173,6 +191,33 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by AMOSParser#doubleBuffer.
 	exitDoubleBuffer(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#draw.
+	enterDraw(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#draw.
+	exitDraw(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#drawTo.
+	enterDrawTo(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#drawTo.
+	exitDrawTo(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#ellipse.
+	enterEllipse(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#ellipse.
+	exitEllipse(ctx) {
 	}
 
 
@@ -425,6 +470,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by AMOSParser#setRainbow.
 	exitSetRainbow(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#sort.
+	enterSort(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#sort.
+	exitSort(ctx) {
 	}
 
 
@@ -794,6 +848,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by AMOSParser#btstFunction.
 	exitBtstFunction(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#colourFunction.
+	enterColourFunction(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#colourFunction.
+	exitColourFunction(ctx) {
 	}
 
 

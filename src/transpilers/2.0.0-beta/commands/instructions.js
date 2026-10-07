@@ -189,6 +189,16 @@ if (amosScreen) {
     }
   }
 
+  // COLOUR
+  enterColour(ctx) {
+    console.log('To be implemented...');
+  }
+
+  // COLOUR BACK
+  enterColourBack(ctx) {
+    console.log('To be implemented...');
+  }
+
   // CURS OFF
   enterCursOff(ctx) {
     this.emit("document.getElementById('amos-screen').style.cursor = 'none';");
@@ -224,6 +234,21 @@ if (amosScreen) {
 
       this.emit(';');
     }
+  }
+
+  // DRAW
+  enterDraw(ctx) {
+    console.log('To be implemented...');
+  }
+
+  // DRAW TO
+  enterDrawTo(ctx) {
+    console.log('To be implemented...');
+  }
+
+  // ELLIPSE
+  enterEllipse(ctx) {
+    console.log('To be implemented...');
   }
 
   // INC
@@ -382,6 +407,11 @@ screenDiv.id = 'amos-screen';
 screenDiv.style.zIndex = 1;
 document.getElementById('game-container').appendChild(screenDiv);
 document.getElementById('amos-screen').style.backgroundColor = 'black';`);
+  }
+
+  // SORT
+  enterSort(ctx) {
+    console.log('To be implemented...');
   }
 
   // SPRITE

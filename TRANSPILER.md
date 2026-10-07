@@ -117,6 +117,9 @@ naming rule, when the first command is implemented
   `instructions.js` under `PRINT`.
 - `STEP` is a Structure, but it is part of the grammar rule of `FOR` (`For I=1 To 9 Step 2`), so
   it is translated in `structures.js` under `FOR ... NEXT`.
+- `COLOUR` is both an Instruction (`Colour 1,$A74`, rule `colour`) and a Function
+  (`C=Colour(1)`, rule `colourFunction`), as in the command index. Each form is translated in the
+  file of its category, under `// COLOUR`.
 - `KEY STATE` is a Function, but the grammar only accepts it as the condition of `If` / `While`,
   so it is translated in `structures.js` under `IF KEY STATE` and `WHILE`.
 - `NOT` and `FN` are Structures, but they return a value inside an expression (`X = Not Y`,

@@ -97,6 +97,12 @@ statement:
     | defFn
     | exitIf
     | swap
+    | colour
+    | colourBack
+    | draw
+    | drawTo
+    | ellipse
+    | sort
     ;
 
 // ---- Instructions ----------------------------------------------------------
@@ -151,6 +157,17 @@ cls:
     'Cls' (expression (COMMA expression COMMA expression TO expression COMMA expression)?)?
     ;
 
+// COLOUR
+colour:
+    'Colour' expression COMMA expression
+    ;
+
+// COLOUR BACK
+// Colour Back $RGB, or Colour Back (number) for the colour of an existing index.
+colourBack:
+    COLOUR_BACK expression
+    ;
+
 // CURS OFF
 cursOff:
     CURS_OFF
@@ -179,6 +196,21 @@ arrayDeclaration:
 // DOUBLE BUFFER
 doubleBuffer:
     'Double' 'Buffer'
+    ;
+
+// DRAW
+draw:
+    'Draw' expression COMMA expression TO expression COMMA expression
+    ;
+
+// DRAW TO
+drawTo:
+    'Draw' TO expression COMMA expression
+    ;
+
+// ELLIPSE
+ellipse:
+    'Ellipse' expression COMMA expression COMMA expression COMMA expression
     ;
 
 // FLASH OFF
@@ -321,6 +353,11 @@ setBuffer:
 // SET RAINBOW
 setRainbow:
     'Set' 'Rainbow' expression COMMA expression COMMA expression COMMA expression COMMA expression COMMA expression
+    ;
+
+// SORT
+sort:
+    'Sort' arrayStructure
     ;
 
 // SPRITE
@@ -556,6 +593,11 @@ btstFunction:
     'Btst' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
     ;
 
+// COLOUR
+colourFunction:
+    'Colour' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
 // COS
 cosFunction:
     'Cos' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
@@ -686,6 +728,7 @@ factor:
     | acosFunction
     | asinFunction
     | atanFunction
+    | colourFunction
     | cosFunction
     | expFunction
     | falseFunction
@@ -768,6 +811,14 @@ ATAN: 'Atan';
 HCOS: 'Hcos';
 HSIN: 'Hsin';
 HTAN: 'Htan';
+COLOUR: 'Colour';
+COLOUR_BACK: 'Colour Back';
+DEC: 'Dec';
+DRAW: 'Draw';
+ELLIPSE: 'Ellipse';
+INC: 'Inc';
+SORT: 'Sort';
+SWAP: 'Swap';
 AND: [aA][nN][dD]; // case-insensitive: and, And, AND
 OR: [oO][rR]; // case-insensitive: or, Or, OR
 

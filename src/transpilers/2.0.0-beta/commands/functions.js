@@ -29,6 +29,12 @@ export default class Functions extends BaseHandler {
     return `0`;
   }
 
+  // COLOUR
+  visitColourFunction(ctx) {
+    console.log('To be implemented...');
+    return `0`;
+  }
+
   // COS
   visitCosFunction(ctx) {
     const angle = this.expr(ctx.expression());

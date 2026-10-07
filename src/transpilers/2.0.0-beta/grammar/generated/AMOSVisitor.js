@@ -84,6 +84,18 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by AMOSParser#colour.
+	visitColour(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#colourBack.
+	visitColourBack(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by AMOSParser#cursOff.
 	visitCursOff(ctx) {
 	  return this.visitChildren(ctx);
@@ -116,6 +128,24 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by AMOSParser#doubleBuffer.
 	visitDoubleBuffer(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#draw.
+	visitDraw(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#drawTo.
+	visitDrawTo(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#ellipse.
+	visitEllipse(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -284,6 +314,12 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by AMOSParser#setRainbow.
 	visitSetRainbow(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#sort.
+	visitSort(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -530,6 +566,12 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by AMOSParser#btstFunction.
 	visitBtstFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#colourFunction.
+	visitColourFunction(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
