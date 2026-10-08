@@ -76,8 +76,16 @@ export default class Functions extends BaseHandler {
 
   // HTAN
   visitHtanFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const num = this.expr(ctx.expression());
+
+    if (!Number.isFinite(num)) {
+      if (isNaN(num)) {
+        console.error(`Invalid number ${num}`);
+        return null;
+      }
+    }
+
+    return `Math.tanh(${num})`;
   }
 
   // INT
