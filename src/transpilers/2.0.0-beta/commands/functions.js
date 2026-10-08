@@ -55,8 +55,17 @@ export default class Functions extends BaseHandler {
 
   // HCOS
   visitHcosFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const angle = this.expr(ctx.expression());
+
+    if (!Number.isFinite(angle)) {
+      throw new RangeError(`${angle} must be a finite, real number.`);
+    }
+  
+    if (Math.abs(angle) > 710.47) {
+      throw new RangeError(`${angle} is too large and will cause floating-point overflow.`);
+    }
+
+    return `Math.cosh(${angle})`;
   }
 
   // HSIN
@@ -67,8 +76,16 @@ export default class Functions extends BaseHandler {
 
   // HTAN
   visitHtanFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const num = this.expr(ctx.expression());
+
+    if (!Number.isFinite(num)) {
+      if (isNaN(num)) {
+        console.error(`Invalid number ${num}`);
+        return null;
+      }
+    }
+
+    return `Math.tanh(${num})`;
   }
 
   // INT
