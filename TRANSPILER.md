@@ -410,7 +410,8 @@ look for what is already there:
 | `bankData`, `loadBank(name, bank)`, `renderSprite(n, x, y, image)` | Sprite banks (`.abk`), drawn on a `canvas`         | `LOAD`, `SPRITE`                                     |
 | `openFile`, `writeToChannel`, `readFromChannel`, `closeChannel`    | File channels                                      | `OPEN IN`, `OPEN OUT`, `PRINT #`, `INPUT #`, `CLOSE` |
 | `dataMatrixPointer`, `Timer`                                       | Position of the next `READ`, and the timer         | `READ`, `REPEAT … UNTIL`                             |
-| `Sin`, `Cos`, `Tan`, `Qsin`, `Qcos`, `Rnd`                         | Math helpers                                       | Not used by the translator yet                       |
+| `Qsin`, `Qcos`                                                   | AMCAF trigonometry helpers                          | `QSIN`, `QCOS`                                       |
+| `Rnd`                                                            | Random number helper                                | Not used by the translator yet                       |
 
 `amos-translator.js` also adds the Amiga colour helpers of `src/utils/amiga-color.js` to every
 program.

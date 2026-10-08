@@ -28,8 +28,9 @@ describe('expression operands', () => {
     expect(normalizedJS).toContain('const x1 = A[Math.trunc(1 + 2)];');
     expect(normalizedJS).toContain('Math.floor(Math.random() * (A[Math.trunc(2 + 1)] + 1))');
     expect(normalizedJS).toContain("textEl.style.top = Math.sin(A[Math.trunc(2 + 1)]) + 'px';");
-    expect(normalizedJS).toMatch(/const TurboDrawX1[A-Za-z0-9]+ = A\[Math\.trunc\(1 \+ 2\)\];/);
-    expect(normalizedJS).toContain('colorMapping[Math.sin(A[Math.trunc(2 + 1)])]');
+    expect(normalizedJS).toContain(
+      "turboDrawLine( 'turboDraw_0', A[Math.trunc(1 + 2)], 2, 3, 4, Math.sin(A[Math.trunc(2 + 1)]), A[Math.trunc(3)], );",
+    );
     expect(normalizedJS).toContain('const clearY2 = A[Math.trunc(2 + 1)];');
     expect(normalizedJS).toContain('const clearColor = colorMapping[A[Math.trunc(1 + 2)]];');
     expect(normalizedJS).not.toMatch(/\bA\(/);

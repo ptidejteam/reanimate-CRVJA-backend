@@ -478,24 +478,41 @@ function closeChannel(channel) {
   delete channels[channel];
 }
 
-function Cos(angle) {
-  return Math.cos((angle * Math.PI) / 180);
-}
-
-function Sin(angle) {
-  return Math.sin((angle * Math.PI) / 180);
-}
-
-function Tan(angle) {
-  return Math.tan((angle * Math.PI) / 180);
-}
-
 function Qsin(angle, radius) {
   return Math.round(radius * Math.sin((angle * Math.PI) / 512));
 }
 
 function Qcos(angle, radius) {
   return Math.round(radius * Math.cos((angle * Math.PI) / 512));
+}
+
+function turboDrawLine(id, x1, y1, x2, y2, colorIndex, index) {
+  const deltaX = x2 - x1;
+  const deltaY = y2 - y1;
+  const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+  const color = colorMapping[colorIndex];
+  const layer = 1000 + index;
+
+  let lineDiv = document.getElementById(id);
+  if (!lineDiv) {
+    lineDiv = document.createElement('div');
+    lineDiv.id = id;
+    lineDiv.style.position = 'absolute';
+    lineDiv.style.borderRadius = '1px';
+    lineDiv.style.transformOrigin = '0 0';
+    document.getElementById('amos-screen').appendChild(lineDiv);
+  }
+
+  lineDiv.style.backgroundColor = color;
+  lineDiv.style.left = x1 + 'px';
+  lineDiv.style.top = y1 + 'px';
+  lineDiv.style.width = length + 'px';
+  lineDiv.style.height = '2px';
+  lineDiv.style.transform = 'rotate(' + angle + 'deg)';
+  lineDiv.style.borderColor = color;
+  lineDiv.style.zIndex = layer;
+  lineDiv.indexPlacer = layer;
 }
 
 function Rnd(maxValue) {
