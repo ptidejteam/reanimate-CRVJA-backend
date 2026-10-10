@@ -25,8 +25,8 @@ export default class Functions extends BaseHandler {
 
   // ATAN
   visitAtanFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const value = this.expr(ctx.expression());
+    return `Math.atan(${value})`;
   }
 
   // COLOUR
