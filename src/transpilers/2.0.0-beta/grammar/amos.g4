@@ -412,6 +412,12 @@ elseStatement:
     END_IF
     ;
 
+// ELSE IF
+elseIfStatement:
+    ELSE_IF condition
+    statementList
+    ;
+
 // EXIT
 exitLoop:
     'Exit' NUMBER?
@@ -454,6 +460,7 @@ gotoLabel:
 ifStatement:
     IF expression comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
     statementList
+    elseIfStatement*
     ('End' 'if' | elseStatement | END_IF)
     ;
 
@@ -465,7 +472,7 @@ logicalOperator:
     OR | AND
     ;
 
-// Condition of EXIT IF and THEN: the conditions that IF ... END IF and IF KEY STATE accept.
+// Condition of ELSE IF, EXIT IF and THEN: the conditions that IF ... END IF and IF KEY STATE accept.
 condition:
     expression comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
     | keyStateFunction
@@ -475,6 +482,7 @@ condition:
 ifKeyStateStatement:
     IF keyStateFunction
     statementList
+    elseIfStatement*
     (elseStatement | END_IF)
     ;
 
@@ -790,6 +798,7 @@ NEXT: 'Next';
 IF: 'If';
 THEN: 'Then';
 ELSE: 'Else';
+ELSE_IF: 'Else If';
 END_IF: 'End If';
 EXIT_IF: 'Exit If';
 WHILE: 'While';

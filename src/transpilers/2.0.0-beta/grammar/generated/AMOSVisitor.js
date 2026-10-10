@@ -378,6 +378,12 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by AMOSParser#elseIfStatement.
+	visitElseIfStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by AMOSParser#exitLoop.
 	visitExitLoop(ctx) {
 	  return this.visitChildren(ctx);

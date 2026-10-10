@@ -25,11 +25,11 @@ New work happens in `2.0.0-beta`; `1.1.0` and `1.2.0` are kept unchanged.
 | `src/resources/`                                   | AMCAF extension library, used by the AMOS decoder                                                                     |
 | `tests/`                                           | Tests of the API and the shared helpers                                                                               |
 | `amos-code-analysis/`                              | CLI that counts AMOS command usage in datasets ([README](amos-code-analysis/README.md)). It will move to its own repo |
-| `antlr-4.13.2-complete.jar`                        | The ANTLR tool, used by `npm run compile-grammar`                                                                     |
+| `antlr-4.13.2-complete.jar`                        | The ANTLR tool, used by `npm run antlr`                                                                               |
 
 ## Getting Started
 
-Requirements: Node.js 20 or later. Java is only needed to regenerate a parser (`npm run compile-grammar`).
+Requirements: Node.js 20 or later. Java is only needed to regenerate a parser (`npm run antlr`).
 
 1. **Install dependencies:**
 
@@ -68,7 +68,7 @@ Requirements: Node.js 20 or later. Java is only needed to regenerate a parser (`
 
 | Command                   | What it does                                                                                    |
 | ------------------------- | ----------------------------------------------------------------------------------------------- |
-| `npm run compile-grammar` | Regenerates the parser of the version in `package.json` from its `grammar/amos.g4` (needs Java) |
+| `npm run antlr`           | Regenerates the parser of the version in `package.json` from its `grammar/amos.g4` (needs Java) |
 | `npm run format`          | Formats every JavaScript file with prettier                                                     |
 
 ## Using the API

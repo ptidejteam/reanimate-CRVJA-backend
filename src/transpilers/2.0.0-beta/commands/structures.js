@@ -42,6 +42,11 @@ export default class Structures extends BaseHandler {
     this.emit('');
   }
 
+  // ELSE IF
+  enterElseIfStatement(ctx) {
+    this.emit(`} else if (${this.ifCondition(ctx.condition())}) {`);
+  }
+
   // EXIT
   enterExitLoop(ctx) {
     console.log('To be implemented...');
@@ -92,22 +97,7 @@ export default class Structures extends BaseHandler {
 
   // IF ... END IF
   enterIfStatement(ctx) {
-    let condition = '';
-
-    for (const child of ctx.children) {
-      if (child instanceof AMOSParser.ExpressionContext) {
-        condition += this.expr(child);
-      } else if (child instanceof AMOSParser.LogicalOperatorContext) {
-        condition += child.AND() ? ' && ' : ' || ';
-      } else if (child instanceof AMOSParser.ComparisonOperatorContext) {
-        let comparator = child.getText();
-        // Special cases for = and <>
-        if (comparator === '=') comparator = '==';
-        if (comparator === '<>') comparator = '!=';
-        condition += ` ${comparator} `;
-      }
-    }
-    this.emit(`if (${condition}) {`);
+    this.emit(`if (${this.ifCondition(ctx)}) {`);
   }
 
   exitIfStatement(ctx) {
@@ -117,30 +107,8 @@ export default class Structures extends BaseHandler {
   // IF KEY STATE(...) ... END IF
   // KEY STATE is a Function, but the grammar only accepts it as the condition of If / While,
   // so it is translated here.
-  // TODO: verify open/close brackets
   enterIfKeyStateStatement(ctx) {
-    let leftExpression = this.expr(ctx.keyStateFunction(0)?.expression(0));
-
-    if (leftExpression.includes('$')) {
-      // Extract the hexadecimal value from the expression
-      let hexValueMatch = leftExpression.match(/\$[0-9A-Fa-f]+/);
-
-      if (hexValueMatch) {
-        let hexValue = parseInt(hexValueMatch[0].replace('$', ''), 16);
-
-        // Check if the leftExpression is just a hexadecimal value
-        if (hexValueMatch[0] === leftExpression) {
-          // If it's only a hex value, convert it to a key mapping lookup
-          leftExpression = `keyMapping[${hexValue}`;
-        } else {
-          let variable = leftExpression.split('$')[0];
-
-          // If it's a variable or expression with a hex part, construct it accordingly
-          leftExpression = leftExpression.replace(/\$[0-9A-Fa-f]+/, `keyMapping[${hexValue}`);
-        }
-      }
-    }
-    this.emit(`if (currentPressedKey === ${leftExpression}]) {`);
+    this.emit(`if (${this.keyStateCondition(ctx.keyStateFunction())}) {`);
   }
 
   exitIfKeyStateStatement(ctx) {
@@ -273,16 +241,7 @@ ${localDeclarations}`);
   // KEY STATE is a Function, but the grammar only accepts it as the condition of If / While,
   // so it is translated here.
   enterWhileWend(ctx) {
-    let leftExpression = this.expr(ctx.keyStateFunction(0)?.expression(0));
-    if (!leftExpression) return;
-
-    // Replace all occurrences of $xx with decimal equivalents
-    leftExpression = leftExpression.replace(/\$[0-9A-Fa-f]+/g, (match) => {
-      return parseInt(match.substring(1), 16);
-    });
-
-    // Cf. https://www.cknow.com/cms/articles/what-is-a-scan-code.html
-    this.emit(`\nif (currentPressedKey === keyMapping[${leftExpression}]) {`);
+    this.emit(`\nif (${this.keyStateCondition(ctx.keyStateFunction())}) {`);
   }
 
   exitWhileWend(ctx) {
@@ -316,5 +275,38 @@ ${localDeclarations}`);
       this.declareVariable(name);
       this.emit(`${name} = ${value};`);
     }
+  }
+
+  // Condition of IF ... END IF, or a `condition` node (ELSE IF, EXIT IF, THEN):
+  // X = 1 and Y <> 2 → X == 1 && Y != 2, or Key State($10) → currentPressedKey === keyMapping[16]
+  ifCondition(ctx) {
+    let condition = '';
+
+    for (const child of ctx.children) {
+      if (child instanceof AMOSParser.KeyStateFunctionContext) {
+        condition += this.keyStateCondition(child);
+      } else if (child instanceof AMOSParser.ExpressionContext) {
+        condition += this.expr(child);
+      } else if (child instanceof AMOSParser.LogicalOperatorContext) {
+        condition += child.AND() ? ' && ' : ' || ';
+      } else if (child instanceof AMOSParser.ComparisonOperatorContext) {
+        let comparator = child.getText();
+        // Special cases for = and <>
+        if (comparator === '=') comparator = '==';
+        if (comparator === '<>') comparator = '!=';
+        condition += ` ${comparator} `;
+      }
+    }
+    return condition;
+  }
+
+  // Condition of KEY STATE: Key State($10+I) → currentPressedKey === keyMapping[16 + I]
+  keyStateCondition(ctx) {
+    // AMOS scan codes are hexadecimal ($10): keyMapping is indexed by their decimal value.
+    // Cf. https://www.cknow.com/cms/articles/what-is-a-scan-code.html
+    const scanCode = this.expr(ctx.expression()).replace(/\$[0-9A-Fa-f]+/g, (hex) =>
+      parseInt(hex.substring(1), 16),
+    );
+    return `currentPressedKey === keyMapping[${scanCode}]`;
   }
 }

@@ -173,7 +173,7 @@ behaviour of the existing commands.
 From the backend root (Java must be installed):
 
 ```bash
-npm run compile-grammar
+npm run antlr
 ```
 
 This rewrites `grammar/generated/` (commit those files too). The parser now has a rule `plot`,
@@ -280,7 +280,7 @@ It is also listed next to the other functions in `factor:`:
     | absFunction
 ```
 
-**Step 2:** `npm run compile-grammar`.
+**Step 2:** `npm run antlr`.
 
 **Step 3: translation.** In `commands/functions.js`, before `COS`:
 
@@ -467,7 +467,7 @@ Then continue as in [section 3](#3-walkthrough-an-instruction-plot).
 1. Find it: search for its name in capitals, e.g. `// CLS`.
 2. Change its method in `commands/`. If the AMOS syntax changes (for example a new optional
    parameter), change the rule under `// CLS` in `grammar/amos.g4` and run
-   `npm run compile-grammar`.
+   `npm run antlr`.
 3. Update the command's test (e.g. `tests/cls.spec.js`) and run `npm test`.
 
 ## 9. Helper reference
@@ -491,7 +491,7 @@ what the emitted code can use in the browser, see
 
 ## 10. Pitfalls
 
-- **Never edit `grammar/generated/`.** Change `amos.g4` and run `npm run compile-grammar`.
+- **Never edit `grammar/generated/`.** Change `amos.g4` and run `npm run antlr`.
 - **Method names must match the grammar rule exactly** (`enterPlot` for rule `plot`), and each
   rule is translated in one command file only. A misspelled method is never called: `npm test`
   catches both mistakes (`tests/command-files.spec.js`).
@@ -515,7 +515,7 @@ what the emitted code can use in the browser, see
 - [ ] Category looked up in the spreadsheet
 - [ ] Grammar rule under its category heading, A-Z, with `// NAME`, and added to `statement:`
       (instructions, structures) or `factor:` (functions)
-- [ ] `npm run compile-grammar`, and the `grammar/generated/` files committed
+- [ ] `npm run antlr`, and the `grammar/generated/` files committed
 - [ ] Method in `commands/<category>.js`, A-Z, with `// NAME` above it
 - [ ] `runtime/amos-runtime.js` checked for helpers the emitted code can reuse
 - [ ] Test in `tests/<command>.spec.js`, and `npm test` passes
