@@ -10,18 +10,18 @@ export default class AMOSTranspiler {
     const chars = new antlr4.InputStream(amosCode);
     const lexer = new AMOSLexer(chars);
 
-    const lexicalErrors = new AmosErrorListener();
+    const amosErrorListener = new AmosErrorListener();
     lexer.removeErrorListeners();
-    lexer.addErrorListener(lexicalErrors);
+    lexer.addErrorListener(amosErrorListener);
 
     const tokens = new antlr4.CommonTokenStream(lexer);
     const parser = new AMOSParser(tokens);
 
-    const syntaxErrors = new AmosErrorListener();
     parser.removeErrorListeners();
-    parser.addErrorListener(syntaxErrors);
+    parser.addErrorListener(amosErrorListener);
 
     const tree = parser.program();
+    const { lexicalErrors, syntaxErrors } = amosErrorListener;
 
     if (lexicalErrors.errors.length || syntaxErrors.errors.length) {
       return {
