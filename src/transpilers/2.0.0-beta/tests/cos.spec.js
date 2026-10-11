@@ -1,4 +1,4 @@
-import AMOSTranspiler from '../AMOSTranspiler.js';
+import AMOSTranspiler from '../amos-transpiler.js';
 
 test.each([
   ['a number', 'X = Cos(1)', 'X = Math.cos(1);'],

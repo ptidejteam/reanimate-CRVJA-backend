@@ -1,4 +1,4 @@
-import AMOSTranspiler from '../AMOSTranspiler.js';
+import AMOSTranspiler from '../amos-transpiler.js';
 
 test('plot translation', async () => {
   const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(

@@ -1,4 +1,4 @@
-import AMOSTranspiler from '../AMOSTranspiler.js';
+import AMOSTranspiler from '../amos-transpiler.js';
 
 async function translate(code) {
   const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(

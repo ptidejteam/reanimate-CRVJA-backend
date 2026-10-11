@@ -1,4 +1,4 @@
-import AMOSTranspiler from '../AMOSTranspiler.js';
+import AMOSTranspiler from '../amos-transpiler.js';
 
 test.each([
   ['two numbers', 'X = Max(99, 1)', 'X = Math.max(99, 1);'],
