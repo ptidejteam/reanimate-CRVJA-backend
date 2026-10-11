@@ -128,12 +128,42 @@ export default class Structures extends BaseHandler {
     );
   }
 
+  // LINE INPUT #
+  enterLineInputFile(ctx) {
+    console.log("To be implemented");
+  }
+
   // NOT
   // NOT is a Structure, but it returns a value inside an expression (X = Not Y),
   // so it is translated by a visitX method.
   visitNotOperator(ctx) {
     console.log('To be implemented...');
     return `0`;
+  }
+
+  // ON BREAK PROC
+  enterOnBreakProc(ctx) {
+    console.log("To be implemented");
+  }
+
+  // ON ERROR
+  enterOnError(ctx) {
+    console.log("To be implemented");
+  }
+
+  // ON ERROR PROC
+  enterOnErrorProc(ctx) {
+    console.log("To be implemented");
+  }
+
+  // ON ... PROC
+  enterOnProc(ctx) {
+    console.log("To be implemented");
+  }
+
+  // POP PROC
+  enterPopProc(ctx) {
+    console.log("To be implemented");
   }
 
   // PROC (procedure call)
@@ -224,6 +254,26 @@ ${localDeclarations}`);
 
   exitRepeatUntil(ctx) {
     this.emit('Timer = 9; }, 16);');
+  }
+
+  // RESTORE
+  enterRestore(ctx) {
+    console.log("To be implemented");
+  }
+
+  // RESUME
+  enterResume(ctx) {
+    console.log("To be implemented");
+  }
+
+  // RESUME LABEL
+  enterResumeLabel(ctx) {
+    console.log("To be implemented");
+  }
+
+  // SHARED
+  enterShared(ctx) {
+    console.log("To be implemented");
   }
 
   // SWAP

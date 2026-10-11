@@ -462,14 +462,50 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by AMOSParser#lineInputFile.
+	visitLineInputFile(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by AMOSParser#notOperator.
 	visitNotOperator(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
+	// Visit a parse tree produced by AMOSParser#onBreakProc.
+	visitOnBreakProc(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#onError.
+	visitOnError(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#onErrorProc.
+	visitOnErrorProc(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by AMOSParser#onGosub.
 	visitOnGosub(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#onProc.
+	visitOnProc(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#popProc.
+	visitPopProc(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -500,6 +536,36 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by AMOSParser#repeatUntil.
 	visitRepeatUntil(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#restore.
+	visitRestore(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#resume.
+	visitResume(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#resumeLabel.
+	visitResumeLabel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#shared.
+	visitShared(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by AMOSParser#sharedItem.
+	visitSharedItem(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

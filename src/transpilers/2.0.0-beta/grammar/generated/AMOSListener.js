@@ -689,6 +689,15 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by AMOSParser#lineInputFile.
+	enterLineInputFile(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#lineInputFile.
+	exitLineInputFile(ctx) {
+	}
+
+
 	// Enter a parse tree produced by AMOSParser#notOperator.
 	enterNotOperator(ctx) {
 	}
@@ -698,12 +707,57 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by AMOSParser#onBreakProc.
+	enterOnBreakProc(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#onBreakProc.
+	exitOnBreakProc(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#onError.
+	enterOnError(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#onError.
+	exitOnError(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#onErrorProc.
+	enterOnErrorProc(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#onErrorProc.
+	exitOnErrorProc(ctx) {
+	}
+
+
 	// Enter a parse tree produced by AMOSParser#onGosub.
 	enterOnGosub(ctx) {
 	}
 
 	// Exit a parse tree produced by AMOSParser#onGosub.
 	exitOnGosub(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#onProc.
+	enterOnProc(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#onProc.
+	exitOnProc(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#popProc.
+	enterPopProc(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#popProc.
+	exitPopProc(ctx) {
 	}
 
 
@@ -749,6 +803,51 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by AMOSParser#repeatUntil.
 	exitRepeatUntil(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#restore.
+	enterRestore(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#restore.
+	exitRestore(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#resume.
+	enterResume(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#resume.
+	exitResume(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#resumeLabel.
+	enterResumeLabel(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#resumeLabel.
+	exitResumeLabel(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#shared.
+	enterShared(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#shared.
+	exitShared(ctx) {
+	}
+
+
+	// Enter a parse tree produced by AMOSParser#sharedItem.
+	enterSharedItem(ctx) {
+	}
+
+	// Exit a parse tree produced by AMOSParser#sharedItem.
+	exitSharedItem(ctx) {
 	}
 
 
