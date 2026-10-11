@@ -56,7 +56,7 @@ JavaScript that runs in the browser
 | `commands/`                | The translation of every command, one file per category                                          |
 | `commands/base-handler.js` | Helpers every command file inherits (`emit`, `expr`, `declareVariable`)                          |
 | `runtime/amos-runtime.js`  | JavaScript included in every generated program (colours, keyboard, sound, sprites, files…)       |
-| `error-listener.js`        | Collects the lexical and syntax errors                                                           |
+| `amos-error-listener.js`   | Collects the lexical and syntax errors                                                           |
 | `tests/`                   | One test file per command (`cls.spec.js`…), plus tests of the transpiler as a whole              |
 
 ## 2. Where is a command?

@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import antlr4, { CommonTokenStream } from 'antlr4';
 import AMOSLexer from '#root/src/transpilers/2.0.0-beta/grammar/generated/AMOSLexer.js';
-import CollectingErrorListener from '#root/src/transpilers/2.0.0-beta/error-listener.js';
+import AmosErrorListener from '#root/src/transpilers/2.0.0-beta/amos-error-listener.js';
 import AMOSParser from '#root/src/transpilers/2.0.0-beta/grammar/generated/AMOSParser.js';
 import AMOSAnalyser from './amos-analyser.js';
 import AMOSCommandsCatalog from './amos-commands-catalog.js';
@@ -20,14 +20,14 @@ function analyseFile(file, catalogRows) {
   const chars = new antlr4.InputStream(amosCode);
   const lexer = new AMOSLexer(chars);
 
-  const lexicalErrors = new CollectingErrorListener();
+  const lexicalErrors = new AmosErrorListener();
   lexer.removeErrorListeners();
   lexer.addErrorListener(lexicalErrors);
 
   const tokens = new CommonTokenStream(lexer);
   const parser = new AMOSParser(tokens);
 
-  const syntaxErrors = new CollectingErrorListener();
+  const syntaxErrors = new AmosErrorListener();
   parser.removeErrorListeners();
   parser.addErrorListener(syntaxErrors);
 
