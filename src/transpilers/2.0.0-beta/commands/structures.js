@@ -26,10 +26,12 @@ export default class Structures extends BaseHandler {
 
   // DO ... LOOP
   enterDoLoop(ctx) {
-    this.emit('while(true) {');
+    this.translator.incrementCurrentLoop();
+    this.emit('loop' + this.translator.currentLoop + ': while(true) {');
   }
 
   exitDoLoop(ctx) {
+    this.translator.decrementCurrentLoop();
     this.emit('await new Promise(r => setTimeout(r, 16));}');
   }
 
@@ -49,12 +51,20 @@ export default class Structures extends BaseHandler {
 
   // EXIT
   enterExitLoop(ctx) {
-    console.log('To be implemented...');
+    const count = ctx.NUMBER() ? parseInt(ctx.NUMBER().getText(), 10) : 1; // Exit without a number is the same as Exit 1
+    const depth = this.translator.currentLoop;
+
+    this.emit('break loop' + (depth - count + 1) + ';');
   }
 
   // EXIT IF
   enterExitIf(ctx) {
-    console.log('To be implemented...');
+    
+    const condition = this.ifCondition(ctx.condition());
+    const count = ctx.NUMBER() ? parseInt(ctx.NUMBER().getText(), 10) : 1; // Exit without a number is the same as Exit 1
+    const depth = this.translator.currentLoop;
+
+    this.emit(`if (${condition}) { break loop${depth - count + 1}; }`);
   }
 
   // FN
