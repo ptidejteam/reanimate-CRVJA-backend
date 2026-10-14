@@ -148,7 +148,6 @@ export default class Functions extends BaseHandler {
 
   // TRUE
   visitTrueFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    return `(-1)`;
   }
 }
