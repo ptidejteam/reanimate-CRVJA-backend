@@ -278,7 +278,12 @@ ${localDeclarations}`);
 
   // SWAP
   enterSwap(ctx) {
-    console.log('To be implemented...');
+    const first = ctx.IDENTIFIER(0).getText();
+    const second = ctx.IDENTIFIER(1).getText();
+
+    this.declareVariable(first);
+    this.declareVariable(second);
+    this.emit(`[${first}, ${second}] = [${second}, ${first}];`);
   }
 
   // THEN
