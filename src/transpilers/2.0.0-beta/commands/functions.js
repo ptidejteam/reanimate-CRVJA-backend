@@ -70,8 +70,13 @@ export default class Functions extends BaseHandler {
 
   // HSIN
   visitHsinFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const angle_radians = this.expr(ctx.expression());
+
+    if (!Number.isFinite(angle_radians)) {
+      throw new RangeError(`${angle_radians} must be a finite, real number.`);
+    }
+
+    return `Math.sinh(${angle_radians})`;
   }
 
   // HTAN
