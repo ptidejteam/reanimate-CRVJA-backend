@@ -43,8 +43,8 @@ export default class Functions extends BaseHandler {
 
   // EXP
   visitExpFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+	const value = Number(this.visit(ctx.expression()));
+	return String(Math.exp(Value));
   }
 
   // FALSE
@@ -96,14 +96,24 @@ export default class Functions extends BaseHandler {
 
   // LN
   visitLnFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+	const value = Number(this.visit(ctx.expression()));
+	
+	if (value <= 0){
+		throw new Error("LN requires a positive number.");
+	}
+	
+	return String(Math.log(value));
   }
 
   // LOG
   visitLogFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+	const value = Number(this.visit(ctx.expression()));
+	
+	if (value <= 0){
+		throw new Error("LOG requires a positive number.");
+	}
+	
+	return String(Math.log10(value));
   }
 
   // MAX
@@ -142,8 +152,13 @@ export default class Functions extends BaseHandler {
 
   // SQR
   visitSqrFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+	const number = Number(this.visit(ctx.expression()));
+	
+	if (number < 0){
+		throw new error("Sqr requires a non-negative number.");
+	}
+	
+	return String(Math.sqrt(number));
   }
 
   // TRUE
