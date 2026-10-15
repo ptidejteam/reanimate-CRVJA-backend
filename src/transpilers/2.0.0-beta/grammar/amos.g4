@@ -500,7 +500,7 @@ lineInputFile:
 // NOT is a Structure, but it returns a value, so it is listed in `factor:`. It applies to the
 // operand that follows it (`Not X+1` is `(Not X)+1`), like a unary minus.
 notOperator:
-    'Not' factor
+    'Not' SUBTRACT? factor
     ;
 
 // ON BREAK PROC
