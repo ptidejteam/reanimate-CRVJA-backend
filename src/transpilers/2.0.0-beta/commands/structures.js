@@ -137,8 +137,9 @@ export default class Structures extends BaseHandler {
   // NOT is a Structure, but it returns a value inside an expression (X = Not Y),
   // so it is translated by a visitX method.
   visitNotOperator(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const minus = ctx.SUBTRACT() ? '-' : '';
+    const value = this.expr(ctx.factor());
+    return `~(${minus}${value})`;
   }
 
   // ON BREAK PROC
