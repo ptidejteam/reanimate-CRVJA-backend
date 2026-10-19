@@ -299,9 +299,17 @@ ${localDeclarations}`);
   // THEN
   // Single-line If: If X=1 Then Print "A" Else Print "B"
   enterIfThenStatement(ctx) {
-    console.log('To be implemented...');
+    this.emit(`if (${this.ifCondition(ctx.condition())}) {`);
   }
 
+  exitIfThenStatement(ctx) {
+    this.emit('}');
+  }
+
+  enterIfThenElse(ctx) {
+    this.emit('} else {');
+  }
+  
   // WHILE ... WEND
   // KEY STATE is a Function, but the grammar only accepts it as the condition of If / While,
   // so it is translated here.
