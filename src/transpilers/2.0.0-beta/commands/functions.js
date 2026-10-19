@@ -13,8 +13,8 @@ export default class Functions extends BaseHandler {
 
   // ACOS
   visitAcosFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const value = this.expr(ctx.expression());
+    return `Math.acos(${value})`;
   }
 
   // ASIN
