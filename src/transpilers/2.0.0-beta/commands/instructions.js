@@ -237,10 +237,30 @@ if (amosScreen) {
   }
 
   // DRAW
-  enterDraw(ctx) {
-    console.log('To be implemented...');
-  }
+   enterDraw(ctx) {
+    const x1 = this.expr(ctx.expression(0));
+    const y1 = this.expr(ctx.expression(1));
+    const x2 = this.expr(ctx.expression(2));
+    const y2 = this.expr(ctx.expression(3));
 
+    this.emit(`
+{
+const drawX1 = ${x1};
+const drawY1 = ${y1};
+const drawX2 = ${x2};
+const drawY2 = ${y2};
+const lineDiv = document.createElement('div');
+lineDiv.style.position = 'absolute';
+lineDiv.style.left = drawX1 + 'px';
+lineDiv.style.top = drawY1 + 'px';
+lineDiv.style.width = Math.hypot(drawX2 - drawX1, drawY2 - drawY1) + 1 + 'px';
+lineDiv.style.height = '1px';
+lineDiv.style.backgroundColor = getColour(Ink);
+lineDiv.style.transformOrigin = '0 0';
+lineDiv.style.transform = 'rotate(' + Math.atan2(drawY2 - drawY1, drawX2 - drawX1) + 'rad)';
+document.getElementById('amos-screen').appendChild(lineDiv);
+}`);
+  }
   // DRAW TO
   enterDrawTo(ctx) {
     console.log('To be implemented...');
