@@ -21,7 +21,7 @@ async function runAmos(code, ...names) {
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
 
-  // Minimal stand-in for the browser APIs the prelude uses at load time
+  // Minimal stand-in for the browser APIs
   const fakeDocument = {
     addEventListener() {},
     getElementById() { return null; },
