@@ -47,12 +47,6 @@ export default class Functions extends BaseHandler {
 	return String(Math.exp(Value));
   }
 
-  // FALSE
-  visitFalseFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
-  }
-
   // HCOS
   visitHcosFunction(ctx) {
     const angle = this.expr(ctx.expression());
@@ -168,7 +162,11 @@ export default class Functions extends BaseHandler {
 
   // TRUE
   visitTrueFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    return `(-1)`;
+  }
+
+  // FALSE
+  visitFalseFunction(ctx) {
+    return `(0)`;
   }
 }
