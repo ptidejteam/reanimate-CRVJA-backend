@@ -22,6 +22,34 @@ describe('Transpiler Service', () => {
     expect(result.translatedCode).toContain('amos-screen');
   });
 
+  test.each([
+    ['explicit', '2.0.0-beta'],
+    ['default', undefined],
+  ])('should transpile numeric functions with the %s version', async (_name, version) => {
+    const functions = [
+      ['EXP_RESULT', 'Exp', 'exp'],
+      ['LN_RESULT', 'Ln', 'log'],
+      ['LOG_RESULT', 'Log', 'log10'],
+      ['SQR_RESULT', 'Sqr', 'sqrt'],
+      ['HCOS_RESULT', 'Hcos', 'cosh'],
+      ['HSIN_RESULT', 'Hsin', 'sinh'],
+      ['HTAN_RESULT', 'Htan', 'tanh'],
+    ];
+    const source = [
+      'ARGUMENT#=0.5',
+      ...functions.map(([variable, amos]) => `${variable}#=${amos}(ARGUMENT#)`),
+    ].join('\n');
+
+    const result = await transpileCode(source, version);
+
+    expect(Object.keys(result).sort()).toEqual(['lexicalErrors', 'syntaxErrors', 'translatedCode']);
+    expect(result.lexicalErrors).toEqual({ errors: [] });
+    expect(result.syntaxErrors).toEqual({ errors: [] });
+    for (const [variable, _amos, math] of functions) {
+      expect(result.translatedCode).toContain(`${variable}_f = Math.${math}(ARGUMENT_f);`);
+    }
+  });
+
   test.each(['1.1.0', '1.2.0'])(
     'should transpile successfully with version %s',
     async (version) => {

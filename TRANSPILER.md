@@ -297,6 +297,14 @@ The rule has a single `expression`, so `ctx.expression()` takes no position
 expression visitor puts it where the call was: `X = Abs(-3) + 1` becomes `X = Math.abs(-3) + 1;`.
 A function usually needs no DOM code.
 
+`this.expr(...)` returns JavaScript source text, such as `Y_f + 1`, whose value is only known
+when the generated program runs. Emit the numeric operation around that text, for example
+`Math.exp(${value})`; do not evaluate it with `Number(...)`, `Number.isFinite(...)`, or a math
+function during transpilation. Command handlers inherit `expr` from `BaseHandler`; they do not
+have a `this.visit(...)` method. `Exp`, `Ln`, `Log`, `Sqr`, `Hcos`, `Hsin`, and `Htan` emit native
+JavaScript `Math` calls, including their runtime `NaN` and infinity behavior for invalid domains
+and overflow.
+
 **Step 4: test.** `tests/abs.spec.js` checks that `X = Abs(-3)` becomes `X = Math.abs(-3);`.
 
 **Step 5:** update the spreadsheet.

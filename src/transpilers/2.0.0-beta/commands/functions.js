@@ -43,48 +43,26 @@ export default class Functions extends BaseHandler {
 
   // EXP
   visitExpFunction(ctx) {
-	const value = Number(this.visit(ctx.expression()));
-	return String(Math.exp(Value));
+    const value = this.expr(ctx.expression());
+    return `Math.exp(${value})`;
   }
 
   // HCOS
   visitHcosFunction(ctx) {
     const angle = this.expr(ctx.expression());
-
-    if (!Number.isFinite(angle)) {
-      throw new RangeError(`${angle} must be a finite, real number.`);
-    }
-  
-    if (Math.abs(angle) > 710.47) {
-      throw new RangeError(`${angle} is too large and will cause floating-point overflow.`);
-    }
-
     return `Math.cosh(${angle})`;
   }
 
   // HSIN
   visitHsinFunction(ctx) {
-    const angle_radians = this.expr(ctx.expression());
-
-    if (!Number.isFinite(angle_radians)) {
-      throw new RangeError(`${angle_radians} must be a finite, real number.`);
-    }
-
-    return `Math.sinh(${angle_radians})`;
+    const angle = this.expr(ctx.expression());
+    return `Math.sinh(${angle})`;
   }
 
   // HTAN
   visitHtanFunction(ctx) {
-    const num = this.expr(ctx.expression());
-
-    if (!Number.isFinite(num)) {
-      if (isNaN(num)) {
-        console.error(`Invalid number ${num}`);
-        return null;
-      }
-    }
-
-    return `Math.tanh(${num})`;
+    const angle = this.expr(ctx.expression());
+    return `Math.tanh(${angle})`;
   }
 
   // INT
@@ -95,24 +73,14 @@ export default class Functions extends BaseHandler {
 
   // LN
   visitLnFunction(ctx) {
-	const value = Number(this.visit(ctx.expression()));
-	
-	if (value <= 0){
-		throw new Error("LN requires a positive number.");
-	}
-	
-	return String(Math.log(value));
+    const value = this.expr(ctx.expression());
+    return `Math.log(${value})`;
   }
 
   // LOG
   visitLogFunction(ctx) {
-	const value = Number(this.visit(ctx.expression()));
-	
-	if (value <= 0){
-		throw new Error("LOG requires a positive number.");
-	}
-	
-	return String(Math.log10(value));
+    const value = this.expr(ctx.expression());
+    return `Math.log10(${value})`;
   }
 
   // MAX
@@ -151,13 +119,8 @@ export default class Functions extends BaseHandler {
 
   // SQR
   visitSqrFunction(ctx) {
-	const number = Number(this.visit(ctx.expression()));
-	
-	if (number < 0){
-		throw new error("Sqr requires a non-negative number.");
-	}
-	
-	return String(Math.sqrt(number));
+    const value = this.expr(ctx.expression());
+    return `Math.sqrt(${value})`;
   }
 
   // TRUE
