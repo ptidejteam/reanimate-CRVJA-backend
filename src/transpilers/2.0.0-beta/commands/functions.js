@@ -19,8 +19,8 @@ export default class Functions extends BaseHandler {
 
   // ASIN
   visitAsinFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const value = this.expr(ctx.expression());
+    return `Math.asin(${value})`;
   }
 
   // ATAN
