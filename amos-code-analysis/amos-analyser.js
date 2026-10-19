@@ -5,7 +5,7 @@ import AMOSLexer from '#root/src/transpilers/2.0.0-beta/grammar/generated/AMOSLe
 class AMOSAnalyser extends AMOSListener {
   constructor(summaryTable) {
     super();
-    this.summaryTable = summaryTable.filter(row => row.CATEGORY === 'Instruction');
+    this.summaryTable = summaryTable.filter((row) => row.CATEGORY === 'Instruction');
     this.rowsByCommand = new Map();
 
     // Keep every matching catalog row so duplicate command entries share the count.
@@ -37,7 +37,6 @@ class AMOSAnalyser extends AMOSListener {
       row.COUNT++;
     }
   }
-
 }
 
 export default AMOSAnalyser;

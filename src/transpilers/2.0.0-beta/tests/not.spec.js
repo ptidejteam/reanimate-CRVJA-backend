@@ -12,11 +12,11 @@ test.each([
   ['a negative variable and an operation after it', 'X = Not -Y + 1', 'X = ~-Y + 1;'],
   ['Not of minus True', 'X = Not -True', 'X = ~-(-1);'],
 ])('transpiles test case: %s', async (_name, input, expected) => {
-  const { lexicalErrors, syntaxErrors, translatedCode } =
-    await new AMOSTranspiler().transpile(input);
+  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
+    input,
+  );
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
   expect(translatedCode).toContain(expected);
 });
-

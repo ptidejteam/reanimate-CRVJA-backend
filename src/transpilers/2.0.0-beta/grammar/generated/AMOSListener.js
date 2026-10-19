@@ -4,1212 +4,807 @@ import antlr4 from 'antlr4';
 
 // This class defines a complete listener for a parse tree produced by AMOSParser.
 export default class AMOSListener extends antlr4.tree.ParseTreeListener {
+  // Enter a parse tree produced by AMOSParser#program.
+  enterProgram(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#program.
-	enterProgram(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#program.
+  exitProgram(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#program.
-	exitProgram(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#statementList.
+  enterStatementList(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#statementList.
+  exitStatementList(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#statementList.
-	enterStatementList(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#statement.
+  enterStatement(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#statementList.
-	exitStatementList(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#statement.
+  exitStatement(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#add.
+  enterAdd(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#statement.
-	enterStatement(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#add.
+  exitAdd(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#statement.
-	exitStatement(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#autoback.
+  enterAutoback(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#autoback.
+  exitAutoback(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#add.
-	enterAdd(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#bar.
+  enterBar(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#add.
-	exitAdd(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#bar.
+  exitBar(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#bobOff.
+  enterBobOff(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#autoback.
-	enterAutoback(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#bobOff.
+  exitBobOff(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#autoback.
-	exitAutoback(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#bobUpdateOn.
+  enterBobUpdateOn(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#bobUpdateOn.
+  exitBobUpdateOn(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#bar.
-	enterBar(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#box.
+  enterBox(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#bar.
-	exitBar(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#box.
+  exitBox(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#circle.
+  enterCircle(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#bobOff.
-	enterBobOff(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#circle.
+  exitCircle(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#bobOff.
-	exitBobOff(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#clearKey.
+  enterClearKey(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#clearKey.
+  exitClearKey(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#bobUpdateOn.
-	enterBobUpdateOn(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#closeFile.
+  enterCloseFile(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#bobUpdateOn.
-	exitBobUpdateOn(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#closeFile.
+  exitCloseFile(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#cls.
+  enterCls(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#box.
-	enterBox(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#cls.
+  exitCls(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#box.
-	exitBox(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#colour.
+  enterColour(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#colour.
+  exitColour(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#circle.
-	enterCircle(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#colourBack.
+  enterColourBack(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#circle.
-	exitCircle(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#colourBack.
+  exitColourBack(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#cursOff.
+  enterCursOff(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#clearKey.
-	enterClearKey(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#cursOff.
+  exitCursOff(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#clearKey.
-	exitClearKey(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#cursOn.
+  enterCursOn(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#cursOn.
+  exitCursOn(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#closeFile.
-	enterCloseFile(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#dec.
+  enterDec(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#closeFile.
-	exitCloseFile(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#dec.
+  exitDec(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#degree.
+  enterDegree(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#cls.
-	enterCls(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#degree.
+  exitDegree(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#cls.
-	exitCls(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#arrayDeclaration.
+  enterArrayDeclaration(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#arrayDeclaration.
+  exitArrayDeclaration(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#colour.
-	enterColour(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#doubleBuffer.
+  enterDoubleBuffer(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#colour.
-	exitColour(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#doubleBuffer.
+  exitDoubleBuffer(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#draw.
+  enterDraw(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#colourBack.
-	enterColourBack(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#draw.
+  exitDraw(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#colourBack.
-	exitColourBack(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#drawTo.
+  enterDrawTo(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#drawTo.
+  exitDrawTo(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#cursOff.
-	enterCursOff(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#ellipse.
+  enterEllipse(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#cursOff.
-	exitCursOff(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#ellipse.
+  exitEllipse(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#flashOff.
+  enterFlashOff(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#cursOn.
-	enterCursOn(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#flashOff.
+  exitFlashOff(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#cursOn.
-	exitCursOn(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#flashOn.
+  enterFlashOn(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#flashOn.
+  exitFlashOn(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#dec.
-	enterDec(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#hide.
+  enterHide(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#dec.
-	exitDec(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#hide.
+  exitHide(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#inc.
+  enterInc(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#degree.
-	enterDegree(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#inc.
+  exitInc(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#degree.
-	exitDegree(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#ink.
+  enterInk(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#ink.
+  exitInk(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#arrayDeclaration.
-	enterArrayDeclaration(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#keySpeed.
+  enterKeySpeed(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#arrayDeclaration.
-	exitArrayDeclaration(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#keySpeed.
+  exitKeySpeed(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#ledOff.
+  enterLedOff(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#doubleBuffer.
-	enterDoubleBuffer(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#ledOff.
+  exitLedOff(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#doubleBuffer.
-	exitDoubleBuffer(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#loadBank.
+  enterLoadBank(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#loadBank.
+  exitLoadBank(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#draw.
-	enterDraw(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#loadIff.
+  enterLoadIff(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#draw.
-	exitDraw(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#loadIff.
+  exitLoadIff(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#locate.
+  enterLocate(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#drawTo.
-	enterDrawTo(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#locate.
+  exitLocate(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#drawTo.
-	exitDrawTo(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#openIn.
+  enterOpenIn(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#openIn.
+  exitOpenIn(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#ellipse.
-	enterEllipse(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#openOut.
+  enterOpenOut(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#ellipse.
-	exitEllipse(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#openOut.
+  exitOpenOut(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#palette.
+  enterPalette(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#flashOff.
-	enterFlashOff(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#palette.
+  exitPalette(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#flashOff.
-	exitFlashOff(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#paper.
+  enterPaper(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#paper.
+  exitPaper(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#flashOn.
-	enterFlashOn(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#pen.
+  enterPen(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#flashOn.
-	exitFlashOn(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#pen.
+  exitPen(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#playSound.
+  enterPlaySound(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#hide.
-	enterHide(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#playSound.
+  exitPlaySound(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#hide.
-	exitHide(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#plot.
+  enterPlot(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#plot.
+  exitPlot(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#inc.
-	enterInc(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#printStatement.
+  enterPrintStatement(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#inc.
-	exitInc(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#printStatement.
+  exitPrintStatement(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#printItem.
+  enterPrintItem(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#ink.
-	enterInk(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#printItem.
+  exitPrintItem(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#ink.
-	exitInk(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#rainbow.
+  enterRainbow(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#rainbow.
+  exitRainbow(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#keySpeed.
-	enterKeySpeed(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#samBank.
+  enterSamBank(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#keySpeed.
-	exitKeySpeed(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#samBank.
+  exitSamBank(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#samLoopOff.
+  enterSamLoopOff(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#ledOff.
-	enterLedOff(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#samLoopOff.
+  exitSamLoopOff(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#ledOff.
-	exitLedOff(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#chooseScreen.
+  enterChooseScreen(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#chooseScreen.
+  exitChooseScreen(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#loadBank.
-	enterLoadBank(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#screenOffset.
+  enterScreenOffset(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#loadBank.
-	exitLoadBank(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#screenOffset.
+  exitScreenOffset(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#screenOpen.
+  enterScreenOpen(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#loadIff.
-	enterLoadIff(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#screenOpen.
+  exitScreenOpen(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#loadIff.
-	exitLoadIff(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#screenSwap.
+  enterScreenSwap(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#screenSwap.
+  exitScreenSwap(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#locate.
-	enterLocate(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#setBuffer.
+  enterSetBuffer(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#locate.
-	exitLocate(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#setBuffer.
+  exitSetBuffer(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#setRainbow.
+  enterSetRainbow(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#openIn.
-	enterOpenIn(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#setRainbow.
+  exitSetRainbow(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#openIn.
-	exitOpenIn(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#sort.
+  enterSort(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#sort.
+  exitSort(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#openOut.
-	enterOpenOut(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#sprite.
+  enterSprite(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#openOut.
-	exitOpenOut(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#sprite.
+  exitSprite(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#text.
+  enterText(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#palette.
-	enterPalette(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#text.
+  exitText(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#palette.
-	exitPalette(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#wait.
+  enterWait(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#wait.
+  exitWait(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#paper.
-	enterPaper(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#waitKey.
+  enterWaitKey(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#paper.
-	exitPaper(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#waitKey.
+  exitWaitKey(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#waitVbl.
+  enterWaitVbl(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#pen.
-	enterPen(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#waitVbl.
+  exitWaitVbl(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#pen.
-	exitPen(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#dataStatement.
+  enterDataStatement(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#dataStatement.
+  exitDataStatement(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#playSound.
-	enterPlaySound(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#defFn.
+  enterDefFn(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#playSound.
-	exitPlaySound(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#defFn.
+  exitDefFn(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#doLoop.
+  enterDoLoop(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#plot.
-	enterPlot(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#doLoop.
+  exitDoLoop(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#plot.
-	exitPlot(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#elseStatement.
+  enterElseStatement(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#elseStatement.
+  exitElseStatement(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#printStatement.
-	enterPrintStatement(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#elseIfStatement.
+  enterElseIfStatement(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#printStatement.
-	exitPrintStatement(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#elseIfStatement.
+  exitElseIfStatement(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#exitLoop.
+  enterExitLoop(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#printItem.
-	enterPrintItem(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#exitLoop.
+  exitExitLoop(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#printItem.
-	exitPrintItem(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#exitIf.
+  enterExitIf(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#exitIf.
+  exitExitIf(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#rainbow.
-	enterRainbow(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#fnCall.
+  enterFnCall(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#rainbow.
-	exitRainbow(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#fnCall.
+  exitFnCall(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#forLoop.
+  enterForLoop(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#samBank.
-	enterSamBank(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#forLoop.
+  exitForLoop(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#samBank.
-	exitSamBank(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#global.
+  enterGlobal(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#global.
+  exitGlobal(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#samLoopOff.
-	enterSamLoopOff(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#gosub.
+  enterGosub(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#samLoopOff.
-	exitSamLoopOff(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#gosub.
+  exitGosub(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#gotoLabel.
+  enterGotoLabel(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#chooseScreen.
-	enterChooseScreen(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#gotoLabel.
+  exitGotoLabel(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#chooseScreen.
-	exitChooseScreen(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#ifStatement.
+  enterIfStatement(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#ifStatement.
+  exitIfStatement(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#screenOffset.
-	enterScreenOffset(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#comparisonOperator.
+  enterComparisonOperator(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#screenOffset.
-	exitScreenOffset(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#comparisonOperator.
+  exitComparisonOperator(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#logicalOperator.
+  enterLogicalOperator(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#screenOpen.
-	enterScreenOpen(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#logicalOperator.
+  exitLogicalOperator(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#screenOpen.
-	exitScreenOpen(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#condition.
+  enterCondition(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#condition.
+  exitCondition(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#screenSwap.
-	enterScreenSwap(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#ifKeyStateStatement.
+  enterIfKeyStateStatement(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#screenSwap.
-	exitScreenSwap(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#ifKeyStateStatement.
+  exitIfKeyStateStatement(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#inputVariable.
+  enterInputVariable(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#setBuffer.
-	enterSetBuffer(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#inputVariable.
+  exitInputVariable(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#setBuffer.
-	exitSetBuffer(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#lineInputFile.
+  enterLineInputFile(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#lineInputFile.
+  exitLineInputFile(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#setRainbow.
-	enterSetRainbow(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#notOperator.
+  enterNotOperator(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#setRainbow.
-	exitSetRainbow(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#notOperator.
+  exitNotOperator(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#onBreakProc.
+  enterOnBreakProc(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#sort.
-	enterSort(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#onBreakProc.
+  exitOnBreakProc(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#sort.
-	exitSort(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#onError.
+  enterOnError(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#onError.
+  exitOnError(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#sprite.
-	enterSprite(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#onErrorProc.
+  enterOnErrorProc(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#sprite.
-	exitSprite(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#onErrorProc.
+  exitOnErrorProc(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#onGosub.
+  enterOnGosub(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#text.
-	enterText(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#onGosub.
+  exitOnGosub(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#text.
-	exitText(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#onProc.
+  enterOnProc(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#onProc.
+  exitOnProc(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#wait.
-	enterWait(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#popProc.
+  enterPopProc(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#wait.
-	exitWait(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#popProc.
+  exitPopProc(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#procedureCall.
+  enterProcedureCall(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#waitKey.
-	enterWaitKey(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#procedureCall.
+  exitProcedureCall(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#waitKey.
-	exitWaitKey(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#procedure.
+  enterProcedure(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#procedure.
+  exitProcedure(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#waitVbl.
-	enterWaitVbl(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#readStatement.
+  enterReadStatement(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#waitVbl.
-	exitWaitVbl(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#readStatement.
+  exitReadStatement(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#readTarget.
+  enterReadTarget(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#dataStatement.
-	enterDataStatement(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#readTarget.
+  exitReadTarget(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#dataStatement.
-	exitDataStatement(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#repeatUntil.
+  enterRepeatUntil(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#repeatUntil.
+  exitRepeatUntil(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#defFn.
-	enterDefFn(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#restore.
+  enterRestore(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#defFn.
-	exitDefFn(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#restore.
+  exitRestore(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#resume.
+  enterResume(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#doLoop.
-	enterDoLoop(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#resume.
+  exitResume(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#doLoop.
-	exitDoLoop(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#resumeLabel.
+  enterResumeLabel(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#resumeLabel.
+  exitResumeLabel(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#elseStatement.
-	enterElseStatement(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#shared.
+  enterShared(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#elseStatement.
-	exitElseStatement(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#shared.
+  exitShared(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#sharedItem.
+  enterSharedItem(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#elseIfStatement.
-	enterElseIfStatement(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#sharedItem.
+  exitSharedItem(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#elseIfStatement.
-	exitElseIfStatement(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#swap.
+  enterSwap(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#swap.
+  exitSwap(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#exitLoop.
-	enterExitLoop(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#ifThenStatement.
+  enterIfThenStatement(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#exitLoop.
-	exitExitLoop(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#ifThenStatement.
+  exitIfThenStatement(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#ifThenElse.
+  enterIfThenElse(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#exitIf.
-	enterExitIf(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#ifThenElse.
+  exitIfThenElse(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#exitIf.
-	exitExitIf(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#whileWend.
+  enterWhileWend(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#whileWend.
+  exitWhileWend(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#fnCall.
-	enterFnCall(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#arrayAssignment.
+  enterArrayAssignment(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#fnCall.
-	exitFnCall(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#arrayAssignment.
+  exitArrayAssignment(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#label.
+  enterLabel(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#forLoop.
-	enterForLoop(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#label.
+  exitLabel(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#forLoop.
-	exitForLoop(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#variableAssignment.
+  enterVariableAssignment(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#variableAssignment.
+  exitVariableAssignment(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#global.
-	enterGlobal(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#absFunction.
+  enterAbsFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#global.
-	exitGlobal(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#absFunction.
+  exitAbsFunction(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#acosFunction.
+  enterAcosFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#gosub.
-	enterGosub(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#acosFunction.
+  exitAcosFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#gosub.
-	exitGosub(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#asinFunction.
+  enterAsinFunction(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#asinFunction.
+  exitAsinFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#gotoLabel.
-	enterGotoLabel(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#atanFunction.
+  enterAtanFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#gotoLabel.
-	exitGotoLabel(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#atanFunction.
+  exitAtanFunction(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#btstFunction.
+  enterBtstFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#ifStatement.
-	enterIfStatement(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#btstFunction.
+  exitBtstFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#ifStatement.
-	exitIfStatement(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#colourFunction.
+  enterColourFunction(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#colourFunction.
+  exitColourFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#comparisonOperator.
-	enterComparisonOperator(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#cosFunction.
+  enterCosFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#comparisonOperator.
-	exitComparisonOperator(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#cosFunction.
+  exitCosFunction(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#expFunction.
+  enterExpFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#logicalOperator.
-	enterLogicalOperator(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#expFunction.
+  exitExpFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#logicalOperator.
-	exitLogicalOperator(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#falseFunction.
+  enterFalseFunction(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#falseFunction.
+  exitFalseFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#condition.
-	enterCondition(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#hcosFunction.
+  enterHcosFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#condition.
-	exitCondition(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#hcosFunction.
+  exitHcosFunction(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#hsinFunction.
+  enterHsinFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#ifKeyStateStatement.
-	enterIfKeyStateStatement(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#hsinFunction.
+  exitHsinFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#ifKeyStateStatement.
-	exitIfKeyStateStatement(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#htanFunction.
+  enterHtanFunction(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#htanFunction.
+  exitHtanFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#inputVariable.
-	enterInputVariable(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#intFunction.
+  enterIntFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#inputVariable.
-	exitInputVariable(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#intFunction.
+  exitIntFunction(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#keyStateFunction.
+  enterKeyStateFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#lineInputFile.
-	enterLineInputFile(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#keyStateFunction.
+  exitKeyStateFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#lineInputFile.
-	exitLineInputFile(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#lnFunction.
+  enterLnFunction(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#lnFunction.
+  exitLnFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#notOperator.
-	enterNotOperator(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#logFunction.
+  enterLogFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#notOperator.
-	exitNotOperator(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#logFunction.
+  exitLogFunction(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#maxFunction.
+  enterMaxFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#onBreakProc.
-	enterOnBreakProc(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#maxFunction.
+  exitMaxFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#onBreakProc.
-	exitOnBreakProc(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#minFunction.
+  enterMinFunction(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#minFunction.
+  exitMinFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#onError.
-	enterOnError(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#piFunction.
+  enterPiFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#onError.
-	exitOnError(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#piFunction.
+  exitPiFunction(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#rndFunction.
+  enterRndFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#onErrorProc.
-	enterOnErrorProc(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#rndFunction.
+  exitRndFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#onErrorProc.
-	exitOnErrorProc(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#sinFunction.
+  enterSinFunction(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#sinFunction.
+  exitSinFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#onGosub.
-	enterOnGosub(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#sqrFunction.
+  enterSqrFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#onGosub.
-	exitOnGosub(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#sqrFunction.
+  exitSqrFunction(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#trueFunction.
+  enterTrueFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#onProc.
-	enterOnProc(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#trueFunction.
+  exitTrueFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#onProc.
-	exitOnProc(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#blitterClear.
+  enterBlitterClear(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#blitterClear.
+  exitBlitterClear(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#popProc.
-	enterPopProc(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#blitterCopy.
+  enterBlitterCopy(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#popProc.
-	exitPopProc(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#blitterCopy.
+  exitBlitterCopy(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#blitterFill.
+  enterBlitterFill(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#procedureCall.
-	enterProcedureCall(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#blitterFill.
+  exitBlitterFill(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#procedureCall.
-	exitProcedureCall(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#qcosFunction.
+  enterQcosFunction(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#qcosFunction.
+  exitQcosFunction(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#procedure.
-	enterProcedure(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#qsinFunction.
+  enterQsinFunction(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#procedure.
-	exitProcedure(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#qsinFunction.
+  exitQsinFunction(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#turboDraw.
+  enterTurboDraw(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#readStatement.
-	enterReadStatement(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#turboDraw.
+  exitTurboDraw(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#readStatement.
-	exitReadStatement(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#expression.
+  enterExpression(ctx) {}
 
+  // Exit a parse tree produced by AMOSParser#expression.
+  exitExpression(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#readTarget.
-	enterReadTarget(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#term.
+  enterTerm(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#readTarget.
-	exitReadTarget(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#term.
+  exitTerm(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#factor.
+  enterFactor(ctx) {}
 
-	// Enter a parse tree produced by AMOSParser#repeatUntil.
-	enterRepeatUntil(ctx) {
-	}
+  // Exit a parse tree produced by AMOSParser#factor.
+  exitFactor(ctx) {}
 
-	// Exit a parse tree produced by AMOSParser#repeatUntil.
-	exitRepeatUntil(ctx) {
-	}
+  // Enter a parse tree produced by AMOSParser#arrayStructure.
+  enterArrayStructure(ctx) {}
 
-
-	// Enter a parse tree produced by AMOSParser#restore.
-	enterRestore(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#restore.
-	exitRestore(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#resume.
-	enterResume(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#resume.
-	exitResume(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#resumeLabel.
-	enterResumeLabel(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#resumeLabel.
-	exitResumeLabel(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#shared.
-	enterShared(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#shared.
-	exitShared(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#sharedItem.
-	enterSharedItem(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#sharedItem.
-	exitSharedItem(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#swap.
-	enterSwap(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#swap.
-	exitSwap(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#ifThenStatement.
-	enterIfThenStatement(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#ifThenStatement.
-	exitIfThenStatement(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#ifThenElse.
-	enterIfThenElse(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#ifThenElse.
-	exitIfThenElse(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#whileWend.
-	enterWhileWend(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#whileWend.
-	exitWhileWend(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#arrayAssignment.
-	enterArrayAssignment(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#arrayAssignment.
-	exitArrayAssignment(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#label.
-	enterLabel(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#label.
-	exitLabel(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#variableAssignment.
-	enterVariableAssignment(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#variableAssignment.
-	exitVariableAssignment(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#absFunction.
-	enterAbsFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#absFunction.
-	exitAbsFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#acosFunction.
-	enterAcosFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#acosFunction.
-	exitAcosFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#asinFunction.
-	enterAsinFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#asinFunction.
-	exitAsinFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#atanFunction.
-	enterAtanFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#atanFunction.
-	exitAtanFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#btstFunction.
-	enterBtstFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#btstFunction.
-	exitBtstFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#colourFunction.
-	enterColourFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#colourFunction.
-	exitColourFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#cosFunction.
-	enterCosFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#cosFunction.
-	exitCosFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#expFunction.
-	enterExpFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#expFunction.
-	exitExpFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#falseFunction.
-	enterFalseFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#falseFunction.
-	exitFalseFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#hcosFunction.
-	enterHcosFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#hcosFunction.
-	exitHcosFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#hsinFunction.
-	enterHsinFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#hsinFunction.
-	exitHsinFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#htanFunction.
-	enterHtanFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#htanFunction.
-	exitHtanFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#intFunction.
-	enterIntFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#intFunction.
-	exitIntFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#keyStateFunction.
-	enterKeyStateFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#keyStateFunction.
-	exitKeyStateFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#lnFunction.
-	enterLnFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#lnFunction.
-	exitLnFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#logFunction.
-	enterLogFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#logFunction.
-	exitLogFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#maxFunction.
-	enterMaxFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#maxFunction.
-	exitMaxFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#minFunction.
-	enterMinFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#minFunction.
-	exitMinFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#piFunction.
-	enterPiFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#piFunction.
-	exitPiFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#rndFunction.
-	enterRndFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#rndFunction.
-	exitRndFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#sinFunction.
-	enterSinFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#sinFunction.
-	exitSinFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#sqrFunction.
-	enterSqrFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#sqrFunction.
-	exitSqrFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#trueFunction.
-	enterTrueFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#trueFunction.
-	exitTrueFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#blitterClear.
-	enterBlitterClear(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#blitterClear.
-	exitBlitterClear(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#blitterCopy.
-	enterBlitterCopy(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#blitterCopy.
-	exitBlitterCopy(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#blitterFill.
-	enterBlitterFill(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#blitterFill.
-	exitBlitterFill(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#qcosFunction.
-	enterQcosFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#qcosFunction.
-	exitQcosFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#qsinFunction.
-	enterQsinFunction(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#qsinFunction.
-	exitQsinFunction(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#turboDraw.
-	enterTurboDraw(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#turboDraw.
-	exitTurboDraw(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#expression.
-	enterExpression(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#expression.
-	exitExpression(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#term.
-	enterTerm(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#term.
-	exitTerm(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#factor.
-	enterFactor(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#factor.
-	exitFactor(ctx) {
-	}
-
-
-	// Enter a parse tree produced by AMOSParser#arrayStructure.
-	enterArrayStructure(ctx) {
-	}
-
-	// Exit a parse tree produced by AMOSParser#arrayStructure.
-	exitArrayStructure(ctx) {
-	}
-
-
-
+  // Exit a parse tree produced by AMOSParser#arrayStructure.
+  exitArrayStructure(ctx) {}
 }

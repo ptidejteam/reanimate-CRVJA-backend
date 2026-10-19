@@ -40,11 +40,7 @@ describe('line boundaries in transpiler 2.0.0-beta', () => {
       'Dim ITEMS(8)\nVALUE=ITEMS((1+2)*2)',
       'VALUE = ITEMS[Math.trunc((1 + 2) * 2)];',
     ],
-    [
-      'nested function arguments',
-      'VALUE=Sin(Cos(1+2))',
-      'VALUE = Math.sin(Math.cos(1 + 2));',
-    ],
+    ['nested function arguments', 'VALUE=Sin(Cos(1+2))', 'VALUE = Math.sin(Math.cos(1 + 2));'],
     [
       'nested function and array arguments',
       'Dim ITEMS(8)\nVALUE=Rnd(Sin(ITEMS(2+1)))',
@@ -109,7 +105,11 @@ describe('line boundaries in transpiler 2.0.0-beta', () => {
       ['If 0>1', 'THEN_VALUE=99', 'Else', 'BODY_ONE=101', 'BODY_TWO=202', 'End If'],
       '} else {',
     ],
-    ['FOR', ['For I=1 To 2', 'BODY_ONE=101', 'BODY_TWO=202', 'Next I'], 'for (I = 1; I <= 2; I++) {'],
+    [
+      'FOR',
+      ['For I=1 To 2', 'BODY_ONE=101', 'BODY_TWO=202', 'Next I'],
+      'for (I = 1; I <= 2; I++) {',
+    ],
     ['IF', ['If 1>0', 'BODY_ONE=101', 'BODY_TWO=202', 'End If'], 'if (1 > 0) {'],
     [
       'IF KEY STATE',

@@ -15,7 +15,7 @@ import { aggregateRows } from './amos-aggregate.js';
 function analyseFile(file, catalogRows) {
   const amosCode = readFileSync(file, 'utf8');
   // The analyser updates rows in place, so each file needs independent counts.
-  const summaryTable = catalogRows.map(row => ({ ...row, COUNT: 0 }));
+  const summaryTable = catalogRows.map((row) => ({ ...row, COUNT: 0 }));
 
   const chars = new antlr4.InputStream(amosCode);
   const lexer = new AMOSLexer(chars);
@@ -50,9 +50,10 @@ function main() {
     throw new Error('--input must specify a directory.');
   }
 
-  const inputDirectory = values.input === undefined
-    ? fileURLToPath(new URL('./datasets/example_dataset/', import.meta.url))
-    : resolve(values.input);
+  const inputDirectory =
+    values.input === undefined
+      ? fileURLToPath(new URL('./datasets/example_dataset/', import.meta.url))
+      : resolve(values.input);
   if (!statSync(inputDirectory).isDirectory()) {
     throw new Error(`Input must be a directory: ${inputDirectory}`);
   }
@@ -76,7 +77,11 @@ function main() {
   // Complete analysis and serialization before replacing the previous reports.
   const analysisCsv = serializeCsv(rows);
   const aggregateCsv = serializeCsv(aggregateRows(rows), [
-    'COMMAND', 'CATEGORY', 'TOTAL_COUNT', 'PROJECT_COUNT', 'FILE_COUNT',
+    'COMMAND',
+    'CATEGORY',
+    'TOTAL_COUNT',
+    'PROJECT_COUNT',
+    'FILE_COUNT',
   ]);
   const outputDirectory = fileURLToPath(new URL('./output/', import.meta.url));
   const analysisFile = join(outputDirectory, 'analysis.csv');

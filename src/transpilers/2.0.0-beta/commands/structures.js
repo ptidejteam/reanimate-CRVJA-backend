@@ -59,7 +59,6 @@ export default class Structures extends BaseHandler {
 
   // EXIT IF
   enterExitIf(ctx) {
-    
     const condition = this.ifCondition(ctx.condition());
     const count = ctx.NUMBER() ? parseInt(ctx.NUMBER().getText(), 10) : 1; // Exit without a number is the same as Exit 1
     const depth = this.translator.currentLoop;
@@ -140,7 +139,7 @@ export default class Structures extends BaseHandler {
 
   // LINE INPUT #
   enterLineInputFile(ctx) {
-    console.log("To be implemented");
+    console.log('To be implemented');
   }
 
   // NOT
@@ -154,27 +153,27 @@ export default class Structures extends BaseHandler {
 
   // ON BREAK PROC
   enterOnBreakProc(ctx) {
-    console.log("To be implemented");
+    console.log('To be implemented');
   }
 
   // ON ERROR
   enterOnError(ctx) {
-    console.log("To be implemented");
+    console.log('To be implemented');
   }
 
   // ON ERROR PROC
   enterOnErrorProc(ctx) {
-    console.log("To be implemented");
+    console.log('To be implemented');
   }
 
   // ON ... PROC
   enterOnProc(ctx) {
-    console.log("To be implemented");
+    console.log('To be implemented');
   }
 
   // POP PROC
   enterPopProc(ctx) {
-    console.log("To be implemented");
+    console.log('To be implemented');
   }
 
   // PROC (procedure call)
@@ -269,22 +268,22 @@ ${localDeclarations}`);
 
   // RESTORE
   enterRestore(ctx) {
-    console.log("To be implemented");
+    console.log('To be implemented');
   }
 
   // RESUME
   enterResume(ctx) {
-    console.log("To be implemented");
+    console.log('To be implemented');
   }
 
   // RESUME LABEL
   enterResumeLabel(ctx) {
-    console.log("To be implemented");
+    console.log('To be implemented');
   }
 
   // SHARED
   enterShared(ctx) {
-    console.log("To be implemented");
+    console.log('To be implemented');
   }
 
   // SWAP
@@ -310,7 +309,7 @@ ${localDeclarations}`);
   enterIfThenElse(ctx) {
     this.emit('} else {');
   }
-  
+
   // WHILE ... WEND
   // KEY STATE is a Function, but the grammar only accepts it as the condition of If / While,
   // so it is translated here.
