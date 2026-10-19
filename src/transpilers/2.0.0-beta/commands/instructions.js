@@ -220,7 +220,17 @@ if (amosScreen) {
       const struct = ctx.arrayStructure(i);
       const name = struct.IDENTIFIER(0)?.getText();
 
-      const numberOfDimensions = struct.expression().length;
+      const fill = name.endsWith('$') ? '""' : '0';
+      const sizes = struct.expression().map((e) => this.expr(e));
+
+      const init = sizes.reduceRight(
+        (inner, size) => `Array.from({ length: (${size}) + 1 }, () => ${inner})`,
+        fill
+      );
+
+      this.emit(`const ${name} = ${init};`);
+
+      /*const numberOfDimensions = struct.expression().length;
       let dimension = this.expr(struct.expression(0));
       this.emit(`const ${name} = Array(${dimension}).fill(0)`);
 
@@ -232,7 +242,7 @@ if (amosScreen) {
         this.emit(')');
       }
 
-      this.emit(';');
+      this.emit(';');*/
     }
   }
 
@@ -409,9 +419,29 @@ document.getElementById('game-container').appendChild(screenDiv);
 document.getElementById('amos-screen').style.backgroundColor = 'black';`);
   }
 
-  // SORT
+  // SORT a(0) / a#(0) / a$(0)
   enterSort(ctx) {
-    console.log('To be implemented...');
+    const struct = ctx.arrayStructure();
+    const name = struct.IDENTIFIER(0)?.getText();
+    const indexes = struct.expression();
+
+    if (indexes.length !== 1){
+      throw new Error(`Line ${ctx.start.line}: SORT only supports one-dimensional arrays`);
+    }
+
+    // AMOS requires the first element: index 0
+    if(Number(indexes[0].getText()) !== 0){
+      throw new Error(
+        `Line ${ctx.start.line}: SORT must start at index 0, e.g., Sort ${name}(0)`
+      );
+    }
+
+    const comparator = name.endsWith('$') 
+      ? '(a, b) => (a < b ? -1: a > b ? 1 : 0)' 
+      : '(a, b) => a - b';
+
+    this.emit(`${name}.sort(${comparator});`);
+
   }
 
   // SPRITE
