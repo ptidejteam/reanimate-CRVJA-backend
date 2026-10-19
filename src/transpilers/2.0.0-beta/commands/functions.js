@@ -124,8 +124,8 @@ export default class Functions extends BaseHandler {
 
   // PI#
   visitPiFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    //console.log('To be implemented...');
+    return `Math.PI`;
   }
 
   // RND
