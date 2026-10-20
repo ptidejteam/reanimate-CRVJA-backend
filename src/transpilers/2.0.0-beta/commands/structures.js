@@ -82,13 +82,27 @@ export default class Structures extends BaseHandler {
     let start = this.expr(ctx.expression(0));
     let end = this.expr(ctx.expression(1));
 
-    if (ctx.STEP()) {
-      console.log('To be implemented...');
+      this.declareVariable(variable);
+
+    if (!ctx.STEP()) {
+      this.emit(`for (${variable} = ${start}; ${variable} <= ${end}; ${variable}++) {`);
+      return;
     }
 
-    this.declareVariable(variable);
-    this.emit(`for (${variable} = ${start}; ${variable} <= ${end}; ${variable}++) {`);
-  }
+    const step = this.expr(ctx.expression(2));
+    let condition;
+
+    if (isNaN(Number(step))) {
+      condition = `(${step}) >= 0 ? ${variable} <= ${end} : ${variable} >= ${end}`;
+    } else if (Number(step) < 0) {
+
+      condition = `${variable} >= ${end}`;
+    } else {
+      condition = `${variable} <= ${end}`;
+    }
+
+    this.emit(`for (${variable} = ${start}; ${condition}; ${variable} += ${step}) {`);
+     }
 
   exitForLoop(ctx) {
     this.emit('}');
