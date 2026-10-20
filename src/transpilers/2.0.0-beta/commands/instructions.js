@@ -211,7 +211,10 @@ if (amosScreen) {
 
   // DEC
   enterDec(ctx) {
-    console.log('To be implemented...');
+    const variable = ctx.IDENTIFIER().getText();
+    const expression = `${variable} = ${variable} - 1`;
+    this.emit(expression);
+    //console.log('To be implemented...');
   }
 
   // DIM
@@ -283,7 +286,10 @@ document.getElementById('amos-screen').appendChild(lineDiv);
 
   // INC
   enterInc(ctx) {
-    console.log('To be implemented...');
+    const variable = ctx.IDENTIFIER().getText();
+    const expression = `${variable} = ${variable} + 1`;
+    this.emit(expression);
+    //console.log('To be implemented...');
   }
 
   // INK
