@@ -247,9 +247,7 @@ if (amosScreen) {
   }
 
   // ELLIPSE
-  enterEllipse(ctx) {
-    console.log('To be implemented...');
-  }
+  enterEllipse = (ctx) => this.emit(`document.getElementById("amos-screen").appendChild(a=document.createElement("canvas"));a.ellipse(${this.expr(ctx.expression(0))},${this.expr(ctx.expression(1))},${this.expr(ctx.expression(2))},${this.expr(ctx.expression(3))})`);
 
   // INC
   enterInc(ctx) {
@@ -383,7 +381,7 @@ document.getElementById('amos-screen').appendChild(plotDiv);
       if (expression) {
         const text = this.expr(expression);
         this.emit(
-          `\n{\nconst printId = 'printDiv${i}_' + String(${text});\nlet printEl = document.getElementById(printId);\nif (!printEl) {\n    printEl = document.createElement('div');\n    printEl.id = printId;\n    printEl.style.position = 'relative';\n    printEl.style.left = '50%';\n    printEl.style.top = '50%';\n    printEl.style.fontSize = '14px';\n    printEl.style.zIndex = '999';\n    document.getElementById('amos-screen').appendChild(printEl);\n}\nprintEl.innerText = ${text};\nprintEl.style.color = getColour(Ink);\n}`,
+          `\n{\nlet printId='printDiv${i}_'+String(${text});\nlet printEl=document.getElementById(printId);\nwhile(printEl)printEl=document.getElementById(printId=printId+'_');\nprintEl=document.createElement('div');\nprintEl.id=printId;\nprintEl.style.position='relative';\nprintEl.style.left=printEl.style.top='50%';\nprintEl.style.fontSize='14px';\nprintEl.style.zIndex='999';\ndocument.getElementById('amos-screen').appendChild(printEl);\nprintEl.innerText=${text};\nprintEl.style.color=getColour(Ink);\n}`,
         );
       }
     }
