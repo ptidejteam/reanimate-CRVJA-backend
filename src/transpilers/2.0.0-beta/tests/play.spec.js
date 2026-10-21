@@ -1,4 +1,4 @@
-import AMOSTranspiler from '../AMOSTranspiler.js';
+import AMOSTranspiler from '../amos-transpiler.js';
 
 test.each([
   ['a number', 'Play 40,2', 'soundPlayer(40, 2 * 1000);'],

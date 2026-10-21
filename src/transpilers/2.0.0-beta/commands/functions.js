@@ -13,20 +13,20 @@ export default class Functions extends BaseHandler {
 
   // ACOS
   visitAcosFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const value = this.expr(ctx.expression());
+    return `Math.acos(${value})`;
   }
 
   // ASIN
   visitAsinFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const value = this.expr(ctx.expression());
+    return `Math.asin(${value})`;
   }
 
   // ATAN
   visitAtanFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const value = this.expr(ctx.expression());
+    return `Math.atan(${value})`;
   }
 
   // COLOUR
@@ -43,32 +43,26 @@ export default class Functions extends BaseHandler {
 
   // EXP
   visitExpFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
-  }
-
-  // FALSE
-  visitFalseFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const value = this.expr(ctx.expression());
+    return `Math.exp(${value})`;
   }
 
   // HCOS
   visitHcosFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const angle = this.expr(ctx.expression());
+    return `Math.cosh(${angle})`;
   }
 
   // HSIN
   visitHsinFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const angle = this.expr(ctx.expression());
+    return `Math.sinh(${angle})`;
   }
 
   // HTAN
   visitHtanFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const angle = this.expr(ctx.expression());
+    return `Math.tanh(${angle})`;
   }
 
   // INT
@@ -76,14 +70,14 @@ export default class Functions extends BaseHandler {
 
   // LN
   visitLnFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const value = this.expr(ctx.expression());
+    return `Math.log(${value})`;
   }
 
   // LOG
   visitLogFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const value = this.expr(ctx.expression());
+    return `Math.log10(${value})`;
   }
 
   // MAX
@@ -104,8 +98,8 @@ export default class Functions extends BaseHandler {
 
   // PI#
   visitPiFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    //console.log('To be implemented...');
+    return `Math.PI`;
   }
 
   // RND
@@ -122,13 +116,17 @@ export default class Functions extends BaseHandler {
 
   // SQR
   visitSqrFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const value = this.expr(ctx.expression());
+    return `Math.sqrt(${value})`;
   }
 
   // TRUE
   visitTrueFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    return `(-1)`;
+  }
+
+  // FALSE
+  visitFalseFunction(ctx) {
+    return `(0)`;
   }
 }

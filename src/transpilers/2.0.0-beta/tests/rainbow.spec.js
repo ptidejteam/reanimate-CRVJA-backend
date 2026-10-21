@@ -1,4 +1,4 @@
-import AMOSTranspiler from '../AMOSTranspiler.js';
+import AMOSTranspiler from '../amos-transpiler.js';
 
 // Rainbow and Set Rainbow are parsed but not translated yet. As in the AMOS manual, Rainbow
 // takes 4 arguments and Set Rainbow 6 ("" for an unused colour).

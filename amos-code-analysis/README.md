@@ -1,7 +1,43 @@
 # AMOS CODE ANALYSIS
 
-This project analyses command usage in AMOS BASIC source-code datasets for
-software-preservation, migration, and empirical language studies.
+This project analyses AMOS BASIC programs to help decide which commands to
+implement next in **CRVJA**, a web-based AMOS-to-JavaScript transpiler and
+environment for running retro Amiga games and applications in the browser. See
+the [CRVJA frontend README](../../reanimate-CRVJA-frontend/README.md) for the broader
+project context.
+
+## Why command usage matters
+
+AMOS Professional has more than 700 commands, so CRVJA needs an implementation
+priority rather than attempting to support the entire language at once. Our
+first prioritization uses the `CATEGORY` field from the
+[AMOS Professional Manual](https://amospromanual.dev), which distinguishes
+structures, functions, instructions, and other command types. These categories
+provide an initial way to organize the work, but still leave many commands to
+implement.
+
+This analysis adds evidence from actual programs to refine those priorities.
+The approach is to collect AMOS programs from websites and code repositories,
+organize their source code into datasets, and measure which commands occur most
+often and across how many projects. Supporting widely used commands first should
+help CRVJA run more of those programs sooner.
+
+The workflow is:
+
+1. Collect AMOS source programs into a dataset, with one directory per project.
+2. Analyse their source files against the command catalog.
+3. Use the per-file and aggregate CSV reports to compare command frequency and
+   usage across projects, alongside the category-based priorities.
+
+The current analyser counts only catalog entries whose `CATEGORY` is
+`Instruction`, using tokens recognized by the backend's AMOS grammar. The broader
+goal is to inform command implementation priorities, but the current reports do
+not measure every category or every AMOS command. Results describe the selected
+dataset, so their usefulness depends on the range of programs collected. The
+reports provide evidence for prioritization; they do not automatically produce a
+ranked implementation roadmap.
+
+## Running the analysis
 
 Run from this directory:
 

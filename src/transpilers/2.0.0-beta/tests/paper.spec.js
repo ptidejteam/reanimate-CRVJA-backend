@@ -1,5 +1,5 @@
 import fs from 'fs';
-import AMOSTranspiler from '../AMOSTranspiler.js';
+import AMOSTranspiler from '../amos-transpiler.js';
 
 async function translate(code) {
   const {

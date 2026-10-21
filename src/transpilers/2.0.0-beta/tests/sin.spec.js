@@ -1,4 +1,4 @@
-import AMOSTranspiler from '../AMOSTranspiler.js';
+import AMOSTranspiler from '../amos-transpiler.js';
 
 test.each([
   ['a number', 'X = Sin(1)', 'X = Math.sin(1);'],

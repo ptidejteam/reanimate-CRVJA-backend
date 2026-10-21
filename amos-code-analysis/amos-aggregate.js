@@ -25,11 +25,13 @@ export function aggregateRows(rows) {
     group.files.add(JSON.stringify([row.PROJECT, row.FILE_PATH]));
   }
 
-  return [...groups.values()].map(group => ({
-    COMMAND: group.COMMAND,
-    CATEGORY: group.CATEGORY,
-    TOTAL_COUNT: group.TOTAL_COUNT,
-    PROJECT_COUNT: group.projects.size,
-    FILE_COUNT: group.files.size,
-  })).sort((a, b) => compareText(a.COMMAND, b.COMMAND) || compareText(a.CATEGORY, b.CATEGORY));
+  return [...groups.values()]
+    .map((group) => ({
+      COMMAND: group.COMMAND,
+      CATEGORY: group.CATEGORY,
+      TOTAL_COUNT: group.TOTAL_COUNT,
+      PROJECT_COUNT: group.projects.size,
+      FILE_COUNT: group.files.size,
+    }))
+    .sort((a, b) => compareText(a.COMMAND, b.COMMAND) || compareText(a.CATEGORY, b.CATEGORY));
 }

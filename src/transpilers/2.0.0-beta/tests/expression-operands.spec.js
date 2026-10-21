@@ -1,4 +1,4 @@
-import AMOSTranspiler from '../AMOSTranspiler.js';
+import AMOSTranspiler from '../amos-transpiler.js';
 
 async function translate(code) {
   const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
@@ -78,8 +78,10 @@ describe('expression operands', () => {
       Print #1,A(2+1)
     `);
 
-    expect(normalizedJS).toContain('const B = Array(A[Math.trunc((1 + 2) * 3)])');
-    expect(normalizedJS).toContain('.map((x) => Array(Math.sin(A[Math.trunc(2 + 1)])).fill(0));');
+    // Dim B(A((1+2)*3),Sin(A(2+1))) -> nested Array.from with size + 1
+    expect(normalizedJS).toMatch(
+      /const B = Array\.from\(\s*\{\s*length:\s*\(?A\[Math\.trunc\(\(1 \+ 2\) \* 3\)\]\)? \+ 1,?\s*\},\s*\(\) =>\s*Array\.from\(\s*\{\s*length:\s*\(?Math\.sin\(A\[Math\.trunc\(2 \+ 1\)\]\)\)? \+ 1,?\s*\},\s*\(\) => 0,?\s*\),?\s*\);/,
+    );
     expect(normalizedJS).toMatch(
       /B\[Math\.trunc\(A\[Math\.trunc\(1 \+ 2\)\]\)\]\[\s*Math\.trunc\(Math\.floor\(Math\.random\(\) \* \(A\[Math\.trunc\(2 \+ 1\)\] \+ 1\)\)\)\s*\] = Math\.sin\(A\[Math\.trunc\(3 \+ 1\)\]\);/,
     );

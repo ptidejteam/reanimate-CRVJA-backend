@@ -1,4 +1,4 @@
-import AMOSTranspiler from '../AMOSTranspiler.js';
+import AMOSTranspiler from '../amos-transpiler.js';
 
 test.each([
   ['two numbers', 'X = Min(99, 1)', 'X = Math.min(99, 1);'],
