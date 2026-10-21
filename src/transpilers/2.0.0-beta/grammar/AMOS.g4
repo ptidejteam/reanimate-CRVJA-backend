@@ -18,9 +18,13 @@ statementList:
     (statement | ifThenStatement | NEWLINE)*
     ;
 
+statement:
+    coreStatement
+    ;
+
 // The order of the alternatives matters: ANTLR resolves ambiguities in favour
 // of the alternative listed first.
-statement:
+coreStatement:
     procedure
     | screenOpen
     | cursOff
@@ -52,12 +56,8 @@ statement:
     | pen
     | doubleBuffer
     | autoback
-    | blitterCopy
-    | blitterFill
-    | blitterClear
     | add
     | locate
-    | turboDraw
     | global
     | setBuffer
     | repeatUntil
@@ -746,38 +746,6 @@ trueFunction:
     'True'
     ;
 
-// ---- AMCAF extension -------------------------------------------------------
-
-// BLITTER CLEAR
-blitterClear:
-    'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression COMMA expression TO expression COMMA expression)?
-    ;
-
-// BLITTER COPY
-blitterCopy:
-    'Blitter' 'Copy' 'Limit'? NUMBER COMMA NUMBER TO NUMBER COMMA NUMBER
-    ;
-
-// BLITTER FILL
-blitterFill:
-    'Blitter' 'Fill' NUMBER COMMA NUMBER (COMMA expression COMMA expression COMMA expression COMMA expression)?
-    ;
-
-// QCOS
-qcosFunction:
-    'Qcos' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
-    ;
-
-// QSIN
-qsinFunction:
-    'Qsin' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
-    ;
-
-// TURBO DRAW
-turboDraw:
-    'Turbo' 'Draw' expression COMMA expression TO expression COMMA expression COMMA expression COMMA expression
-    ;
-
 // ---- Expressions -----------------------------------------------------------
 
 expression:
@@ -789,6 +757,10 @@ term:
     ;
 
 factor:
+    coreFactor
+    ;
+
+coreFactor:
     NUMBER                                                  // A number
     | STRING
     | arrayStructure
@@ -811,8 +783,6 @@ factor:
     | minFunction
     | notOperator
     | piFunction
-    | qcosFunction
-    | qsinFunction
     | rndFunction
     | sinFunction
     | sqrFunction

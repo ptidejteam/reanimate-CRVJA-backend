@@ -1,11 +1,11 @@
 import antlr4 from 'antlr4';
-import AMOSVisitor from './grammar/generated/AMOSVisitor.js';
+import CRVJAVisitor from './grammar/generated/CRVJAVisitor.js';
 
 /**
  * Translates AMOS expressions (operators, parentheses, arrays) into JavaScript.
  * AMOS functions (Abs, Sin...) are translated in commands/, like the other commands.
  */
-export default class ExpressionVisitor extends AMOSVisitor {
+export default class ExpressionVisitor extends CRVJAVisitor {
   constructor(translator) {
     super();
     this.translator = translator;
@@ -59,6 +59,15 @@ export default class ExpressionVisitor extends AMOSVisitor {
   }
 
   visitFactor(ctx) {
+    if (!ctx) return '';
+    return this.visit(ctx.getChild(0));
+  }
+
+  visitAmcafFunction(ctx) {
+    return this.translator.forwardToCommands('visit', ctx.getChild(0));
+  }
+
+  visitCoreFactor(ctx) {
     if (!ctx) return '';
 
     // Parentheses: (a + b)

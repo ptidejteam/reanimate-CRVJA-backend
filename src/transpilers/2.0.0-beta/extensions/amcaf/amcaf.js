@@ -1,4 +1,4 @@
-import BaseHandler from './base-handler.js';
+import BaseHandler from '../../commands/base-handler.js';
 
 /**
  * Commands of the AMCAF extension, sorted A-Z by AMOS name. AMCAF is an AMOS

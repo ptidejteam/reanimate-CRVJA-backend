@@ -1,11 +1,11 @@
 import antlr4 from 'antlr4';
-import AMOSLexer from '../grammar/generated/AMOSLexer.js';
+import CRVJALexer from '../grammar/generated/CRVJALexer.js';
 
 // Keywords written only as literals in parser rules ('Wait') have no symbolic name
 function tokens(code) {
-  const lexer = new AMOSLexer(new antlr4.InputStream(code));
+  const lexer = new CRVJALexer(new antlr4.InputStream(code));
   return lexer.getAllTokens().map((token) => {
-    const name = AMOSLexer.symbolicNames[token.type] ?? AMOSLexer.literalNames[token.type];
+    const name = CRVJALexer.symbolicNames[token.type] ?? CRVJALexer.literalNames[token.type];
     return `${name} ${token.text}`;
   });
 }

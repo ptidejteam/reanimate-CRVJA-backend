@@ -1,13 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import AMOSListener from './grammar/generated/AMOSListener.js';
-import AMOSParser from './grammar/generated/AMOSParser.js';
+import CRVJAListener from './grammar/generated/CRVJAListener.js';
+import CRVJAParser from './grammar/generated/CRVJAParser.js';
 import ExpressionVisitor from './expression-visitor.js';
 import Instructions from './commands/instructions.js';
 import Structures from './commands/structures.js';
 import Functions from './commands/functions.js';
-// import Amcaf from './commands/amcaf.js';
+import Amcaf from './extensions/amcaf/amcaf.js';
 import { amiga12BitToHex, amiga12BitToRgb, validateAmigaColor } from '../../utils/amiga-color.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,7 +38,7 @@ const DEFAULT_COLOR_MAPPING = {
  * Walks the AMOS parse tree and builds the JavaScript program. The translation of
  * each command is in commands/, one file per category (see TRANSPILER.md at the backend root).
  */
-class AMOSTranslator extends AMOSListener {
+class AMOSTranslator extends CRVJAListener {
   constructor() {
     super();
 
@@ -65,7 +65,7 @@ class AMOSTranslator extends AMOSListener {
       new Instructions(this),
       new Structures(this),
       new Functions(this),
-      // new Amcaf(this),
+      new Amcaf(this),
     ];
   }
 
@@ -85,7 +85,7 @@ class AMOSTranslator extends AMOSListener {
    * rule `cls` -> enterCls(ctx) and exitCls(ctx), rule `absFunction` -> visitAbsFunction(ctx).
    */
   forwardToCommands(prefix, ctx) {
-    const rule = AMOSParser.ruleNames[ctx.ruleIndex];
+    const rule = CRVJAParser.ruleNames[ctx.ruleIndex];
     const method = prefix + rule[0].toUpperCase() + rule.slice(1);
     const commandFile = this.commandFiles.find((file) => file[method]);
     return commandFile?.[method](ctx);

@@ -1,4 +1,4 @@
-import AMOSParser from '../grammar/generated/AMOSParser.js';
+import CRVJAParser from '../grammar/generated/CRVJAParser.js';
 import BaseHandler from './base-handler.js';
 
 /**
@@ -365,13 +365,13 @@ ${localDeclarations}`);
     let condition = '';
 
     for (const child of ctx.children) {
-      if (child instanceof AMOSParser.KeyStateFunctionContext) {
+      if (child instanceof CRVJAParser.KeyStateFunctionContext) {
         condition += this.keyStateCondition(child);
-      } else if (child instanceof AMOSParser.ExpressionContext) {
+      } else if (child instanceof CRVJAParser.ExpressionContext) {
         condition += this.expr(child);
-      } else if (child instanceof AMOSParser.LogicalOperatorContext) {
+      } else if (child instanceof CRVJAParser.LogicalOperatorContext) {
         condition += child.AND() ? ' && ' : ' || ';
-      } else if (child instanceof AMOSParser.ComparisonOperatorContext) {
+      } else if (child instanceof CRVJAParser.ComparisonOperatorContext) {
         let comparator = child.getText();
         // Special cases for = and <>
         if (comparator === '=') comparator = '==';

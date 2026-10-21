@@ -1,6 +1,6 @@
 import antlr4 from 'antlr4';
-import AMOSLexer from '../grammar/generated/AMOSLexer.js';
-import AMOSParser from '../grammar/generated/AMOSParser.js';
+import CRVJALexer from '../grammar/generated/CRVJALexer.js';
+import CRVJAParser from '../grammar/generated/CRVJAParser.js';
 
 // When grammar rules overlap (an alternative that `expression` already covers, or an optional
 // comma between two arguments), ANTLR falls back to a much slower "full-context" prediction,
@@ -17,8 +17,8 @@ test.each([
   'Rainbow 1,2,3,4',
   'X#=Y#*2.5',
 ])('%j parses without full-context prediction', (code) => {
-  const parser = new AMOSParser(
-    new antlr4.CommonTokenStream(new AMOSLexer(new antlr4.InputStream(code))),
+  const parser = new CRVJAParser(
+    new antlr4.CommonTokenStream(new CRVJALexer(new antlr4.InputStream(code))),
   );
   const errors = [];
   const slowRules = [];

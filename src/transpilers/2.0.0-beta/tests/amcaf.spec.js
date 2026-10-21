@@ -2,6 +2,7 @@ import { jest } from '@jest/globals';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 import AMOSTranspiler from '../amos-transpiler.js';
+import Amcaf from '../extensions/amcaf/amcaf.js';
 
 async function translate(source, transpiler = new AMOSTranspiler()) {
   const { lexicalErrors, syntaxErrors, translatedCode } = await transpiler.transpile(source);
@@ -95,6 +96,68 @@ async function run(source, { strict = true, random = jest.fn(() => 0.5), frames 
 }
 
 const screenOpen = 'Screen Open 0,320,256,8,Lowres\n';
+
+describe('AMCAF integration with core AMOS', () => {
+  test.each([
+    ['ANGLE#=256\nX#=(Abs(Qsin(ANGLE#,10))+Qcos(Sin(0),1))*2', '22px'],
+    ['X#=Qcos(Qsin(0,10),5)', '5px'],
+  ])('evaluates nested functions and float variables in %j', async (setup, expectedLeft) => {
+    const { screen } = await run(`${screenOpen}${setup}
+      Turbo Draw X#,0 To X#+3,4,1,-1
+    `);
+
+    expect(screen.children).toHaveLength(1);
+    expect(screen.children[0].style.left).toBe(expectedLeft);
+    expect(screen.children[0].style.width).toBe('5px');
+  });
+
+  test('uses AMCAF functions in core conditions', async () => {
+    const { screen } = await run(`${screenOpen}
+      RADIUS#=10
+      If Qsin(256,RADIUS#)=10
+        Turbo Draw 2,0 To 5,4,1,-1
+      Else
+        Turbo Draw 9,0 To 12,4,1,-1
+      End If
+    `);
+
+    expect(screen.children).toHaveLength(1);
+    expect(screen.children[0].style.left).toBe('2px');
+  });
+
+  test('shares command dispatch while preserving procedure scope', async () => {
+    const { screen } = await run(`${screenOpen}
+      X=99
+      Procedure DRAW_LINE[X]
+        X=X+Qcos(0,1)
+        Turbo Draw X,0 To X+3,4,1,-1
+      End Proc
+      DRAW_LINE[2]
+      Turbo Draw X,0 To X+3,4,1,-1
+    `);
+
+    expect(screen.children.map((line) => line.style.left)).toEqual(['3px', '99px']);
+    expect(screen.children.map((line) => line.id)).toEqual(['turboDraw_0', 'turboDraw_1']);
+  });
+
+  test.each([
+    ['Turbo Draw 0,0 To 3,4', 'syntaxErrors'],
+    ['Turbo Draw 0,0 To 3,4,1,-1 @', 'lexicalErrors'],
+  ])('rejects %j before translating any statements', async (invalidCommand, diagnostic) => {
+    const handler = jest.spyOn(Amcaf.prototype, 'enterTurboDraw');
+    try {
+      const result = await new AMOSTranspiler().transpile(
+        `${screenOpen}Turbo Draw 0,0 To 3,4,1,-1\n${invalidCommand}`,
+      );
+
+      expect(result[diagnostic].errors.length).toBeGreaterThan(0);
+      expect(result.translatedCode).toBe('');
+      expect(handler).not.toHaveBeenCalled();
+    } finally {
+      handler.mockRestore();
+    }
+  });
+});
 
 describe('Turbo Draw', () => {
   test.each([
