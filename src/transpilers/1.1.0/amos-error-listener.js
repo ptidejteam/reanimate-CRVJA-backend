@@ -1,6 +1,6 @@
 import antlr4 from 'antlr4';
 
-export default class AmosErrorListener extends antlr4.error.ErrorListener {
+export default class AMOSErrorListener extends antlr4.error.ErrorListener {
   constructor() {
     super();
     this.errors = [];

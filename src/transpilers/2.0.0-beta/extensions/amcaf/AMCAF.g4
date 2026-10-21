@@ -1,0 +1,6 @@
+grammar AMCAF;
+
+amcaf:
+    'amcaf'
+    ;
+

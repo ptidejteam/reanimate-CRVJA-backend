@@ -7,7 +7,7 @@ import ExpressionVisitor from './expression-visitor.js';
 import Instructions from './commands/instructions.js';
 import Structures from './commands/structures.js';
 import Functions from './commands/functions.js';
-import Amcaf from './commands/amcaf.js';
+// import Amcaf from './commands/amcaf.js';
 import { amiga12BitToHex, amiga12BitToRgb, validateAmigaColor } from '../../utils/amiga-color.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,7 +38,7 @@ const DEFAULT_COLOR_MAPPING = {
  * Walks the AMOS parse tree and builds the JavaScript program. The translation of
  * each command is in commands/, one file per category (see TRANSPILER.md at the backend root).
  */
-class AmosTranslator extends AMOSListener {
+class AMOSTranslator extends AMOSListener {
   constructor() {
     super();
 
@@ -65,7 +65,7 @@ class AmosTranslator extends AMOSListener {
       new Instructions(this),
       new Structures(this),
       new Functions(this),
-      new Amcaf(this),
+      // new Amcaf(this),
     ];
   }
 
@@ -153,4 +153,4 @@ class AmosTranslator extends AMOSListener {
   }
 }
 
-export default AmosTranslator;
+export default AMOSTranslator;

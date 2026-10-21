@@ -1,10 +1,10 @@
 import AMOSListener from '../grammar/generated/AMOSListener.js';
 import AMOSVisitor from '../grammar/generated/AMOSVisitor.js';
-import AmosTranslator from '../amos-translator.js';
+import AMOSTranslator from '../amos-translator.js';
 
 // The translator calls the methods of commands/ by name (rule `cls` -> enterCls), so a
 // method whose name matches no grammar rule, e.g. a typo, would never be called.
-const methods = new AmosTranslator().commandFiles.flatMap((file) =>
+const methods = new AMOSTranslator().commandFiles.flatMap((file) =>
   Object.getOwnPropertyNames(Object.getPrototypeOf(file)).filter((name) =>
     /^(enter|exit|visit)[A-Z]/.test(name),
   ),

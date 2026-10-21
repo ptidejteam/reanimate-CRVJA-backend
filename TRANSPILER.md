@@ -33,7 +33,7 @@ AMOS source code
 ANTLR lexer + parser   (grammar/amos.g4, compiled into grammar/generated/)
   │  parse tree
   ▼
-AmosTranslator         (amos-translator.js)
+AMOSTranslator         (amos-translator.js)
   │  ANTLR walks the tree and calls enterEveryRule(ctx) / exitEveryRule(ctx) for every node.
   │  The translator calls the method named after the node's grammar rule in
   │  commands/<category>.js (rule `cls` → enterCls), which appends JavaScript with this.emit(...).

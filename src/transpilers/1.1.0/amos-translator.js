@@ -1,6 +1,6 @@
 import AMOSListener from './grammar/generated/AMOSListener.js';
 
-class AmosTranslator extends AMOSListener {
+class AMOSTranslator extends AMOSListener {
   constructor() {
     super();
 
@@ -1849,4 +1849,4 @@ setInterval(() => {
   }
 }
 
-export default AmosTranslator;
+export default AMOSTranslator;

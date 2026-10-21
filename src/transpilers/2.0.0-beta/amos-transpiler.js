@@ -1,16 +1,36 @@
 import antlr4 from 'antlr4';
-import AmosTranslator from './amos-translator.js';
+import AMOSTranslator from './amos-translator.js';
 import AMOSParser from './grammar/generated/AMOSParser.js';
 import AMOSLexer from './grammar/generated/AMOSLexer.js';
-import AmosErrorListener from './amos-error-listener.js';
+import AMOSErrorListener from './amos-error-listener.js';
 import prettier from 'prettier';
+
+import AMCAFParser from './extensions/amcaf/AMCAFParser.js'
+import AMCAFLexer from './extensions/amcaf/AMCAFLexer.js';
+import AMCAFTranslator from './extensions/amcaf/AMCAFTranslator.js'
 
 export default class AMOSTranspiler {
   async transpile(amosCode) {
+    // Begin of PoC AMCAF extension
+
+    const amcafChars = new antlr4.InputStream(amosCode);
+    const amcafLexer = new AMCAFLexer(amcafChars);
+    const amcafTokens = new antlr4.CommonTokenStream(amcafLexer);
+    const amcafParser = new AMCAFParser(amcafTokens)
+    const amcafTree = amcafParser.amcaf();
+
+
+    const amcafTranslator = new AMCAFTranslator();
+    const amcafWalker = new antlr4.tree.ParseTreeWalker();
+    amcafWalker.walk(amcafTranslator, amcafTree);
+
+
+    // End of PoC AMCAF extension
+
     const chars = new antlr4.InputStream(amosCode);
     const lexer = new AMOSLexer(chars);
 
-    const amosErrorListener = new AmosErrorListener();
+    const amosErrorListener = new AMOSErrorListener();
     lexer.removeErrorListeners();
     lexer.addErrorListener(amosErrorListener);
 
@@ -39,7 +59,7 @@ export default class AMOSTranspiler {
       }
     }
 
-    const translator = new AmosTranslator();
+    const translator = new AMOSTranslator();
     const walker = new antlr4.tree.ParseTreeWalker();
     walker.walk(translator, tree);
 

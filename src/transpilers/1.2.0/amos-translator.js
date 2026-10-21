@@ -1,6 +1,6 @@
 import AMOSListener from './grammar/generated/AMOSListener.js';
 
-class AmosTranslator extends AMOSListener {
+class AMOSTranslator extends AMOSListener {
   constructor() {
     super();
 
@@ -1801,4 +1801,4 @@ document.getElementById('amos-screen').appendChild(${varName});`;
   }
 }
 
-export default AmosTranslator;
+export default AMOSTranslator;
