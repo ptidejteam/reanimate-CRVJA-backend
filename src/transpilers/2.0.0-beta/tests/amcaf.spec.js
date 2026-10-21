@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
-import AMOSTranspiler from '../AMOSTranspiler.js';
+import AMOSTranspiler from '../amos-transpiler.js';
 
 async function translate(source, transpiler = new AMOSTranspiler()) {
   const { lexicalErrors, syntaxErrors, translatedCode } = await transpiler.transpile(source);

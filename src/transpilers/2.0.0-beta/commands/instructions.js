@@ -211,7 +211,10 @@ if (amosScreen) {
 
   // DEC
   enterDec(ctx) {
-    console.log('To be implemented...');
+    const variable = ctx.IDENTIFIER().getText();
+    const expression = `${variable} = ${variable} - 1`;
+    this.emit(expression);
+    //console.log('To be implemented...');
   }
 
   // DIM
@@ -220,7 +223,17 @@ if (amosScreen) {
       const struct = ctx.arrayStructure(i);
       const name = struct.IDENTIFIER(0)?.getText();
 
-      const numberOfDimensions = struct.expression().length;
+      const fill = name.endsWith('$') ? '""' : '0';
+      const sizes = struct.expression().map((e) => this.expr(e));
+
+      const init = sizes.reduceRight(
+        (inner, size) => `Array.from({ length: (${size}) + 1 }, () => ${inner})`,
+        fill
+      );
+
+      this.emit(`const ${name} = ${init};`);
+
+      /*const numberOfDimensions = struct.expression().length;
       let dimension = this.expr(struct.expression(0));
       this.emit(`const ${name} = Array(${dimension}).fill(0)`);
 
@@ -232,18 +245,63 @@ if (amosScreen) {
         this.emit(')');
       }
 
-      this.emit(';');
+      this.emit(';');*/
     }
   }
 
   // DRAW
-  enterDraw(ctx) {
-    console.log('To be implemented...');
+   enterDraw(ctx) {
+    const x1 = this.expr(ctx.expression(0));
+    const y1 = this.expr(ctx.expression(1));
+    const x2 = this.expr(ctx.expression(2));
+    const y2 = this.expr(ctx.expression(3));
+
+    this.emit(`
+{
+const drawX1 = ${x1};
+const drawY1 = ${y1};
+const drawX2 = ${x2};
+const drawY2 = ${y2};
+const lineDiv = document.createElement('div');
+lineDiv.style.position = 'absolute';
+lineDiv.style.left = drawX1 + 'px';
+lineDiv.style.top = drawY1 + 'px';
+lineDiv.style.width = Math.hypot(drawX2 - drawX1, drawY2 - drawY1) + 1 + 'px';
+lineDiv.style.height = '1px';
+lineDiv.style.backgroundColor = getColour(Ink);
+lineDiv.style.transformOrigin = '0 0';
+lineDiv.style.transform = 'rotate(' + Math.atan2(drawY2 - drawY1, drawX2 - drawX1) + 'rad)';
+document.getElementById('amos-screen').appendChild(lineDiv);
+graphicCursorX = drawX2;
+graphicCursorY = drawY2;
+}`);
   }
 
-  // DRAW TO
+
+    // DRAW TO
   enterDrawTo(ctx) {
-    console.log('To be implemented...');
+    const x = this.expr(ctx.expression(0));
+    const y = this.expr(ctx.expression(1));
+
+    this.emit(`
+{
+const drawX1 = graphicCursorX;
+const drawY1 = graphicCursorY;
+const drawX2 = ${x};
+const drawY2 = ${y};
+const lineDiv = document.createElement('div');
+lineDiv.style.position = 'absolute';
+lineDiv.style.left = drawX1 + 'px';
+lineDiv.style.top = drawY1 + 'px';
+lineDiv.style.width = Math.hypot(drawX2 - drawX1, drawY2 - drawY1) + 1 + 'px';
+lineDiv.style.height = '1px';
+lineDiv.style.backgroundColor = getColour(Ink);
+lineDiv.style.transformOrigin = '0 0';
+lineDiv.style.transform = 'rotate(' + Math.atan2(drawY2 - drawY1, drawX2 - drawX1) + 'rad)';
+document.getElementById('amos-screen').appendChild(lineDiv);
+graphicCursorX = drawX2;
+graphicCursorY = drawY2;
+}`);
   }
 
   // ELLIPSE
@@ -251,7 +309,10 @@ if (amosScreen) {
 
   // INC
   enterInc(ctx) {
-    console.log('To be implemented...');
+    const variable = ctx.IDENTIFIER().getText();
+    const expression = `${variable} = ${variable} + 1`;
+    this.emit(expression);
+    //console.log('To be implemented...');
   }
 
   // INK
@@ -407,9 +468,29 @@ document.getElementById('game-container').appendChild(screenDiv);
 document.getElementById('amos-screen').style.backgroundColor = 'black';`);
   }
 
-  // SORT
+  // SORT a(0) / a#(0) / a$(0)
   enterSort(ctx) {
-    console.log('To be implemented...');
+    const struct = ctx.arrayStructure();
+    const name = struct.IDENTIFIER(0)?.getText();
+    const indexes = struct.expression();
+
+    if (indexes.length !== 1){
+      throw new Error(`Line ${ctx.start.line}: SORT only supports one-dimensional arrays`);
+    }
+
+    // AMOS requires the first element: index 0
+    if(Number(indexes[0].getText()) !== 0){
+      throw new Error(
+        `Line ${ctx.start.line}: SORT must start at index 0, e.g., Sort ${name}(0)`
+      );
+    }
+
+    const comparator = name.endsWith('$') 
+      ? '(a, b) => (a < b ? -1: a > b ? 1 : 0)' 
+      : '(a, b) => a - b';
+
+    this.emit(`${name}.sort(${comparator});`);
+
   }
 
   // SPRITE

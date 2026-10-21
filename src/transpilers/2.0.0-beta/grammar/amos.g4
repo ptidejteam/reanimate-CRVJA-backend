@@ -412,6 +412,12 @@ elseStatement:
     END_IF
     ;
 
+// ELSE IF
+elseIfStatement:
+    ELSE_IF condition
+    statementList
+    ;
+
 // EXIT
 exitLoop:
     'Exit' NUMBER?
@@ -454,6 +460,7 @@ gotoLabel:
 ifStatement:
     IF expression comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
     statementList
+    elseIfStatement*
     ('End' 'if' | elseStatement | END_IF)
     ;
 
@@ -465,7 +472,7 @@ logicalOperator:
     OR | AND
     ;
 
-// Condition of EXIT IF and THEN: the conditions that IF ... END IF and IF KEY STATE accept.
+// Condition of ELSE IF, EXIT IF and THEN: the conditions that IF ... END IF and IF KEY STATE accept.
 condition:
     expression comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
     | keyStateFunction
@@ -475,6 +482,7 @@ condition:
 ifKeyStateStatement:
     IF keyStateFunction
     statementList
+    elseIfStatement*
     (elseStatement | END_IF)
     ;
 
@@ -483,16 +491,46 @@ inputVariable:
     'Input' HASH NUMBER COMMA IDENTIFIER HEX_NUMBER?
     ;
 
+// LINE INPUT #
+lineInputFile:
+    LINE_INPUT HASH expression COMMA readTarget (COMMA readTarget)*
+    ;
+
 // NOT
 // NOT is a Structure, but it returns a value, so it is listed in `factor:`. It applies to the
 // operand that follows it (`Not X+1` is `(Not X)+1`), like a unary minus.
 notOperator:
-    'Not' factor
+    'Not' SUBTRACT? factor
+    ;
+
+// ON BREAK PROC
+onBreakProc:
+    ON_BREAK_PROC IDENTIFIER
+    ;
+
+// ON ERROR
+onError:
+    ON_ERROR ('Goto' (IDENTIFIER | NUMBER))?
+    ;
+
+// ON ERROR PROC
+onErrorProc:
+    ON_ERROR_PROC IDENTIFIER
     ;
 
 // ON ... GOSUB
 onGosub:
     'On' IDENTIFIER ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE 'Gosub' IDENTIFIER (COMMA IDENTIFIER)*
+    ;
+
+// ON ... PROC
+onProc:
+    'On' IDENTIFIER PROC IDENTIFIER (COMMA IDENTIFIER)*
+    ;
+
+// POP PROC
+popProc:
+    POP_PROC
     ;
 
 // PROC (procedure call)
@@ -523,6 +561,31 @@ repeatUntil:
     'Repeat'
     statementList
     'Until' 'Mouse' 'Key' '=' NUMBER
+    ;
+
+// RESTORE
+restore:
+    RESTORE expression
+    ;
+
+// RESUME
+resume:
+    RESUME (NEXT | IDENTIFIER | NUMBER)?
+    ;
+
+// RESUME LABEL
+resumeLabel:
+    RESUME_LABEL IDENTIFIER?
+    ;
+
+// SHARED
+shared:
+    SHARED sharedItem (COMMA sharedItem)*
+    ;
+
+sharedItem:
+    IDENTIFIER (ROUND_BRACKET_OPEN ROUND_BRACKET_CLOSE)?
+    | STRING
     ;
 
 // SWAP
@@ -770,13 +833,17 @@ arrayStructure:
 // ---- Keywords --------------------------------------------------------------
 // Multi-word keywords are single tokens. Every keyword (and REM below) must stay
 // above IDENTIFIER: on equal-length matches the lexer picks the first rule.
+// Multi-word keywords end with a boundary check (fragments below), so they can't
+// end in the middle of a name: `Resume Labelled` is RESUME + IDENTIFIER, not
+// RESUME_LABEL + `led`. One-word keywords don't need it: `Resumed` is a longer
+// IDENTIFIER match.
 
-SCREEN_OPEN: 'Screen Open';
-LOAD_IFF: 'Load Iff';
+SCREEN_OPEN: 'Screen Open' KEYWORD_BOUNDARY;
+LOAD_IFF: 'Load Iff' KEYWORD_BOUNDARY;
 LOWRES: 'Lowres';
 HIRES: 'Hires';
-CURS_OFF: 'Curs Off';
-CURS_ON: 'Curs On';
+CURS_OFF: 'Curs Off' KEYWORD_BOUNDARY;
+CURS_ON: 'Curs On' KEYWORD_BOUNDARY;
 INK: 'Ink';
 TEXT: 'Text';
 BAR: 'Bar';
@@ -790,14 +857,15 @@ NEXT: 'Next';
 IF: 'If';
 THEN: 'Then';
 ELSE: 'Else';
-END_IF: 'End If';
-EXIT_IF: 'Exit If';
+ELSE_IF: 'Else If' KEYWORD_BOUNDARY;
+END_IF: 'End If' KEYWORD_BOUNDARY;
+EXIT_IF: 'Exit If' KEYWORD_BOUNDARY;
 WHILE: 'While';
 WEND: 'Wend';
 PROCEDURE: 'Procedure';
-END_PROC: 'End Proc';
-WAIT_KEY: 'Wait Key';
-KEY_STATE: 'Key State';
+END_PROC: 'End Proc' KEYWORD_BOUNDARY;
+WAIT_KEY: 'Wait Key' KEYWORD_BOUNDARY;
+KEY_STATE: 'Key State' KEYWORD_BOUNDARY;
 ABS: 'Abs';
 MAX: 'Max';
 MIN: 'Min';
@@ -809,7 +877,7 @@ PI: 'Pi#';
 TRUE: 'True';
 FALSE: 'False';
 NOT: 'Not';
-DEF_FN: 'Def Fn';
+DEF_FN: 'Def Fn' KEYWORD_BOUNDARY;
 FN: 'Fn';
 ACOS: 'Acos';
 ASIN: 'Asin';
@@ -818,7 +886,7 @@ HCOS: 'Hcos';
 HSIN: 'Hsin';
 HTAN: 'Htan';
 COLOUR: 'Colour';
-COLOUR_BACK: 'Colour Back';
+COLOUR_BACK: 'Colour Back' KEYWORD_BOUNDARY;
 DEC: 'Dec';
 DRAW: 'Draw';
 ELLIPSE: 'Ellipse';
@@ -826,6 +894,28 @@ INC: 'Inc';
 SORT: 'Sort';
 SWAP: 'Swap';
 INT: 'Int';
+LINE_INPUT: 'Line Input' FILE_CHANNEL_BOUNDARY;
+ON_BREAK_PROC: 'On Break Proc' KEYWORD_BOUNDARY;
+ON_ERROR: 'On Error' KEYWORD_BOUNDARY;
+ON_ERROR_PROC: 'On Error Proc' KEYWORD_BOUNDARY;
+PROC: 'Proc';
+POP_PROC: 'Pop Proc' KEYWORD_BOUNDARY;
+RESTORE: 'Restore';
+RESUME: 'Resume';
+RESUME_LABEL: 'Resume Label' KEYWORD_BOUNDARY;
+SHARED: 'Shared';
+
+// Fragments are reusable grammar pieces, not tokens. These inspect the next
+// character without consuming it; each boundary check is defined only once.
+fragment KEYWORD_BOUNDARY:
+    { !/[a-zA-Z_0-9$#]/.test(String.fromCharCode(this._input.LA(1))) }?
+    ;
+
+// LINE INPUT allows # immediately after its name: Line Input#1,A$.
+fragment FILE_CHANNEL_BOUNDARY:
+    { !/[a-zA-Z_0-9$]/.test(String.fromCharCode(this._input.LA(1))) }?
+    ;
+
 AND: [aA][nN][dD]; // case-insensitive: and, And, AND
 OR: [oO][rR]; // case-insensitive: or, Or, OR
 

@@ -8,7 +8,7 @@ function escapeField(value) {
 export function serializeCsv(rows, columns = defaultColumns) {
   const lines = [columns.join(',')];
   for (const row of rows) {
-    lines.push(columns.map(column => escapeField(row[column])).join(','));
+    lines.push(columns.map((column) => escapeField(row[column])).join(','));
   }
   return `${lines.join('\n')}\n`;
 }

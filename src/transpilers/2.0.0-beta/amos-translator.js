@@ -55,6 +55,7 @@ class AmosTranslator extends AMOSListener {
 
     // Translation state
     this.scopes = [{}]; // [main program, Procedure being translated]
+    this.currentLoop = 0;
     this.globalVariablesSet = new Set(); // names listed in a `Global` statement
     this.hasDataMatrix = false;
     this.expressionVisitor = new ExpressionVisitor(this);
@@ -109,6 +110,14 @@ class AmosTranslator extends AMOSListener {
 
   get isRootScope() {
     return this.scopes.length === 1;
+  }
+
+  incrementCurrentLoop() {
+    this.currentLoop++;
+  }
+
+  decrementCurrentLoop() {
+    this.currentLoop--;
   }
 
   isVariableDeclared(name) {

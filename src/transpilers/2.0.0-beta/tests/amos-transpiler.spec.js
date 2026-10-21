@@ -1,4 +1,4 @@
-import AMOSTranspiler from '../AMOSTranspiler.js';
+import AMOSTranspiler from '../amos-transpiler.js';
 
 // Each transpile() starts from nothing: no diagnostics, declarations or output carried over.
 describe('AMOSTranspiler instance isolation', () => {

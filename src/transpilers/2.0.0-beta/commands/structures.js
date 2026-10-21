@@ -24,10 +24,12 @@ export default class Structures extends BaseHandler {
 
   // DO ... LOOP
   enterDoLoop(ctx) {
-    this.emit('while(true) {');
+    this.translator.incrementCurrentLoop();
+    this.emit('loop' + this.translator.currentLoop + ': while(true) {');
   }
 
   exitDoLoop(ctx) {
+    this.translator.decrementCurrentLoop();
     this.emit('await new Promise(r => setTimeout(r, 16));}');
   }
 
@@ -40,14 +42,26 @@ export default class Structures extends BaseHandler {
     this.emit('');
   }
 
+  // ELSE IF
+  enterElseIfStatement(ctx) {
+    this.emit(`} else if (${this.ifCondition(ctx.condition())}) {`);
+  }
+
   // EXIT
   enterExitLoop(ctx) {
-    console.log('To be implemented...');
+    const count = ctx.NUMBER() ? parseInt(ctx.NUMBER().getText(), 10) : 1; // Exit without a number is the same as Exit 1
+    const depth = this.translator.currentLoop;
+
+    this.emit('break loop' + (depth - count + 1) + ';');
   }
 
   // EXIT IF
   enterExitIf(ctx) {
-    console.log('To be implemented...');
+    const condition = this.ifCondition(ctx.condition());
+    const count = ctx.NUMBER() ? parseInt(ctx.NUMBER().getText(), 10) : 1; // Exit without a number is the same as Exit 1
+    const depth = this.translator.currentLoop;
+
+    this.emit(`if (${condition}) { break loop${depth - count + 1}; }`);
   }
 
   // FN
@@ -63,13 +77,27 @@ export default class Structures extends BaseHandler {
     let start = this.expr(ctx.expression(0));
     let end = this.expr(ctx.expression(1));
 
-    if (ctx.STEP()) {
-      console.log('To be implemented...');
+      this.declareVariable(variable);
+
+    if (!ctx.STEP()) {
+      this.emit(`for (${variable} = ${start}; ${variable} <= ${end}; ${variable}++) {`);
+      return;
     }
 
-    this.declareVariable(variable);
-    this.emit(`for (${variable} = ${start}; ${variable} <= ${end}; ${variable}++) {`);
-  }
+    const step = this.expr(ctx.expression(2));
+    let condition;
+
+    if (isNaN(Number(step))) {
+      condition = `(${step}) >= 0 ? ${variable} <= ${end} : ${variable} >= ${end}`;
+    } else if (Number(step) < 0) {
+
+      condition = `${variable} >= ${end}`;
+    } else {
+      condition = `${variable} <= ${end}`;
+    }
+
+    this.emit(`for (${variable} = ${start}; ${condition}; ${variable} += ${step}) {`);
+     }
 
   exitForLoop(ctx) {
     this.emit('}');
@@ -87,22 +115,7 @@ export default class Structures extends BaseHandler {
 
   // IF ... END IF
   enterIfStatement(ctx) {
-    let condition = '';
-
-    for (const child of ctx.children) {
-      if (child instanceof AMOSParser.ExpressionContext) {
-        condition += this.expr(child);
-      } else if (child instanceof AMOSParser.LogicalOperatorContext) {
-        condition += child.AND() ? ' && ' : ' || ';
-      } else if (child instanceof AMOSParser.ComparisonOperatorContext) {
-        let comparator = child.getText();
-        // Special cases for = and <>
-        if (comparator === '=') comparator = '==';
-        if (comparator === '<>') comparator = '!=';
-        condition += ` ${comparator} `;
-      }
-    }
-    this.emit(`if (${condition}) {`);
+    this.emit(`if (${this.ifCondition(ctx)}) {`);
   }
 
   exitIfStatement(ctx) {
@@ -112,30 +125,8 @@ export default class Structures extends BaseHandler {
   // IF KEY STATE(...) ... END IF
   // KEY STATE is a Function, but the grammar only accepts it as the condition of If / While,
   // so it is translated here.
-  // TODO: verify open/close brackets
   enterIfKeyStateStatement(ctx) {
-    let leftExpression = this.expr(ctx.keyStateFunction(0)?.expression(0));
-
-    if (leftExpression.includes('$')) {
-      // Extract the hexadecimal value from the expression
-      let hexValueMatch = leftExpression.match(/\$[0-9A-Fa-f]+/);
-
-      if (hexValueMatch) {
-        let hexValue = parseInt(hexValueMatch[0].replace('$', ''), 16);
-
-        // Check if the leftExpression is just a hexadecimal value
-        if (hexValueMatch[0] === leftExpression) {
-          // If it's only a hex value, convert it to a key mapping lookup
-          leftExpression = `keyMapping[${hexValue}`;
-        } else {
-          let variable = leftExpression.split('$')[0];
-
-          // If it's a variable or expression with a hex part, construct it accordingly
-          leftExpression = leftExpression.replace(/\$[0-9A-Fa-f]+/, `keyMapping[${hexValue}`);
-        }
-      }
-    }
-    this.emit(`if (currentPressedKey === ${leftExpression}]) {`);
+    this.emit(`if (${this.keyStateCondition(ctx.keyStateFunction())}) {`);
   }
 
   exitIfKeyStateStatement(ctx) {
@@ -155,12 +146,43 @@ export default class Structures extends BaseHandler {
     );
   }
 
+  // LINE INPUT #
+  enterLineInputFile(ctx) {
+    console.log('To be implemented');
+  }
+
   // NOT
   // NOT is a Structure, but it returns a value inside an expression (X = Not Y),
   // so it is translated by a visitX method.
   visitNotOperator(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const minus = ctx.SUBTRACT() ? '-' : '';
+    const value = this.expr(ctx.factor());
+    return `~(${minus}${value})`;
+  }
+
+  // ON BREAK PROC
+  enterOnBreakProc(ctx) {
+    console.log('To be implemented');
+  }
+
+  // ON ERROR
+  enterOnError(ctx) {
+    console.log('To be implemented');
+  }
+
+  // ON ERROR PROC
+  enterOnErrorProc(ctx) {
+    console.log('To be implemented');
+  }
+
+  // ON ... PROC
+  enterOnProc(ctx) {
+    console.log('To be implemented');
+  }
+
+  // POP PROC
+  enterPopProc(ctx) {
+    console.log('To be implemented');
   }
 
   // PROC (procedure call)
@@ -253,31 +275,55 @@ ${localDeclarations}`);
     this.emit('Timer = 9; }, 16);');
   }
 
+  // RESTORE
+  enterRestore(ctx) {
+    console.log('To be implemented');
+  }
+
+  // RESUME
+  enterResume(ctx) {
+    console.log('To be implemented');
+  }
+
+  // RESUME LABEL
+  enterResumeLabel(ctx) {
+    console.log('To be implemented');
+  }
+
+  // SHARED
+  enterShared(ctx) {
+    console.log('To be implemented');
+  }
+
   // SWAP
   enterSwap(ctx) {
-    console.log('To be implemented...');
+    const first = ctx.IDENTIFIER(0).getText();
+    const second = ctx.IDENTIFIER(1).getText();
+
+    this.declareVariable(first);
+    this.declareVariable(second);
+    this.emit(`[${first}, ${second}] = [${second}, ${first}];`);
   }
 
   // THEN
   // Single-line If: If X=1 Then Print "A" Else Print "B"
   enterIfThenStatement(ctx) {
-    console.log('To be implemented...');
+    this.emit(`if (${this.ifCondition(ctx.condition())}) {`);
+  }
+
+  exitIfThenStatement(ctx) {
+    this.emit('}');
+  }
+
+  enterIfThenElse(ctx) {
+    this.emit('} else {');
   }
 
   // WHILE ... WEND
   // KEY STATE is a Function, but the grammar only accepts it as the condition of If / While,
   // so it is translated here.
   enterWhileWend(ctx) {
-    let leftExpression = this.expr(ctx.keyStateFunction(0)?.expression(0));
-    if (!leftExpression) return;
-
-    // Replace all occurrences of $xx with decimal equivalents
-    leftExpression = leftExpression.replace(/\$[0-9A-Fa-f]+/g, (match) => {
-      return parseInt(match.substring(1), 16);
-    });
-
-    // Cf. https://www.cknow.com/cms/articles/what-is-a-scan-code.html
-    this.emit(`\nif (currentPressedKey === keyMapping[${leftExpression}]) {`);
+    this.emit(`\nif (${this.keyStateCondition(ctx.keyStateFunction())}) {`);
   }
 
   exitWhileWend(ctx) {
@@ -311,5 +357,38 @@ ${localDeclarations}`);
       this.declareVariable(name);
       this.emit(`${name} = ${value};`);
     }
+  }
+
+  // Condition of IF ... END IF, or a `condition` node (ELSE IF, EXIT IF, THEN):
+  // X = 1 and Y <> 2 → X == 1 && Y != 2, or Key State($10) → currentPressedKey === keyMapping[16]
+  ifCondition(ctx) {
+    let condition = '';
+
+    for (const child of ctx.children) {
+      if (child instanceof AMOSParser.KeyStateFunctionContext) {
+        condition += this.keyStateCondition(child);
+      } else if (child instanceof AMOSParser.ExpressionContext) {
+        condition += this.expr(child);
+      } else if (child instanceof AMOSParser.LogicalOperatorContext) {
+        condition += child.AND() ? ' && ' : ' || ';
+      } else if (child instanceof AMOSParser.ComparisonOperatorContext) {
+        let comparator = child.getText();
+        // Special cases for = and <>
+        if (comparator === '=') comparator = '==';
+        if (comparator === '<>') comparator = '!=';
+        condition += ` ${comparator} `;
+      }
+    }
+    return condition;
+  }
+
+  // Condition of KEY STATE: Key State($10+I) → currentPressedKey === keyMapping[16 + I]
+  keyStateCondition(ctx) {
+    // AMOS scan codes are hexadecimal ($10): keyMapping is indexed by their decimal value.
+    // Cf. https://www.cknow.com/cms/articles/what-is-a-scan-code.html
+    const scanCode = this.expr(ctx.expression()).replace(/\$[0-9A-Fa-f]+/g, (hex) =>
+      parseInt(hex.substring(1), 16),
+    );
+    return `currentPressedKey === keyMapping[${scanCode}]`;
   }
 }

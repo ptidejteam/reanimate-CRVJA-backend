@@ -2,8 +2,9 @@ import { readdirSync } from 'node:fs';
 import { extname, join, relative, resolve, sep } from 'node:path';
 
 function sortedEntries(directory) {
-  return readdirSync(directory, { withFileTypes: true })
-    .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+  return readdirSync(directory, { withFileTypes: true }).sort((a, b) =>
+    a.name < b.name ? -1 : a.name > b.name ? 1 : 0,
+  );
 }
 
 function* findProjectFiles(directory) {
