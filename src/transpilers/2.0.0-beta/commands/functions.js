@@ -66,10 +66,7 @@ export default class Functions extends BaseHandler {
   }
 
   // INT
-  visitIntFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
-  }
+  visitIntFunction = ctx => (`Math.floor(${this.expr(ctx.expression())})`);
 
   // LN
   visitLnFunction(ctx) {
