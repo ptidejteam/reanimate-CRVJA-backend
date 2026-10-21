@@ -20,9 +20,7 @@ export default class Structures extends BaseHandler {
   }
 
   // DEF FN
-  enterDefFn(ctx) {
-    console.log('To be implemented...');
-  }
+  enterDefFn = (ctx) => this.emit(`${ctx.IDENTIFIER(0).getText()}=(${Array.from(Array(ctx.IDENTIFIER().length - 1), (_, i) => ctx.IDENTIFIER(i + 1).getText())})=>${this.expr(ctx.expression())};`);
 
   // DO ... LOOP
   enterDoLoop(ctx) {
@@ -69,10 +67,7 @@ export default class Structures extends BaseHandler {
   // FN
   // FN is a Structure, but it returns a value inside an expression (Print Fn X(1,10,100)),
   // so it is translated by a visitX method.
-  visitFnCall(ctx) {
-    console.log('To be implemented...');
-    return `0`;
-  }
+  visitFnCall = (ctx) => `${ctx.IDENTIFIER().getText()}(${ctx.expression().map(expr => this.expr(expr)).join(',')})`;
 
   // FOR ... NEXT (and STEP)
   // STEP is a Structure, but it is part of the forLoop rule (For I=1 To 9 Step 2),
