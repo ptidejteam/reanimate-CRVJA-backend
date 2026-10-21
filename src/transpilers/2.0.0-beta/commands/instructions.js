@@ -272,11 +272,36 @@ lineDiv.style.backgroundColor = getColour(Ink);
 lineDiv.style.transformOrigin = '0 0';
 lineDiv.style.transform = 'rotate(' + Math.atan2(drawY2 - drawY1, drawX2 - drawX1) + 'rad)';
 document.getElementById('amos-screen').appendChild(lineDiv);
+graphicCursorX = drawX2;
+graphicCursorY = drawY2;
 }`);
   }
-  // DRAW TO
+
+
+    // DRAW TO
   enterDrawTo(ctx) {
-    console.log('To be implemented...');
+    const x = this.expr(ctx.expression(0));
+    const y = this.expr(ctx.expression(1));
+
+    this.emit(`
+{
+const drawX1 = graphicCursorX;
+const drawY1 = graphicCursorY;
+const drawX2 = ${x};
+const drawY2 = ${y};
+const lineDiv = document.createElement('div');
+lineDiv.style.position = 'absolute';
+lineDiv.style.left = drawX1 + 'px';
+lineDiv.style.top = drawY1 + 'px';
+lineDiv.style.width = Math.hypot(drawX2 - drawX1, drawY2 - drawY1) + 1 + 'px';
+lineDiv.style.height = '1px';
+lineDiv.style.backgroundColor = getColour(Ink);
+lineDiv.style.transformOrigin = '0 0';
+lineDiv.style.transform = 'rotate(' + Math.atan2(drawY2 - drawY1, drawX2 - drawX1) + 'rad)';
+document.getElementById('amos-screen').appendChild(lineDiv);
+graphicCursorX = drawX2;
+graphicCursorY = drawY2;
+}`);
   }
 
   // ELLIPSE
