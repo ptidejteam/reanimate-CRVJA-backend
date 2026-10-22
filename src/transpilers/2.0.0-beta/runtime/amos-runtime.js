@@ -488,35 +488,6 @@ function Qcos(angle, radius) {
   return Math.round(radius * Math.cos((angle * Math.PI) / 512));
 }
 
-function turboDrawLine(id, x1, y1, x2, y2, colorIndex, index) {
-  const deltaX = x2 - x1;
-  const deltaY = y2 - y1;
-  const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-  const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-  const color = colorMapping[colorIndex];
-  const layer = 1000 + index;
-
-  let lineDiv = document.getElementById(id);
-  if (!lineDiv) {
-    lineDiv = document.createElement('div');
-    lineDiv.id = id;
-    lineDiv.style.position = 'absolute';
-    lineDiv.style.borderRadius = '1px';
-    lineDiv.style.transformOrigin = '0 0';
-    document.getElementById('amos-screen').appendChild(lineDiv);
-  }
-
-  lineDiv.style.backgroundColor = color;
-  lineDiv.style.left = x1 + 'px';
-  lineDiv.style.top = y1 + 'px';
-  lineDiv.style.width = length + 'px';
-  lineDiv.style.height = '2px';
-  lineDiv.style.transform = 'rotate(' + angle + 'deg)';
-  lineDiv.style.borderColor = color;
-  lineDiv.style.zIndex = layer;
-  lineDiv.indexPlacer = layer;
-}
-
 function Rnd(maxValue) {
   return Math.floor(Math.random() * maxValue);
 }
@@ -757,4 +728,36 @@ function renderSprite(spriteNumber, x, y, bankImgIndex) {
 
 function getColour(expression) {
   return colorMapping[expression];
+}
+
+// AMCAF drawing currently shares the AMOS runtime, colour mapping, and screen.
+// Moving this behavior into the statement translator is deferred; keep operands
+// evaluated once at the call site when that change is made.
+function turboDrawLine(id, x1, y1, x2, y2, colorIndex, index) {
+  const deltaX = x2 - x1;
+  const deltaY = y2 - y1;
+  const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+  const color = colorMapping[colorIndex];
+  const layer = 1000 + index;
+
+  let lineDiv = document.getElementById(id);
+  if (!lineDiv) {
+    lineDiv = document.createElement('div');
+    lineDiv.id = id;
+    lineDiv.style.position = 'absolute';
+    lineDiv.style.borderRadius = '1px';
+    lineDiv.style.transformOrigin = '0 0';
+    document.getElementById('amos-screen').appendChild(lineDiv);
+  }
+
+  lineDiv.style.backgroundColor = color;
+  lineDiv.style.left = x1 + 'px';
+  lineDiv.style.top = y1 + 'px';
+  lineDiv.style.width = length + 'px';
+  lineDiv.style.height = '2px';
+  lineDiv.style.transform = 'rotate(' + angle + 'deg)';
+  lineDiv.style.borderColor = color;
+  lineDiv.style.zIndex = layer;
+  lineDiv.indexPlacer = layer;
 }

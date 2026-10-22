@@ -22,6 +22,12 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMOSParser#statement.
   exitStatement(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#extensionStatement.
+  enterExtensionStatement(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#extensionStatement.
+  exitExtensionStatement(ctx) {}
+
   // Enter a parse tree produced by AMOSParser#add.
   enterAdd(ctx) {}
 
@@ -748,42 +754,6 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMOSParser#trueFunction.
   exitTrueFunction(ctx) {}
 
-  // Enter a parse tree produced by AMOSParser#blitterClear.
-  enterBlitterClear(ctx) {}
-
-  // Exit a parse tree produced by AMOSParser#blitterClear.
-  exitBlitterClear(ctx) {}
-
-  // Enter a parse tree produced by AMOSParser#blitterCopy.
-  enterBlitterCopy(ctx) {}
-
-  // Exit a parse tree produced by AMOSParser#blitterCopy.
-  exitBlitterCopy(ctx) {}
-
-  // Enter a parse tree produced by AMOSParser#blitterFill.
-  enterBlitterFill(ctx) {}
-
-  // Exit a parse tree produced by AMOSParser#blitterFill.
-  exitBlitterFill(ctx) {}
-
-  // Enter a parse tree produced by AMOSParser#qcosFunction.
-  enterQcosFunction(ctx) {}
-
-  // Exit a parse tree produced by AMOSParser#qcosFunction.
-  exitQcosFunction(ctx) {}
-
-  // Enter a parse tree produced by AMOSParser#qsinFunction.
-  enterQsinFunction(ctx) {}
-
-  // Exit a parse tree produced by AMOSParser#qsinFunction.
-  exitQsinFunction(ctx) {}
-
-  // Enter a parse tree produced by AMOSParser#turboDraw.
-  enterTurboDraw(ctx) {}
-
-  // Exit a parse tree produced by AMOSParser#turboDraw.
-  exitTurboDraw(ctx) {}
-
   // Enter a parse tree produced by AMOSParser#expression.
   enterExpression(ctx) {}
 
@@ -801,6 +771,12 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
   // Exit a parse tree produced by AMOSParser#factor.
   exitFactor(ctx) {}
+
+  // Enter a parse tree produced by AMOSParser#coreFactor.
+  enterCoreFactor(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#coreFactor.
+  exitCoreFactor(ctx) {}
 
   // Enter a parse tree produced by AMOSParser#arrayStructure.
   enterArrayStructure(ctx) {}

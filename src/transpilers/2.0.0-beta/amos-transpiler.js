@@ -1,21 +1,34 @@
 import antlr4 from 'antlr4';
 import AMOSTranslator from './amos-translator.js';
-import CRVJAParser from './grammar/generated/CRVJAParser.js';
-import CRVJALexer from './grammar/generated/CRVJALexer.js';
+import AMOSParser from './grammar/generated/AMOSParser.js';
+import AMOSLexer from './grammar/generated/AMOSLexer.js';
 import AMOSErrorListener from './amos-error-listener.js';
 import prettier from 'prettier';
+import ExtensionLoader from './extensions/extension-loader.js';
+import ExtensionStatements from './extensions/statements.js';
+import ExtensionTokenSource from './extensions/extension-token-source.js';
+import { normalizeFloatIdentifiers } from './grammar/normalize-float-identifiers.js';
 
 export default class AMOSTranspiler {
-  async transpile(amosCode) {
-    const chars = new antlr4.InputStream(amosCode);
-    const lexer = new CRVJALexer(chars);
+  constructor({ extensionsDirectory } = {}) {
+    this.extensionsDirectory = extensionsDirectory;
+  }
 
-    const amosErrorListener = new AMOSErrorListener();
+  async transpile(amosCode) {
+    const extensions = await new ExtensionLoader(this.extensionsDirectory).load();
+    const prepared = new ExtensionStatements(amosCode, extensions).prepare();
+    const chars = new antlr4.InputStream(prepared.source);
+    const lexer = new AMOSLexer(chars);
+
+    const amosErrorListener = new AMOSErrorListener(amosCode);
     lexer.removeErrorListeners();
     lexer.addErrorListener(amosErrorListener);
 
-    const tokens = new antlr4.CommonTokenStream(lexer);
-    const parser = new CRVJAParser(tokens);
+    const tokens = new antlr4.CommonTokenStream(
+      new ExtensionTokenSource(lexer, prepared.statements, amosCode),
+    );
+    tokens.fill();
+    const parser = new AMOSParser(tokens);
 
     parser.removeErrorListeners();
     parser.addErrorListener(amosErrorListener);
@@ -31,13 +44,7 @@ export default class AMOSTranspiler {
       };
     }
 
-    // A float variable (A#) is not a valid JavaScript name: rename it A_f. The commands read
-    // names from these tokens, so they all get the JavaScript name.
-    for (const token of tokens.tokens) {
-      if (token.type === CRVJALexer.IDENTIFIER && token.text.endsWith('#')) {
-        token.text = `${token.text.slice(0, -1)}_f`;
-      }
-    }
+    normalizeFloatIdentifiers(tokens.tokens, AMOSLexer);
 
     const translator = new AMOSTranslator();
     const walker = new antlr4.tree.ParseTreeWalker();

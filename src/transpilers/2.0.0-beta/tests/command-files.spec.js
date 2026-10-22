@@ -1,5 +1,5 @@
-import CRVJAListener from '../grammar/generated/CRVJAListener.js';
-import CRVJAVisitor from '../grammar/generated/CRVJAVisitor.js';
+import AMOSListener from '../grammar/generated/AMOSListener.js';
+import AMOSVisitor from '../grammar/generated/AMOSVisitor.js';
 import AMOSTranslator from '../amos-translator.js';
 
 // The translator calls the methods of commands/ by name (rule `cls` -> enterCls), so a
@@ -12,7 +12,7 @@ const methods = new AMOSTranslator().commandFiles.flatMap((file) =>
 
 test('every enterX, exitX and visitX method in commands/ matches a grammar rule', () => {
   const unknown = methods.filter(
-    (method) => !(method in CRVJAListener.prototype) && !(method in CRVJAVisitor.prototype),
+    (method) => !(method in AMOSListener.prototype) && !(method in AMOSVisitor.prototype),
   );
 
   expect(unknown).toEqual([]);

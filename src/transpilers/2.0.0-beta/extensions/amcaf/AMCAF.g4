@@ -2,10 +2,7 @@ grammar AMCAF;
 import AMOS;
 
 amcafStatement:
-    blitterClear
-    | blitterCopy
-    | blitterFill
-    | turboDraw
+    (blitterClear | turboDraw) EOF
     ;
 
 amcafFunction:
@@ -15,7 +12,7 @@ amcafFunction:
 
 // BLITTER CLEAR
 blitterClear:
-    'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression COMMA expression TO expression COMMA expression)?
+    'Blitter' 'Clear' NUMBER COMMA NUMBER COMMA expression COMMA expression TO expression COMMA expression
     ;
 
 // BLITTER COPY

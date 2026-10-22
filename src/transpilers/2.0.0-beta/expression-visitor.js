@@ -1,14 +1,25 @@
 import antlr4 from 'antlr4';
-import CRVJAVisitor from './grammar/generated/CRVJAVisitor.js';
+import AMOSVisitor from './grammar/generated/AMOSVisitor.js';
 
 /**
  * Translates AMOS expressions (operators, parentheses, arrays) into JavaScript.
  * AMOS functions (Abs, Sin...) are translated in commands/, like the other commands.
  */
-export default class ExpressionVisitor extends CRVJAVisitor {
+export default class ExpressionVisitor extends AMOSVisitor {
   constructor(translator) {
     super();
     this.translator = translator;
+  }
+
+  // Imported AMOS rules in another generated parser have different context classes.
+  // Dispatch by their shared rule names instead of generated accept()/instanceof checks.
+  visit(ctx) {
+    if (!ctx) return '';
+    if (Array.isArray(ctx)) return ctx.map((child) => this.visit(child));
+    if (!(ctx instanceof antlr4.ParserRuleContext)) return this.visitTerminal(ctx);
+    const rule = ctx.parser.ruleNames[ctx.ruleIndex];
+    const method = `visit${rule[0].toUpperCase()}${rule.slice(1)}`;
+    return this[method] ? this[method](ctx) : this.visitChildren(ctx);
   }
 
   // Addition and subtraction: a + b - c
@@ -61,10 +72,6 @@ export default class ExpressionVisitor extends CRVJAVisitor {
   visitFactor(ctx) {
     if (!ctx) return '';
     return this.visit(ctx.getChild(0));
-  }
-
-  visitAmcafFunction(ctx) {
-    return this.translator.forwardToCommands('visit', ctx.getChild(0));
   }
 
   visitCoreFactor(ctx) {

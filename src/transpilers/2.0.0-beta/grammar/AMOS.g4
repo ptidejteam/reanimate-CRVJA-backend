@@ -1,5 +1,8 @@
 grammar AMOS;
 
+// Supplied by the extension statement bridge, never matched by the AMOS lexer.
+tokens { EXTENSION_STATEMENT }
+
 // ============================================================================
 // Parser rules
 // ============================================================================
@@ -18,13 +21,9 @@ statementList:
     (statement | ifThenStatement | NEWLINE)*
     ;
 
-statement:
-    coreStatement
-    ;
-
 // The order of the alternatives matters: ANTLR resolves ambiguities in favour
 // of the alternative listed first.
-coreStatement:
+statement:
     procedure
     | screenOpen
     | cursOff
@@ -103,6 +102,11 @@ coreStatement:
     | drawTo
     | ellipse
     | sort
+    | extensionStatement
+    ;
+
+extensionStatement:
+    EXTENSION_STATEMENT
     ;
 
 // ---- Instructions ----------------------------------------------------------

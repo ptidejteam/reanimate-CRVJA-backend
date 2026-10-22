@@ -20,6 +20,11 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
     return this.visitChildren(ctx);
   }
 
+  // Visit a parse tree produced by AMOSParser#extensionStatement.
+  visitExtensionStatement(ctx) {
+    return this.visitChildren(ctx);
+  }
+
   // Visit a parse tree produced by AMOSParser#add.
   visitAdd(ctx) {
     return this.visitChildren(ctx);
@@ -625,36 +630,6 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
     return this.visitChildren(ctx);
   }
 
-  // Visit a parse tree produced by AMOSParser#blitterClear.
-  visitBlitterClear(ctx) {
-    return this.visitChildren(ctx);
-  }
-
-  // Visit a parse tree produced by AMOSParser#blitterCopy.
-  visitBlitterCopy(ctx) {
-    return this.visitChildren(ctx);
-  }
-
-  // Visit a parse tree produced by AMOSParser#blitterFill.
-  visitBlitterFill(ctx) {
-    return this.visitChildren(ctx);
-  }
-
-  // Visit a parse tree produced by AMOSParser#qcosFunction.
-  visitQcosFunction(ctx) {
-    return this.visitChildren(ctx);
-  }
-
-  // Visit a parse tree produced by AMOSParser#qsinFunction.
-  visitQsinFunction(ctx) {
-    return this.visitChildren(ctx);
-  }
-
-  // Visit a parse tree produced by AMOSParser#turboDraw.
-  visitTurboDraw(ctx) {
-    return this.visitChildren(ctx);
-  }
-
   // Visit a parse tree produced by AMOSParser#expression.
   visitExpression(ctx) {
     return this.visitChildren(ctx);
@@ -667,6 +642,11 @@ export default class AMOSVisitor extends antlr4.tree.ParseTreeVisitor {
 
   // Visit a parse tree produced by AMOSParser#factor.
   visitFactor(ctx) {
+    return this.visitChildren(ctx);
+  }
+
+  // Visit a parse tree produced by AMOSParser#coreFactor.
+  visitCoreFactor(ctx) {
     return this.visitChildren(ctx);
   }
 

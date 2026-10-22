@@ -10,16 +10,24 @@ export default class Amcaf extends BaseHandler {
     this.turboDrawCounter = 0;
   }
 
+  emitStatement(ctx) {
+    const rule = ctx.parser.ruleNames[ctx.ruleIndex];
+    const handler = this[`enter${rule[0].toUpperCase()}${rule.slice(1)}`];
+    if (typeof handler !== 'function') {
+      throw new Error(`No AMCAF statement translator for ${rule}`);
+    }
+    handler.call(this, ctx);
+  }
+
   // BLITTER CLEAR
   enterBlitterClear(ctx) {
-    // Blitter Clear clears a rectangular region on screen
-    if (ctx.expression().length >= 4) {
-      const x1 = this.expr(ctx.expression(0));
-      const y1 = this.expr(ctx.expression(1));
-      const x2 = this.expr(ctx.expression(2));
-      const y2 = this.expr(ctx.expression(3));
+    // AmcafTranspiler has already validated the rectangular form and its four expressions.
+    const x1 = this.expr(ctx.expression(0));
+    const y1 = this.expr(ctx.expression(1));
+    const x2 = this.expr(ctx.expression(2));
+    const y2 = this.expr(ctx.expression(3));
 
-      this.emit(`
+    this.emit(`
 // Blitter Clear - remove elements in the region
 {
   const clearX1 = ${x1};
@@ -39,11 +47,7 @@ export default class Amcaf extends BaseHandler {
   }
 }
 `);
-    }
   }
-
-  // BLITTER FILL
-  enterBlitterFill(ctx) {}
 
   // QCOS
   visitQcosFunction(ctx) {

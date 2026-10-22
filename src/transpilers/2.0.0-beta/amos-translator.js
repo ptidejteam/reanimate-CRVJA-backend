@@ -1,13 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import CRVJAListener from './grammar/generated/CRVJAListener.js';
-import CRVJAParser from './grammar/generated/CRVJAParser.js';
+import AMOSListener from './grammar/generated/AMOSListener.js';
 import ExpressionVisitor from './expression-visitor.js';
 import Instructions from './commands/instructions.js';
 import Structures from './commands/structures.js';
 import Functions from './commands/functions.js';
-import Amcaf from './extensions/amcaf/amcaf.js';
 import { amiga12BitToHex, amiga12BitToRgb, validateAmigaColor } from '../../utils/amiga-color.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,7 +36,7 @@ const DEFAULT_COLOR_MAPPING = {
  * Walks the AMOS parse tree and builds the JavaScript program. The translation of
  * each command is in commands/, one file per category (see TRANSPILER.md at the backend root).
  */
-class AMOSTranslator extends CRVJAListener {
+class AMOSTranslator extends AMOSListener {
   constructor() {
     super();
 
@@ -59,14 +57,10 @@ class AMOSTranslator extends CRVJAListener {
     this.globalVariablesSet = new Set(); // names listed in a `Global` statement
     this.hasDataMatrix = false;
     this.expressionVisitor = new ExpressionVisitor(this);
+    this.usedExtensions = new Set();
 
     // One object per command category
-    this.commandFiles = [
-      new Instructions(this),
-      new Structures(this),
-      new Functions(this),
-      new Amcaf(this),
-    ];
+    this.commandFiles = [new Instructions(this), new Structures(this), new Functions(this)];
   }
 
   // ---- Command dispatch ----------------------------------------------------
@@ -80,12 +74,25 @@ class AMOSTranslator extends CRVJAListener {
     this.forwardToCommands('exit', ctx);
   }
 
+  enterExtensionStatement(ctx) {
+    const { extension, node } = ctx.EXTENSION_STATEMENT().symbol.extensionStatement;
+    if (!this.usedExtensions.has(extension)) {
+      this.usedExtensions.add(extension);
+      if (extension.runtimeSource) this.preamble += `\n${extension.runtimeSource}\n`;
+    }
+    // Trials only parse. Translate here, after the host has entered the right scope.
+    const result = extension.translate(node, this);
+    if (result && typeof result.then === 'function') {
+      throw new Error('Extension translate() must be synchronous');
+    }
+  }
+
   /**
    * Calls the method of commands/ named after the grammar rule of ctx, if there is one:
    * rule `cls` -> enterCls(ctx) and exitCls(ctx), rule `absFunction` -> visitAbsFunction(ctx).
    */
   forwardToCommands(prefix, ctx) {
-    const rule = CRVJAParser.ruleNames[ctx.ruleIndex];
+    const rule = ctx.parser.ruleNames[ctx.ruleIndex];
     const method = prefix + rule[0].toUpperCase() + rule.slice(1);
     const commandFile = this.commandFiles.find((file) => file[method]);
     return commandFile?.[method](ctx);
