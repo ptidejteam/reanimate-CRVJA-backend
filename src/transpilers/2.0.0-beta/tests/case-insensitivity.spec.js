@@ -2,17 +2,15 @@ import antlr4 from 'antlr4';
 import vm from 'node:vm';
 import AMOSLexer from '../grammar/generated/AMOSLexer.js';
 import AMOSParser from '../grammar/generated/AMOSParser.js';
-import AMCAFLexer from '../extensions/amcaf/generated/AMCAFLexer.js';
-import AMCAFParser from '../extensions/amcaf/generated/AMCAFParser.js';
 import AMOSTranspiler from '../amos-transpiler.js';
-import AMOSErrorListener from '../amos-error-listener.js';
+import AMOSErrorListener from '../core/amos-error-listener.js';
 import { normalizeIdentifiers } from '../grammar/normalize-identifiers.js';
 
 const mixedCase = (text) =>
   [...text].map((char, index) => (index % 2 ? char.toLowerCase() : char.toUpperCase())).join('');
 
-function lex(source, Lexer = AMOSLexer) {
-  const lexer = new Lexer(new antlr4.InputStream(source));
+function lex(source) {
+  const lexer = new AMOSLexer(new antlr4.InputStream(source));
   const errors = new AMOSErrorListener(source);
   lexer.removeErrorListeners();
   lexer.addErrorListener(errors);
@@ -21,13 +19,13 @@ function lex(source, Lexer = AMOSLexer) {
   return tokens;
 }
 
-function parse(source, rule = 'program', Lexer = AMOSLexer, Parser = AMOSParser) {
-  const lexer = new Lexer(new antlr4.InputStream(source));
+function parse(source, rule = 'program') {
+  const lexer = new AMOSLexer(new antlr4.InputStream(source));
   const errors = new AMOSErrorListener(source);
   lexer.removeErrorListeners();
   lexer.addErrorListener(errors);
   const tokens = new antlr4.CommonTokenStream(lexer);
-  const parser = new Parser(tokens);
+  const parser = new AMOSParser(tokens);
   parser.removeErrorListeners();
   parser.addErrorListener(errors);
   const tree = parser[rule]();
@@ -56,23 +54,20 @@ async function run(source, result) {
   );
 }
 
-describe.each([
-  ['AMOS', AMOSLexer],
-  ['AMCAF', AMCAFLexer],
-])('%s keyword convention', (_name, Lexer) => {
+describe('AMOS keyword convention', () => {
   test('has no anonymous lexer tokens', () => {
-    expect(Lexer.ruleNames.filter((name) => name.startsWith('T__'))).toEqual([]);
+    expect(AMOSLexer.ruleNames.filter((name) => name.startsWith('T__'))).toEqual([]);
   });
 
   // Keyword names encode their words; PI is the one spelling with a type suffix.
-  const keywords = Lexer.ruleNames.slice(0, Lexer.ruleNames.indexOf('KEYWORD_BOUNDARY'));
+  const keywords = AMOSLexer.ruleNames.slice(0, AMOSLexer.ruleNames.indexOf('KEYWORD_BOUNDARY'));
   test.each(keywords)('%s accepts any case and horizontal spacing', (name) => {
     const spelling = name === 'PI' ? 'Pi#' : name.replaceAll('_', ' ');
     for (const variant of [spelling, spelling.toLowerCase(), mixedCase(spelling)]) {
       for (const separator of [' ', '  ', '\t', ' \t ']) {
         const source = variant.replaceAll(' ', separator);
-        expect(lex(source, Lexer).map((token) => [token.type, token.text])).toEqual([
-          [Lexer[name], source],
+        expect(lex(source).map((token) => [token.type, token.text])).toEqual([
+          [AMOSLexer[name], source],
         ]);
       }
     }
@@ -80,7 +75,7 @@ describe.each([
 
   test.each(keywords.filter((name) => name.includes('_')))('%s cannot span a newline', (name) => {
     const source = name.replaceAll('_', '\n');
-    expect(lex(source, Lexer).some((token) => token.type === Lexer[name])).toBe(false);
+    expect(lex(source).some((token) => token.type === AMOSLexer[name])).toBe(false);
   });
 });
 
@@ -213,18 +208,6 @@ test('uses named arguments after compound OPEN IN and OPEN OUT tokens', async ()
   const code = await translate('Open\tIn 1,File$\nOpen  Out 2,FILE$');
   expect(code).toContain("openFile('FILE$', 1, 'w');");
   expect(code).toContain("openFile('FILE$', 2, 'r');");
-});
-
-test('normalizes expressions using the imported parser token vocabulary', () => {
-  const { tokens } = parse(
-    'tUrBo\tDraw value#,0 TO VaLuE#+1,2,1,-1',
-    'amcafStatement',
-    AMCAFLexer,
-    AMCAFParser,
-  );
-  expect(
-    tokens.filter((token) => token.type === AMCAFLexer.IDENTIFIER).map((token) => token.text),
-  ).toEqual(['VALUE_f', 'VALUE_f']);
 });
 
 test('arithmetic and comparison operators retain their meanings', async () => {

@@ -1,9 +1,10 @@
 import antlr4 from 'antlr4';
 import AMCAFLexer from './generated/AMCAFLexer.js';
 import AMCAFParser from './generated/AMCAFParser.js';
-import AMOSErrorListener from '../../amos-error-listener.js';
+import AMOSErrorListener from '../../core/amos-error-listener.js';
 import { normalizeIdentifiers } from '../../grammar/normalize-identifiers.js';
 import Amcaf from './amcaf.js';
+import HandlerDispatcher, { getRuleName } from '../../core/handler-dispatcher.js';
 
 export default class AmcafTranspiler {
   /** Recognizes one complete statement; rejected trials return null without emitting code. */
@@ -27,9 +28,11 @@ export default class AmcafTranspiler {
     return tree.getChild(0);
   }
 
-  /** Reuses this program's handler while the host supplies its current scope. */
-  translate(node, host) {
-    this.translator ??= new Amcaf(host);
-    this.translator.emitStatement(node);
+  /** Reuses local handlers with the current program's shared translation context. */
+  translate(node, context) {
+    this.dispatcher ??= new HandlerDispatcher([new Amcaf(context)]);
+    const handler = this.dispatcher.get('enter', node);
+    if (!handler) throw new Error(`No AMCAF statement translator for ${getRuleName(node)}`);
+    handler(node);
   }
 }

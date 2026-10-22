@@ -1,33 +1,23 @@
-import BaseHandler from '../../commands/base-handler.js';
-
 /**
  * Commands of the AMCAF extension, sorted A-Z by AMOS name. AMCAF is an AMOS
  * Professional extension, so its commands are not in the AMOS command index.
  */
-export default class Amcaf extends BaseHandler {
-  constructor(translator) {
-    super(translator);
+export default class Amcaf {
+  constructor(context) {
+    this.context = context;
+    this.expressions = context.expressions;
     this.turboDrawCounter = 0;
-  }
-
-  emitStatement(ctx) {
-    const rule = ctx.parser.ruleNames[ctx.ruleIndex];
-    const handler = this[`enter${rule[0].toUpperCase()}${rule.slice(1)}`];
-    if (typeof handler !== 'function') {
-      throw new Error(`No AMCAF statement translator for ${rule}`);
-    }
-    handler.call(this, ctx);
   }
 
   // BLITTER CLEAR
   enterBlitterClear(ctx) {
     // AmcafTranspiler has already validated the rectangular form and its four expressions.
-    const x1 = this.expr(ctx.expression(0));
-    const y1 = this.expr(ctx.expression(1));
-    const x2 = this.expr(ctx.expression(2));
-    const y2 = this.expr(ctx.expression(3));
+    const x1 = this.expressions.translate(ctx.expression(0));
+    const y1 = this.expressions.translate(ctx.expression(1));
+    const x2 = this.expressions.translate(ctx.expression(2));
+    const y2 = this.expressions.translate(ctx.expression(3));
 
-    this.emit(`
+    this.context.emit(`
 // Blitter Clear - remove elements in the region
 {
   const clearX1 = ${x1};
@@ -52,30 +42,32 @@ export default class Amcaf extends BaseHandler {
   // QCOS
   visitQcosFunction(ctx) {
     const expressions = ctx.expression();
-    const angle = this.expr(expressions[0]);
-    const radius = this.expr(expressions[1]);
+    const angle = this.expressions.translate(expressions[0]);
+    const radius = this.expressions.translate(expressions[1]);
     return `Qcos(${angle}, ${radius})`;
   }
 
   // QSIN
   visitQsinFunction(ctx) {
     const expressions = ctx.expression();
-    const angle = this.expr(expressions[0]);
-    const radius = this.expr(expressions[1]);
+    const angle = this.expressions.translate(expressions[0]);
+    const radius = this.expressions.translate(expressions[1]);
     return `Qsin(${angle}, ${radius})`;
   }
 
   // TURBO DRAW
   enterTurboDraw(ctx) {
-    const x1 = this.expr(ctx.expression(0));
-    const y1 = this.expr(ctx.expression(1));
-    const x2 = this.expr(ctx.expression(2));
-    const y2 = this.expr(ctx.expression(3));
-    const colorIndex = this.expr(ctx.expression(4));
-    const index = this.expr(ctx.expression(5));
+    const x1 = this.expressions.translate(ctx.expression(0));
+    const y1 = this.expressions.translate(ctx.expression(1));
+    const x2 = this.expressions.translate(ctx.expression(2));
+    const y2 = this.expressions.translate(ctx.expression(3));
+    const colorIndex = this.expressions.translate(ctx.expression(4));
+    const index = this.expressions.translate(ctx.expression(5));
 
     // Each statement owns a line and reuses it when an animation runs it again.
     const id = `turboDraw_${this.turboDrawCounter++}`;
-    this.emit(`turboDrawLine('${id}', ${x1}, ${y1}, ${x2}, ${y2}, ${colorIndex}, ${index});\n`);
+    this.context.emit(
+      `turboDrawLine('${id}', ${x1}, ${y1}, ${x2}, ${y2}, ${colorIndex}, ${index});\n`,
+    );
   }
 }

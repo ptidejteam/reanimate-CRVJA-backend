@@ -1,16 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import AMOSListener from './grammar/generated/AMOSListener.js';
-import ExpressionVisitor from './expression-visitor.js';
-import Instructions from './commands/instructions.js';
-import Structures from './commands/structures.js';
-import Functions from './commands/functions.js';
-import { amiga12BitToHex, amiga12BitToRgb, validateAmigaColor } from '../../utils/amiga-color.js';
+import {
+  amiga12BitToHex,
+  amiga12BitToRgb,
+  validateAmigaColor,
+} from '../../../utils/amiga-color.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const runtimeScript = fs.readFileSync(path.join(__dirname, 'runtime', 'amos-runtime.js'), 'utf8');
+const runtimeScript = fs.readFileSync(path.join(__dirname, 'amos-runtime.js'), 'utf8');
 
 // AMOS colour indexes used until the program sets its own Palette
 const DEFAULT_COLOR_MAPPING = {
@@ -32,13 +31,10 @@ const DEFAULT_COLOR_MAPPING = {
   15: 'rgb(0,0,128)',
 };
 
-/**
- * Walks the AMOS parse tree and builds the JavaScript program. The translation of
- * each command is in commands/, one file per category (see TRANSPILER.md at the backend root).
- */
-class AMOSTranslator extends AMOSListener {
-  constructor() {
-    super();
+/** Shared state and JavaScript output for one transpilation. */
+export default class TranslationContext {
+  constructor(expressions) {
+    this.expressions = expressions;
 
     // Sections of the generated program, joined in this order by getJavaScript()
     this.colorMapping = { ...DEFAULT_COLOR_MAPPING };
@@ -56,53 +52,19 @@ class AMOSTranslator extends AMOSListener {
     this.currentLoop = 0;
     this.globalVariablesSet = new Set(); // names listed in a `Global` statement
     this.hasDataMatrix = false;
-    this.expressionVisitor = new ExpressionVisitor(this);
     this.usedExtensions = new Set();
-
-    // One object per command category
-    this.commandFiles = [new Instructions(this), new Structures(this), new Functions(this)];
   }
 
-  // ---- Command dispatch ----------------------------------------------------
-
-  // ANTLR calls enterEveryRule / exitEveryRule for every node of the parse tree.
-  enterEveryRule(ctx) {
-    this.forwardToCommands('enter', ctx);
+  /** Appends JavaScript to the program body. */
+  emit(code) {
+    this.output += code;
   }
 
-  exitEveryRule(ctx) {
-    this.forwardToCommands('exit', ctx);
-  }
-
-  enterExtensionStatement(ctx) {
-    const { extension, node } = ctx.EXTENSION_STATEMENT().symbol.extensionStatement;
-    if (!this.usedExtensions.has(extension)) {
-      this.usedExtensions.add(extension);
-      if (extension.runtimeSource) this.preamble += `\n${extension.runtimeSource}\n`;
-    }
-    // Trials only parse. Translate here, after the host has entered the right scope.
-    const result = extension.translate(node, this);
-    if (result && typeof result.then === 'function') {
-      throw new Error('Extension translate() must be synchronous');
-    }
-  }
-
-  /**
-   * Calls the method of commands/ named after the grammar rule of ctx, if there is one:
-   * rule `cls` -> enterCls(ctx) and exitCls(ctx), rule `absFunction` -> visitAbsFunction(ctx).
-   */
-  forwardToCommands(prefix, ctx) {
-    const rule = ctx.parser.ruleNames[ctx.ruleIndex];
-    const method = prefix + rule[0].toUpperCase() + rule.slice(1);
-    const commandFile = this.commandFiles.find((file) => file[method]);
-    return commandFile?.[method](ctx);
-  }
-
-  // ---- Helpers used by the command files -----------------------------------
-
-  handleExpression(expressionContext) {
-    if (!expressionContext) return '';
-    return this.expressionVisitor.visit(expressionContext);
+  /** Includes an extension's optional runtime once, when its first statement is used. */
+  includeExtensionRuntime(extension) {
+    if (this.usedExtensions.has(extension)) return;
+    this.usedExtensions.add(extension);
+    if (extension.runtimeSource) this.preamble += `\n${extension.runtimeSource}\n`;
   }
 
   /** AMOS default value of a new variable: "" for strings (NAME$), 0 otherwise. */
@@ -159,5 +121,3 @@ class AMOSTranslator extends AMOSListener {
     );
   }
 }
-
-export default AMOSTranslator;

@@ -764,10 +764,6 @@ term:
     ;
 
 factor:
-    coreFactor
-    ;
-
-coreFactor:
     NUMBER                                                  // A number
     | STRING
     | arrayStructure

@@ -820,12 +820,6 @@ export default class AMCAFListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMCAFParser#factor.
   exitFactor(ctx) {}
 
-  // Enter a parse tree produced by AMCAFParser#coreFactor.
-  enterCoreFactor(ctx) {}
-
-  // Exit a parse tree produced by AMCAFParser#coreFactor.
-  exitCoreFactor(ctx) {}
-
   // Enter a parse tree produced by AMCAFParser#arrayStructure.
   enterArrayStructure(ctx) {}
 

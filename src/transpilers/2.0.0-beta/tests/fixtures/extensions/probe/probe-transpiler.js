@@ -2,7 +2,7 @@
 import antlr4 from 'antlr4';
 import AMOSLexer from '../../../../grammar/generated/AMOSLexer.js';
 import AMOSParser from '../../../../grammar/generated/AMOSParser.js';
-import AMOSErrorListener from '../../../../amos-error-listener.js';
+import AMOSErrorListener from '../../../../core/amos-error-listener.js';
 import { normalizeIdentifiers } from '../../../../grammar/normalize-identifiers.js';
 
 export default class ProbeTranspiler {
@@ -33,7 +33,8 @@ export default class ProbeTranspiler {
     return node;
   }
 
-  translate(node, host) {
-    host.output += `recordProbe(${this.sequence++}, ${host.handleExpression(node)});\n`;
+  translate(node, context) {
+    const value = context.expressions.translate(node);
+    context.emit(`recordProbe(${this.sequence++}, ${value});\n`);
   }
 }

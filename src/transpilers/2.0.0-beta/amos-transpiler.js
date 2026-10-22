@@ -1,8 +1,14 @@
 import antlr4 from 'antlr4';
-import AMOSTranslator from './amos-translator.js';
+import AMOSTranslator from './core/amos-translator.js';
+import TranslationContext from './core/translation-context.js';
+import ExpressionTranslator from './core/expression-translator.js';
+import HandlerDispatcher from './core/handler-dispatcher.js';
+import Instructions from './commands/instructions.js';
+import Structures from './commands/structures.js';
+import Functions from './commands/functions.js';
 import AMOSParser from './grammar/generated/AMOSParser.js';
 import AMOSLexer from './grammar/generated/AMOSLexer.js';
-import AMOSErrorListener from './amos-error-listener.js';
+import AMOSErrorListener from './core/amos-error-listener.js';
 import prettier from 'prettier';
 import ExtensionLoader from './extensions/extension-loader.js';
 import ExtensionStatements from './extensions/statements.js';
@@ -46,11 +52,19 @@ export default class AMOSTranspiler {
 
     normalizeIdentifiers(tree);
 
-    const translator = new AMOSTranslator();
+    const dispatcher = new HandlerDispatcher();
+    const expressions = new ExpressionTranslator(dispatcher);
+    const context = new TranslationContext(expressions);
+    dispatcher.register([
+      new Instructions(context),
+      new Structures(context),
+      new Functions(context),
+    ]);
+    const translator = new AMOSTranslator(context, dispatcher);
     const walker = new antlr4.tree.ParseTreeWalker();
     walker.walk(translator, tree);
 
-    const translatedCode = await prettier.format(translator.getJavaScript(), {
+    const translatedCode = await prettier.format(context.getJavaScript(), {
       parser: 'babel',
       singleQuote: true,
     });

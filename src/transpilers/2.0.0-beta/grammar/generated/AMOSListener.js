@@ -772,12 +772,6 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMOSParser#factor.
   exitFactor(ctx) {}
 
-  // Enter a parse tree produced by AMOSParser#coreFactor.
-  enterCoreFactor(ctx) {}
-
-  // Exit a parse tree produced by AMOSParser#coreFactor.
-  exitCoreFactor(ctx) {}
-
   // Enter a parse tree produced by AMOSParser#arrayStructure.
   enterArrayStructure(ctx) {}
 

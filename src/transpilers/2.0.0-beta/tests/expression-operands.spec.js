@@ -19,8 +19,6 @@ describe('expression operands', () => {
       Bar A(1+2),10 To 100,100
       Circle A(1+2),10,Rnd(A(2+1))
       Text A(1+2),Sin(A(2+1)),"Hello"
-      Turbo Draw A(1+2),2 To 3,4,Sin(A(2+1)),A(3)
-      Blitter Clear 0,0,A(1+2),2 To 3,A(2+1)
       Cls A(1+2),A(2+1),3 To 4,A(3)
     `);
 
@@ -28,10 +26,6 @@ describe('expression operands', () => {
     expect(normalizedJS).toContain('const x1 = A[Math.trunc(1 + 2)];');
     expect(normalizedJS).toContain('Math.floor(Math.random() * (A[Math.trunc(2 + 1)] + 1))');
     expect(normalizedJS).toContain("textEl.style.top = Math.sin(A[Math.trunc(2 + 1)]) + 'px';");
-    expect(normalizedJS).toContain(
-      "turboDrawLine( 'turboDraw_0', A[Math.trunc(1 + 2)], 2, 3, 4, Math.sin(A[Math.trunc(2 + 1)]), A[Math.trunc(3)], );",
-    );
-    expect(normalizedJS).toContain('const clearY2 = A[Math.trunc(2 + 1)];');
     expect(normalizedJS).toContain('const clearColor = colorMapping[A[Math.trunc(1 + 2)]];');
     expect(normalizedJS).not.toMatch(/\bA\(/);
   });

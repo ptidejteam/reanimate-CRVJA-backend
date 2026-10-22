@@ -99,6 +99,21 @@ const screenOpen = 'Screen Open 0,320,256,8,Lowres\n';
 
 // Extension-function cases are retained for ../EXTENSIONS.md#deferred-work.
 describe('AMCAF integration with core AMOS', () => {
+  test('translates nested array and function operands in extension commands', async () => {
+    const code = await translate(`
+      Dim A(20)
+      Turbo Draw A((1+2)*3),2 To 3,4,Sin(A(2+1)),A(3)
+      Blitter Clear 0,0,A(1+2),2 To 3,A(2+1)
+    `);
+    const normalizedJS = code.replace(/\s+/g, ' ').trim();
+    expect(normalizedJS).toContain(
+      "turboDrawLine( 'turboDraw_0', A[Math.trunc((1 + 2) * 3)], 2, 3, 4, Math.sin(A[Math.trunc(2 + 1)]), A[Math.trunc(3)], );",
+    );
+    expect(normalizedJS).toContain('const clearX1 = A[Math.trunc(1 + 2)];');
+    expect(normalizedJS).toContain('const clearY2 = A[Math.trunc(2 + 1)];');
+    expect(normalizedJS).not.toMatch(/\bA\(/);
+  });
+
   test('shares mixed-case float arrays, variables, and procedure parameters with core AMOS', async () => {
     const { screen } = await run(`
       sCrEeN\tOpEn 0,320,256,8,lOwReS

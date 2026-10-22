@@ -1,4 +1,4 @@
-import { createPositionLookup } from '../amos-error-listener.js';
+import { createPositionLookup } from '../core/amos-error-listener.js';
 import StatementScanner from './statement-scanner.js';
 
 /** Tries mini-parsers and keeps accepted fragments in their original positions. */

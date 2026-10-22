@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
 import AMOSTranspiler from '../amos-transpiler.js';
+import TranslationContext from '../core/translation-context.js';
 import Amcaf from '../extensions/amcaf/amcaf.js';
 import ExtensionLoader from '../extensions/extension-loader.js';
 import AmcafTranspiler from '../extensions/amcaf/amcaf-transpiler.js';
@@ -85,7 +86,7 @@ test.each(['@Ping', 'A=1'])(
       'alpha',
       `export default class Alpha {
     parse(source) { return ['@Ping', 'A=1'].includes(source) ? {} : null; }
-    translate(node, host) { host.output += 'globalThis.ping = true;'; }
+    translate(node, context) { context.emit('globalThis.ping = true;'); }
   }`,
     );
     const code = await translate(source, new AMOSTranspiler({ extensionsDirectory: directory }));
@@ -142,6 +143,46 @@ test('preserves inline branches and nested loop/procedure scope', async () => {
     [1, 4],
     [2, 99],
   ]);
+});
+
+test('lets an extension declare and emit through the shared active context', async () => {
+  const directory = await installation();
+  await install(
+    directory,
+    'context',
+    `export default class ContextExtension {
+    parse(source) {
+      const command = source.trim();
+      return ['@Set', '@Read'].includes(command) ? { command } : null;
+    }
+    translate(node, context) {
+      context.declareVariable('VALUE');
+      if (node.command === '@Set') context.emit('VALUE = 7;');
+      context.emit('globalThis.values.push(VALUE);');
+    }
+  }`,
+  );
+  const transpiler = new AMOSTranspiler({ extensionsDirectory: directory });
+  const code = await translate('VALUE=99\nProcedure P\n@Set\nEnd Proc\nP\n@Read', transpiler);
+  const context = vm.createContext({ values: [], document: { addEventListener() {} }, Date });
+  vm.runInContext(code, context, { timeout: 1000 });
+  expect(context.values).toEqual([7, 99]);
+  expect(await translate('VALUE=99\nProcedure P\n@Set\nEnd Proc\nP\n@Read', transpiler)).toBe(code);
+});
+
+test('still rejects asynchronous extension translation', async () => {
+  const directory = await installation();
+  await install(
+    directory,
+    'async',
+    `export default class AsyncExtension {
+    parse(source) { return source.trim() === '@Async' ? {} : null; }
+    async translate() {}
+  }`,
+  );
+  await expect(
+    new AMOSTranspiler({ extensionsDirectory: directory }).transpile('@Async'),
+  ).rejects.toThrow('Extension translate() must be synchronous');
 });
 
 test.each(['\n', '\r\n', '\r'])(
@@ -233,6 +274,17 @@ test('keeps optional extension runtime separate from the shared AMOS runtime', a
   const used = await translate('Probe Trace @ 1:Probe Trace @ 2', transpiler);
   expect(used.match(/function recordProbe/g)).toHaveLength(1);
   expect(used.match(/function turboDrawLine/g)).toHaveLength(1);
+});
+
+test('includes optional runtimes once and keeps them local to one context', () => {
+  const first = new TranslationContext();
+  const second = new TranslationContext();
+  const runtime = { runtimeSource: 'function optionalRuntime() {}' };
+  first.includeExtensionRuntime(runtime);
+  first.includeExtensionRuntime(runtime);
+  expect(first.preamble.match(/function optionalRuntime/g)).toHaveLength(1);
+  expect(second.usedExtensions.size).toBe(0);
+  expect(second.preamble).not.toContain('optionalRuntime');
 });
 
 test('shares AMOS expression translation across independently generated parsers', async () => {

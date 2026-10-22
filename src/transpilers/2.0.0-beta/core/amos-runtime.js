@@ -1,3 +1,4 @@
+// This is the base code that runs inside the `iframe` in the front-end
 const keyMapping = {
   1: 'Escape',
   2: 'Digit1',

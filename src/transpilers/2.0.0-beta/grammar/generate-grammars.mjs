@@ -4,9 +4,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
 
-const directory = path.dirname(fileURLToPath(import.meta.url));
-const jar = fileURLToPath(new URL('../../../antlr-4.13.2-complete.jar', import.meta.url));
-const core = path.join(directory, 'grammar');
+const core = path.dirname(fileURLToPath(import.meta.url));
+const directory = path.dirname(core);
+const jar = fileURLToPath(new URL('../../../../antlr-4.13.2-complete.jar', import.meta.url));
 
 async function generate(folder, grammar) {
   execFileSync(

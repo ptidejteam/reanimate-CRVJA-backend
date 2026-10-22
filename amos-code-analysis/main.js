@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import antlr4, { CommonTokenStream } from 'antlr4';
 import AMOSLexer from '#root/src/transpilers/2.0.0-beta/grammar/generated/AMOSLexer.js';
-import AMOSErrorListener from '#root/src/transpilers/2.0.0-beta/amos-error-listener.js';
+import AMOSErrorListener from '#root/src/transpilers/2.0.0-beta/core/amos-error-listener.js';
 import AMOSParser from '#root/src/transpilers/2.0.0-beta/grammar/generated/AMOSParser.js';
 import AMOSAnalyser from './amos-analyser.js';
 import AMOSCommandsCatalog from './amos-commands-catalog.js';
