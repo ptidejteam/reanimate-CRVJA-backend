@@ -6,6 +6,7 @@ import { normalizeFloatIdentifiers } from '../../grammar/normalize-float-identif
 import Amcaf from './amcaf.js';
 
 export default class AmcafTranspiler {
+  /** Recognizes one complete statement; rejected trials return null without emitting code. */
   parse(source) {
     const lexer = new AMCAFLexer(new antlr4.InputStream(source));
     const diagnostics = new AMOSErrorListener(source);
@@ -26,6 +27,7 @@ export default class AmcafTranspiler {
     return tree.getChild(0);
   }
 
+  /** Reuses this program's handler while the host supplies its current scope. */
   translate(node, host) {
     this.translator ??= new Amcaf(host);
     this.translator.emitStatement(node);

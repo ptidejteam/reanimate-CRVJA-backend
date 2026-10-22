@@ -163,10 +163,10 @@ test.each(['\n', '\r\n', '\r'])(
 );
 
 test('does not recognize commands inside names, strings, comments, or core expressions', async () => {
-  const extensions = await new ExtensionLoader(fixtures).load();
+  const extensions = await new ExtensionLoader(fixtures).loadExtensions();
   const source =
     'Probe Traces\nProbe Trace$\nPROBE Trace\nA=Probe Trace\n"Probe Trace @ 1"\nRem Probe Trace @ 2';
-  expect(new ExtensionStatements(source, extensions).prepare().statements).toEqual([]);
+  expect(new ExtensionStatements(source, extensions).prepareStatements().statements).toEqual([]);
 });
 
 test('tries the next parser after rejection, without invoking translation', () => {
@@ -174,7 +174,11 @@ test('tries the next parser after rejection, without invoking translation', () =
   const probe = new ProbeTranspiler();
   const translation = jest.spyOn(probe, 'translate');
   const later = { parse: jest.fn(() => ({})), translate: jest.fn() };
-  const prepared = new ExtensionStatements('Probe Trace @ 7', [rejected, probe, later]).prepare();
+  const prepared = new ExtensionStatements('Probe Trace @ 7', [
+    rejected,
+    probe,
+    later,
+  ]).prepareStatements();
   expect(prepared.statements[0].extension).toBe(probe);
   expect(rejected.parse).toHaveBeenCalledTimes(1);
   expect(rejected.translate).not.toHaveBeenCalled();
@@ -198,9 +202,9 @@ test('propagates programming exceptions instead of treating them as rejected syn
 });
 
 test.each([undefined, Promise.resolve({})])('rejects an invalid parse result %#', (result) => {
-  expect(() => new ExtensionStatements('A=1', [{ parse: () => result }]).prepare()).toThrow(
-    /node or null synchronously/,
-  );
+  expect(() =>
+    new ExtensionStatements('A=1', [{ parse: () => result }]).prepareStatements(),
+  ).toThrow(/node or null synchronously/);
 });
 
 test.each([

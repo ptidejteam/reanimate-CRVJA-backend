@@ -2,10 +2,10 @@
 export default class StatementScanner {
   constructor(source) {
     this.source = source;
-    this.parts = this.scan();
+    this.parts = this.scanSource();
   }
 
-  scan() {
+  scanSource() {
     const source = this.source;
     const parts = [];
     const word = /[A-Za-z_][A-Za-z_0-9]*[$#]?/y;
@@ -41,31 +41,33 @@ export default class StatementScanner {
     return parts;
   }
 
-  findStatementEnd(start) {
-    let depth = 0;
-    for (let i = start; i < this.parts.length; i++) {
+  /** Returns the index of the terminating source part, not a character offset. */
+  findStatementEndIndex(startPartIndex) {
+    let bracketDepth = 0;
+    for (let i = startPartIndex; i < this.parts.length; i++) {
       const part = this.parts[i];
       if (
         part.kind === 'newline' ||
         part.kind === 'comment' ||
-        (depth === 0 && (part.text === ':' || (part.kind === 'word' && part.text === 'Else')))
+        (bracketDepth === 0 &&
+          (part.text === ':' || (part.kind === 'word' && part.text === 'Else')))
       )
         return i;
-      depth = this.nextDepth(depth, part);
+      bracketDepth = this.nextBracketDepth(bracketDepth, part);
     }
     return this.parts.length;
   }
 
-  nextDepth(depth, part) {
-    if (part.kind !== 'punctuation') return depth;
-    if ('([{'.includes(part.text)) return depth + 1;
-    if (')]}'.includes(part.text)) return Math.max(0, depth - 1);
-    return depth;
+  nextBracketDepth(bracketDepth, part) {
+    if (part.kind !== 'punctuation') return bracketDepth;
+    if ('([{'.includes(part.text)) return bracketDepth + 1;
+    if (')]}'.includes(part.text)) return Math.max(0, bracketDepth - 1);
+    return bracketDepth;
   }
 
-  startsStatementAfter(part, depth) {
+  startsStatementAfter(part, bracketDepth) {
     return (
-      depth === 0 &&
+      bracketDepth === 0 &&
       (part.text === ':' || (part.kind === 'word' && ['Then', 'Else'].includes(part.text)))
     );
   }

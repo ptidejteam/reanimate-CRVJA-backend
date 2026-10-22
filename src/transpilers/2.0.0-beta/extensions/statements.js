@@ -10,18 +10,20 @@ export default class ExtensionStatements {
     this.positionAt = createPositionLookup(source);
   }
 
-  prepare() {
+  /** Finds accepted fragments and masks their text for the AMOS lexer. */
+  prepareStatements() {
     const statements = [];
     const parts = this.scanner.parts;
-    let atStart = true;
-    let depth = 0;
+    let atStatementStart = true;
+    let bracketDepth = 0;
 
     for (let i = 0; i < parts.length;) {
       const part = parts[i];
-      if (atStart && !['space', 'comment', 'newline'].includes(part.kind)) {
-        const next = this.scanner.findStatementEnd(i);
-        const end = parts[next]?.start ?? this.source.length;
-        const match = end > part.start ? this.tryParsers(this.source.slice(part.start, end)) : null;
+      if (atStatementStart && !['space', 'comment', 'newline'].includes(part.kind)) {
+        const endPartIndex = this.scanner.findStatementEndIndex(i);
+        const end = parts[endPartIndex]?.start ?? this.source.length;
+        const match =
+          end > part.start ? this.tryExtensionParsers(this.source.slice(part.start, end)) : null;
         if (match) {
           statements.push({
             start: part.start,
@@ -29,26 +31,26 @@ export default class ExtensionStatements {
             ...this.positionAt(part.start),
             ...match,
           });
-          i = next;
-          atStart = false;
+          i = endPartIndex;
+          atStatementStart = false;
           continue;
         }
         // Leave rejected text for AMOS, but keep looking for Then/Else boundaries
         // inside it: an inline branch may contain an accepted extension statement.
       }
       if (part.kind === 'newline') {
-        atStart = true;
-        depth = 0;
+        atStatementStart = true;
+        bracketDepth = 0;
       } else if (part.kind !== 'space' && part.kind !== 'comment') {
-        atStart = this.scanner.startsStatementAfter(part, depth);
-        depth = this.scanner.nextDepth(depth, part);
+        atStatementStart = this.scanner.startsStatementAfter(part, bracketDepth);
+        bracketDepth = this.scanner.nextBracketDepth(bracketDepth, part);
       }
       i++;
     }
-    return { source: this.maskStatements(statements), statements };
+    return { source: this.maskExtensionStatements(statements), statements };
   }
 
-  tryParsers(source) {
+  tryExtensionParsers(source) {
     for (const extension of this.extensions) {
       const node = extension.parse(source);
       if (node === null) continue;
@@ -63,7 +65,7 @@ export default class ExtensionStatements {
     return null;
   }
 
-  maskStatements(statements) {
+  maskExtensionStatements(statements) {
     const masked = [];
     let copiedUntil = 0;
     for (const { start, stop } of statements) {

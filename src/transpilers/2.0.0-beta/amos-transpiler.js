@@ -15,8 +15,8 @@ export default class AMOSTranspiler {
   }
 
   async transpile(amosCode) {
-    const extensions = await new ExtensionLoader(this.extensionsDirectory).load();
-    const prepared = new ExtensionStatements(amosCode, extensions).prepare();
+    const extensions = await new ExtensionLoader(this.extensionsDirectory).loadExtensions();
+    const prepared = new ExtensionStatements(amosCode, extensions).prepareStatements();
     const chars = new antlr4.InputStream(prepared.source);
     const lexer = new AMOSLexer(chars);
 
