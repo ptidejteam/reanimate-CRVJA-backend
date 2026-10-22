@@ -16,6 +16,9 @@ test.each([
   'Play X,2',
   'Rainbow 1,2,3,4',
   'X#=Y#*2.5',
+  'dim values(9)\nscore=values(1)+2',
+  'if score=1\nscore=2\nelse\tif score=3\nscore=4\nend  if',
+  'Start:\nvalue=1\nFinish:',
 ])('%j parses without full-context prediction', (code) => {
   const parser = new AMOSParser(
     new antlr4.CommonTokenStream(new AMOSLexer(new antlr4.InputStream(code))),

@@ -7,7 +7,7 @@ import prettier from 'prettier';
 import ExtensionLoader from './extensions/extension-loader.js';
 import ExtensionStatements from './extensions/statements.js';
 import ExtensionTokenSource from './extensions/extension-token-source.js';
-import { normalizeFloatIdentifiers } from './grammar/normalize-float-identifiers.js';
+import { normalizeIdentifiers } from './grammar/normalize-identifiers.js';
 
 export default class AMOSTranspiler {
   constructor({ extensionsDirectory } = {}) {
@@ -44,7 +44,7 @@ export default class AMOSTranspiler {
       };
     }
 
-    normalizeFloatIdentifiers(tokens.tokens, AMOSLexer);
+    normalizeIdentifiers(tree);
 
     const translator = new AMOSTranslator();
     const walker = new antlr4.tree.ParseTreeWalker();

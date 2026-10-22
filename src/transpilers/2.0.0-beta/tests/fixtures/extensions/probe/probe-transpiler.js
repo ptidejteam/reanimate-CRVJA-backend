@@ -3,7 +3,7 @@ import antlr4 from 'antlr4';
 import AMOSLexer from '../../../../grammar/generated/AMOSLexer.js';
 import AMOSParser from '../../../../grammar/generated/AMOSParser.js';
 import AMOSErrorListener from '../../../../amos-error-listener.js';
-import { normalizeFloatIdentifiers } from '../../../../grammar/normalize-float-identifiers.js';
+import { normalizeIdentifiers } from '../../../../grammar/normalize-identifiers.js';
 
 export default class ProbeTranspiler {
   runtimeSource = 'function recordProbe(id, value) { globalThis.probeTrace.push([id, value]); }';
@@ -29,7 +29,7 @@ export default class ProbeTranspiler {
       tokens.LA(1) !== antlr4.Token.EOF
     )
       return null;
-    normalizeFloatIdentifiers(tokens.tokens, AMOSLexer);
+    normalizeIdentifiers(node);
     return node;
   }
 

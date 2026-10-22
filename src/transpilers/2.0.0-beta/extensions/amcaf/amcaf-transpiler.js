@@ -2,7 +2,7 @@ import antlr4 from 'antlr4';
 import AMCAFLexer from './generated/AMCAFLexer.js';
 import AMCAFParser from './generated/AMCAFParser.js';
 import AMOSErrorListener from '../../amos-error-listener.js';
-import { normalizeFloatIdentifiers } from '../../grammar/normalize-float-identifiers.js';
+import { normalizeIdentifiers } from '../../grammar/normalize-identifiers.js';
 import Amcaf from './amcaf.js';
 
 export default class AmcafTranspiler {
@@ -23,7 +23,7 @@ export default class AmcafTranspiler {
     const tree = parser.amcafStatement();
     if (diagnostics.lexicalErrors.errors.length || diagnostics.syntaxErrors.errors.length)
       return null;
-    normalizeFloatIdentifiers(tokens.tokens, AMCAFLexer);
+    normalizeIdentifiers(tree);
     return tree.getChild(0);
   }
 

@@ -23,8 +23,8 @@ export default class StatementScanner {
         kind = 'string';
         while (end < source.length && !'"\r\n'.includes(source[end])) end++;
         if (source[end] === '"') end++;
-      } else if (char === "'" || source.startsWith('Rem', start)) {
-        // Match the current AMOS lexer: Rem consumes the rest of the line.
+      } else if (char === "'" || /^rem(?![a-z_0-9$#])/i.test(source.slice(start))) {
+        // Match REM in the lexer, including its identifier boundary.
         kind = 'comment';
         while (end < source.length && !'\r\n'.includes(source[end])) end++;
       } else {
@@ -50,7 +50,7 @@ export default class StatementScanner {
         part.kind === 'newline' ||
         part.kind === 'comment' ||
         (bracketDepth === 0 &&
-          (part.text === ':' || (part.kind === 'word' && part.text === 'Else')))
+          (part.text === ':' || (part.kind === 'word' && part.text.toLowerCase() === 'else')))
       )
         return i;
       bracketDepth = this.nextBracketDepth(bracketDepth, part);
@@ -68,7 +68,8 @@ export default class StatementScanner {
   startsStatementAfter(part, bracketDepth) {
     return (
       bracketDepth === 0 &&
-      (part.text === ':' || (part.kind === 'word' && ['Then', 'Else'].includes(part.text)))
+      (part.text === ':' ||
+        (part.kind === 'word' && ['then', 'else'].includes(part.text.toLowerCase())))
     );
   }
 }

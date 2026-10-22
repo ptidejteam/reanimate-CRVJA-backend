@@ -1,11 +1,10 @@
 import antlr4 from 'antlr4';
 import AMOSLexer from '../grammar/generated/AMOSLexer.js';
 
-// Keywords written only as literals in parser rules ('Wait') have no symbolic name
 function tokens(code) {
   const lexer = new AMOSLexer(new antlr4.InputStream(code));
   return lexer.getAllTokens().map((token) => {
-    const name = AMOSLexer.symbolicNames[token.type] ?? AMOSLexer.literalNames[token.type];
+    const name = AMOSLexer.symbolicNames[token.type];
     return `${name} ${token.text}`;
   });
 }
@@ -23,9 +22,15 @@ test.each([
   ['Else If', ['ELSE_IF Else If']],
   ['Else Ifx', ['ELSE Else', 'IDENTIFIER Ifx']],
   ['Curs Off', ['CURS_OFF Curs Off']],
-  ['Curs Offset', ['IDENTIFIER Curs', "'Offset' Offset"]],
+  ['Curs Offset', ['IDENTIFIER Curs', 'IDENTIFIER Offset']],
   ['Wait Key', ['WAIT_KEY Wait Key']],
-  ['Wait Keyboard', ["'Wait' Wait", 'IDENTIFIER Keyboard']],
+  ['Wait Keyboard', ['WAIT Wait', 'IDENTIFIER Keyboard']],
+  ['sCrEeN sWaPped', ['SCREEN sCrEeN', 'IDENTIFIER sWaPped']],
+  ['Remember', ['IDENTIFIER Remember']],
+  ['reminder$', ['IDENTIFIER reminder$']],
+  ['REM#', ['IDENTIFIER REM#']],
+  ['rem a comment', []],
+  ['rEm', []],
 ])('%j is lexed as %j', (code, expected) => {
   expect(tokens(code)).toEqual(expected);
 });

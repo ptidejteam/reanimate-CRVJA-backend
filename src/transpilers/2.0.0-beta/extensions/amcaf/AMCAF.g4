@@ -1,4 +1,7 @@
 grammar AMCAF;
+
+options { caseInsensitive = true; }
+
 import AMOS;
 
 amcafStatement:
@@ -12,30 +15,39 @@ amcafFunction:
 
 // BLITTER CLEAR
 blitterClear:
-    'Blitter' 'Clear' NUMBER COMMA NUMBER COMMA expression COMMA expression TO expression COMMA expression
+    BLITTER_CLEAR NUMBER COMMA NUMBER COMMA expression COMMA expression TO expression COMMA expression
     ;
 
 // BLITTER COPY
 blitterCopy:
-    'Blitter' 'Copy' 'Limit'? NUMBER COMMA NUMBER TO NUMBER COMMA NUMBER
+    BLITTER_COPY LIMIT? NUMBER COMMA NUMBER TO NUMBER COMMA NUMBER
     ;
 
 // BLITTER FILL
 blitterFill:
-    'Blitter' 'Fill' NUMBER COMMA NUMBER (COMMA expression COMMA expression COMMA expression COMMA expression)?
+    BLITTER_FILL NUMBER COMMA NUMBER (COMMA expression COMMA expression COMMA expression COMMA expression)?
     ;
 
 // QCOS
 qcosFunction:
-    'Qcos' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
+    QCOS ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
     ;
 
 // QSIN
 qsinFunction:
-    'Qsin' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
+    QSIN ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
     ;
 
 // TURBO DRAW
 turboDraw:
-    'Turbo' 'Draw' expression COMMA expression TO expression COMMA expression COMMA expression COMMA expression
+    TURBO_DRAW expression COMMA expression TO expression COMMA expression COMMA expression COMMA expression
     ;
+
+// Same token convention as AMOS; HSPACE and boundaries come from the import.
+BLITTER_CLEAR: 'Blitter' HSPACE 'Clear' KEYWORD_BOUNDARY;
+BLITTER_COPY: 'Blitter' HSPACE 'Copy' KEYWORD_BOUNDARY;
+BLITTER_FILL: 'Blitter' HSPACE 'Fill' KEYWORD_BOUNDARY;
+LIMIT: 'Limit';
+QCOS: 'Qcos';
+QSIN: 'Qsin';
+TURBO_DRAW: 'Turbo' HSPACE 'Draw' KEYWORD_BOUNDARY;

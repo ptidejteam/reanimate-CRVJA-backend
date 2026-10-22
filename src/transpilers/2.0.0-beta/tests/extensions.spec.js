@@ -257,7 +257,7 @@ test.each([
 });
 
 test('accepts core assignments and the deferred four-operand interpretation without trial diagnostics', async () => {
-  expect(await translate('Turbo = 1')).toContain('Turbo = 1;');
+  expect(await translate('Turbo = 1')).toContain('TURBO = 1;');
   const code = await translate('Turbo Draw 0,0 To 1,1');
   expect(code).not.toContain("turboDrawLine('turboDraw_0'");
 });
@@ -271,6 +271,35 @@ test.each(['\n', '\r\n', '\r'])(
     const result = await new AMOSTranspiler().transpile(`${line}${newline}A=@`);
     expect(result.lexicalErrors.errors[0]).toMatchObject({ line: 2, column: 2 });
     expect(result.translatedCode).toBe('');
+  },
+);
+
+test('recognizes mixed-case inline boundaries and REM without consuming variable names', async () => {
+  expect(
+    await runProbe(`
+      rEm Probe Trace @ 999
+      Remember=3
+      if REMEMBER=3 tHeN Probe Trace @ remember eLsE Probe Trace @ 0
+      if remember=0 THEN Probe Trace @ 0 ELSE Probe Trace @ ReMeMbEr+1
+      Probe Trace @ "rEm Then: Else" : REM Probe Trace @ 998
+    `),
+  ).toEqual([
+    [0, 3],
+    [3, 4],
+    [4, 'rEm Then: Else'],
+  ]);
+});
+
+test.each(['\n', '\r\n', '\r'])(
+  'preserves diagnostic positions after mixed-case compound commands with %j',
+  async (newline) => {
+    const command = 'tUrBo \t DrAw 0,0 tO 3,4,1,-1';
+    const result = await new AMOSTranspiler().transpile(`${command}${newline}score=@`);
+    expect(result.lexicalErrors.errors[0]).toMatchObject({ line: 2, column: 6 });
+    expect(result.translatedCode).toBe('');
+    const failed = await new AMOSTranspiler().transpile(`score=1${newline}  ${command} @`);
+    expect(failed.lexicalErrors.errors[0]).toMatchObject({ line: 2, column: command.length + 3 });
+    expect(failed.translatedCode).toBe('');
   },
 );
 

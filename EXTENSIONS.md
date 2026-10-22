@@ -90,7 +90,9 @@ Expression helpers operate in the host's current scope when translation runs.
 
 AMCAF imports AMOS expressions. Independently generated grammars have different
 token IDs and context classes, so expression dispatch uses the owning parser's
-rule names, and float normalization uses the owning lexer's constants.
+rule names, and identifier normalization uses the owning parser's symbolic token names.
+Accepted trees normalize variables and routine names to uppercase, retain the float
+mapping `NAME#` to `NAME_f`, and preserve label spelling and quoted strings.
 
 ## Intentional PoC policies
 

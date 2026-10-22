@@ -99,6 +99,24 @@ const screenOpen = 'Screen Open 0,320,256,8,Lowres\n';
 
 // Extension-function cases are retained for ../EXTENSIONS.md#deferred-work.
 describe('AMCAF integration with core AMOS', () => {
+  test('shares mixed-case float arrays, variables, and procedure parameters with core AMOS', async () => {
+    const { screen } = await run(`
+      sCrEeN\tOpEn 0,320,256,8,lOwReS
+      dim Positions#(1)
+      POSITIONS#(0)=2
+      x#=positions#(0)
+      procedure Draw_Line[Offset#]
+        tUrBo\tDraw offset#,0 TO OFFSET#+3,4,1,-1
+      end  proc
+      dRaW_lInE[X#]
+      X#=x#+5
+      if X#=7 tHeN turbo  DRAW x#,0 to X#+3,4,1,-1 eLsE turbo draw 99,0 to 102,4,1,-1
+      bLiTtEr\tClEaR 0,0,100,100 to 200,200
+    `);
+    expect(screen.children.map((line) => line.style.left)).toEqual(['2px', '7px']);
+    expect(screen.children.map((line) => line.style.width)).toEqual(['5px', '5px']);
+  });
+
   test.skip.each([
     ['ANGLE#=256\nX#=(Abs(Qsin(ANGLE#,10))+Qcos(Sin(0),1))*2', '22px'],
     ['X#=Qcos(Qsin(0,10),5)', '5px'],

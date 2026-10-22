@@ -335,16 +335,16 @@ graphicCursorY = drawY2;
 
   // OPEN IN
   enterOpenIn(ctx) {
-    const channel = ctx.children[2]?.getText();
-    const fileName = ctx.children[4]?.getText();
+    const channel = ctx.NUMBER().getText();
+    const fileName = ctx.IDENTIFIER().getText();
 
     this.emit(`openFile('${fileName}', ${channel}, 'w');`);
   }
 
   // OPEN OUT
   enterOpenOut(ctx) {
-    const channel = ctx.children[2]?.getText();
-    const fileName = ctx.children[4]?.getText();
+    const channel = ctx.NUMBER().getText();
+    const fileName = ctx.IDENTIFIER().getText();
 
     this.emit(`openFile('${fileName}', ${channel}, 'r');`);
   }
