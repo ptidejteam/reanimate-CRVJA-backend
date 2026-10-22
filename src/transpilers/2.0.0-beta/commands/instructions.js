@@ -228,7 +228,7 @@ if (amosScreen) {
 
       const init = sizes.reduceRight(
         (inner, size) => `Array.from({ length: (${size}) + 1 }, () => ${inner})`,
-        fill
+        fill,
       );
 
       this.emit(`const ${name} = ${init};`);
@@ -250,7 +250,7 @@ if (amosScreen) {
   }
 
   // DRAW
-   enterDraw(ctx) {
+  enterDraw(ctx) {
     const x1 = this.expr(ctx.expression(0));
     const y1 = this.expr(ctx.expression(1));
     const x2 = this.expr(ctx.expression(2));
@@ -277,8 +277,7 @@ graphicCursorY = drawY2;
 }`);
   }
 
-
-    // DRAW TO
+  // DRAW TO
   enterDrawTo(ctx) {
     const x = this.expr(ctx.expression(0));
     const y = this.expr(ctx.expression(1));
@@ -305,7 +304,17 @@ graphicCursorY = drawY2;
   }
 
   // ELLIPSE
-  enterEllipse = (ctx) => this.emit(`document.getElementById("amos-screen").appendChild(a=document.createElement("canvas"));a.ellipse(${this.expr(ctx.expression(0))},${this.expr(ctx.expression(1))},${this.expr(ctx.expression(2))},${this.expr(ctx.expression(3))})`);
+  enterEllipse(ctx) {
+    const x = this.expr(ctx.expression(0));
+    const y = this.expr(ctx.expression(1));
+    const radiusX = this.expr(ctx.expression(2));
+    const radiusY = this.expr(ctx.expression(3));
+
+    this.emit(`
+document.getElementById("amos-screen").appendChild(a=document.createElement("canvas"));
+a.ellipse(${x},${y},${radiusX},${radiusY})
+`);
+  }
 
   // INC
   enterInc(ctx) {
@@ -474,23 +483,20 @@ document.getElementById('amos-screen').style.backgroundColor = 'black';`);
     const name = struct.IDENTIFIER(0)?.getText();
     const indexes = struct.expression();
 
-    if (indexes.length !== 1){
+    if (indexes.length !== 1) {
       throw new Error(`Line ${ctx.start.line}: SORT only supports one-dimensional arrays`);
     }
 
     // AMOS requires the first element: index 0
-    if(Number(indexes[0].getText()) !== 0){
-      throw new Error(
-        `Line ${ctx.start.line}: SORT must start at index 0, e.g., Sort ${name}(0)`
-      );
+    if (Number(indexes[0].getText()) !== 0) {
+      throw new Error(`Line ${ctx.start.line}: SORT must start at index 0, e.g., Sort ${name}(0)`);
     }
 
-    const comparator = name.endsWith('$') 
-      ? '(a, b) => (a < b ? -1: a > b ? 1 : 0)' 
+    const comparator = name.endsWith('$')
+      ? '(a, b) => (a < b ? -1: a > b ? 1 : 0)'
       : '(a, b) => a - b';
 
     this.emit(`${name}.sort(${comparator});`);
-
   }
 
   // SPRITE

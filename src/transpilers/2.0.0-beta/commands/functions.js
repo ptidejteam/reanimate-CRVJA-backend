@@ -66,7 +66,10 @@ export default class Functions extends BaseHandler {
   }
 
   // INT
-  visitIntFunction = ctx => (`Math.floor(${this.expr(ctx.expression())})`);
+  visitIntFunction(ctx) {
+    const value = this.expr(ctx.expression());
+    return `Math.floor(${value})`;
+  }
 
   // LN
   visitLnFunction(ctx) {
@@ -98,7 +101,6 @@ export default class Functions extends BaseHandler {
 
   // PI#
   visitPiFunction(ctx) {
-    //console.log('To be implemented...');
     return `Math.PI`;
   }
 

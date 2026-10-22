@@ -133,6 +133,34 @@ npm test -- --runInBand src/transpilers/2.0.0-beta/tests
 Generation uses the existing ANTLR JAR, handles AMOS before extension grammars,
 and writes only this version's generated files.
 
+### Why 11 tests are skipped
+
+The statement-only PoC explicitly defers extension functions such as `Qsin` and
+`Qcos`. The 11 skipped cases in
+[amcaf.spec.js](src/transpilers/2.0.0-beta/tests/amcaf.spec.js) require those functions:
+
+| Cases | Required functionality |
+| --- | --- |
+| 2 | Nested extension functions and float variables |
+| 1 | Extension functions in conditions |
+| 1 | An extension function inside a procedure |
+| 1 | An extension function as a drawing operand |
+| 6 | AMCAF trigonometry and argument expressions |
+| **11** | **Total** |
+
+For example, the engine supports a complete statement such as
+`Turbo Draw 10,10 To 400,400,2,0`, but does not yet integrate extension functions
+inside expressions such as `X = Qcos(0,10)` or
+`Turbo Draw Qsin(256,10),0 To 100,100,2,0`.
+
+The skipped test bodies are retained as acceptance tests for future function support.
+Re-enable them when extension functions work in expressions, including nested calls,
+conditions, procedure scope, and statement arguments. Separate active tests cover
+statement ordering, procedures, loops, branches, and core expression reuse.
+
+These skips predate the naming cleanup and represent a known functionality gap.
+Passing the active suite does not establish that extension functions work.
+
 ## Deferred work
 
 - Command ownership, ambiguity reporting, and better fallback diagnostics.
