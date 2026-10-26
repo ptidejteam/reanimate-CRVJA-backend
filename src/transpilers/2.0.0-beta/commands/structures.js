@@ -196,9 +196,7 @@ export default class Structures {
   }
 
   // ON ... PROC
-  enterOnProc(ctx) {
-    console.log('To be implemented');
-  }
+  enterOnProc = (ctx) => this.context.emit(`switch(${ctx.IDENTIFIER(0)}){${ctx.IDENTIFIER().slice(1).map((elt, idx) => `case ${idx+1}:${elt}();break;`).join('')}}`);
 
   // POP PROC
   enterPopProc(ctx) {
