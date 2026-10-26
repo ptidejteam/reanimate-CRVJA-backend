@@ -26,7 +26,8 @@ statementList:
 // The order of the alternatives matters: ANTLR resolves ambiguities in favour
 // of the alternative listed first.
 statement:
-    procedure
+    onProc
+    | procedure
     | screenOpen
     | cursOff
     | arrayAssignment
