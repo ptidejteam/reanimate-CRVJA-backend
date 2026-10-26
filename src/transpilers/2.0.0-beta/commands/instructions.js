@@ -480,7 +480,8 @@ document.getElementById('amos-screen').appendChild(plotDiv);
 
   // RANDOMIZE
   enterRandomize(ctx) {
-    console.log('to be implemented');
+    const seed = this.expressions.translate(ctx.expression());
+    this.context.emit(`Randomize(${seed});`);
   }
 
   // SCREEN OPEN

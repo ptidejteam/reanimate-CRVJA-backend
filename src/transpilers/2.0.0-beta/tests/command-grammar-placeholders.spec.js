@@ -131,7 +131,6 @@ test.each([
 const placeholders = [
   ['Polygon 0,0 To 1,2', Instructions, 'enterPolygon'],
   ['Polyline To 1,2', Instructions, 'enterPolyline'],
-  ['Randomize Timer', Instructions, 'enterRandomize'],
   ['Degree', Instructions, 'enterDegree'],
   ['Radian', Instructions, 'enterRadian'],
   ['Wait Key', Instructions, 'enterWaitKey'],
