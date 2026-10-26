@@ -1,5 +1,10 @@
 grammar AMOS;
 
+options { caseInsensitive = true; }
+
+// Supplied by the extension statement bridge, never matched by the AMOS lexer.
+tokens { EXTENSION_STATEMENT }
+
 // ============================================================================
 // Parser rules
 // ============================================================================
@@ -33,12 +38,13 @@ statement:
     | ifKeyStateStatement
     | ifStatement
     | bar
+    | label // A name followed by a colon is a label, before the bare-call alternative.
     | procedureCall
     | variableAssignment
     | whileWend
     | waitKey
     | playSound
-    | 'End'
+    | END
     | COLON
     | arrayDeclaration
     | printStatement
@@ -52,12 +58,8 @@ statement:
     | pen
     | doubleBuffer
     | autoback
-    | blitterCopy
-    | blitterFill
-    | blitterClear
     | add
     | locate
-    | turboDraw
     | global
     | setBuffer
     | repeatUntil
@@ -72,7 +74,6 @@ statement:
     | samBank
     | samLoopOff
     | keySpeed
-    | label
     | setRainbow
     | rainbow
     | bobOff
@@ -103,18 +104,23 @@ statement:
     | drawTo
     | ellipse
     | sort
+    | extensionStatement
+    ;
+
+extensionStatement:
+    EXTENSION_STATEMENT
     ;
 
 // ---- Instructions ----------------------------------------------------------
 
 // ADD
 add:
-    'Add' IDENTIFIER COMMA expression (COMMA expression TO expression)?
+    ADD IDENTIFIER COMMA expression (COMMA expression TO expression)?
     ;
 
 // AUTOBACK
 autoback:
-    'Autoback' NUMBER
+    AUTOBACK NUMBER
     ;
 
 // BAR
@@ -124,42 +130,42 @@ bar:
 
 // BOB OFF
 bobOff:
-    'Bob' 'Off'
+    BOB_OFF
     ;
 
 // BOB UPDATE ON
 bobUpdateOn:
-    'Bob' 'Update' 'On'
+    BOB_UPDATE_ON
     ;
 
 // BOX
 box:
-    'Box' expression COMMA expression TO expression COMMA expression
+    BOX expression COMMA expression TO expression COMMA expression
     ;
 
 // CIRCLE
 circle:
-    'Circle' expression COMMA expression COMMA expression
+    CIRCLE expression COMMA expression COMMA expression
     ;
 
 // CLEAR KEY
 clearKey:
-    'Clear' 'Key'
+    CLEAR_KEY
     ;
 
 // CLOSE
 closeFile:
-    'Close' NUMBER
+    CLOSE NUMBER
     ;
 
 // CLS
 cls:
-    'Cls' (expression (COMMA expression COMMA expression TO expression COMMA expression)?)?
+    CLS (expression (COMMA expression COMMA expression TO expression COMMA expression)?)?
     ;
 
 // COLOUR
 colour:
-    'Colour' expression COMMA expression
+    COLOUR expression COMMA expression
     ;
 
 // COLOUR BACK
@@ -180,57 +186,57 @@ cursOn:
 
 // DEC
 dec:
-    'Dec' IDENTIFIER
+    DEC IDENTIFIER
     ;
 
 // DEGREE
 degree:
-    'Degree'
+    DEGREE
     ;
 
 // DIM
 arrayDeclaration:
-    'Dim' arrayStructure (COMMA arrayStructure)*
+    DIM arrayStructure (COMMA arrayStructure)*
     ;
 
 // DOUBLE BUFFER
 doubleBuffer:
-    'Double' 'Buffer'
+    DOUBLE_BUFFER
     ;
 
 // DRAW
 draw:
-    'Draw' expression COMMA expression TO expression COMMA expression
+    DRAW expression COMMA expression TO expression COMMA expression
     ;
 
 // DRAW TO
 drawTo:
-    'Draw' TO expression COMMA expression
+    DRAW_TO expression COMMA expression
     ;
 
 // ELLIPSE
 ellipse:
-    'Ellipse' expression COMMA expression COMMA expression COMMA expression
+    ELLIPSE expression COMMA expression COMMA expression COMMA expression
     ;
 
 // FLASH OFF
 flashOff:
-    'Flash' 'Off'
+    FLASH_OFF
     ;
 
 // FLASH ON
 flashOn:
-    'Flash' 'On'
+    FLASH_ON
     ;
 
 // HIDE
 hide:
-    'Hide' 'On'?
+    HIDE ON?
     ;
 
 // INC
 inc:
-    'Inc' IDENTIFIER
+    INC IDENTIFIER
     ;
 
 // INK
@@ -240,17 +246,17 @@ ink:
 
 // KEY SPEED
 keySpeed:
-    'Key' 'Speed' NUMBER COMMA NUMBER
+    KEY_SPEED NUMBER COMMA NUMBER
     ;
 
 // LED OFF
 ledOff:
-    'LED' 'OFF'
+    LED_OFF
     ;
 
 // LOAD
 loadBank:
-    'Load' STRING (COMMA (IDENTIFIER | NUMBER))?
+    LOAD STRING (COMMA (IDENTIFIER | NUMBER))?
     ;
 
 // LOAD IFF
@@ -262,32 +268,32 @@ loadIff:
 
 // LOCATE
 locate:
-    'Locate' NUMBER COMMA? NUMBER?
+    LOCATE NUMBER COMMA? NUMBER?
     ;
 
 // OPEN IN
 openIn:
-    'Open' 'In' NUMBER COMMA IDENTIFIER
+    OPEN_IN NUMBER COMMA IDENTIFIER
     ;
 
 // OPEN OUT
 openOut:
-    'Open' 'Out' NUMBER COMMA IDENTIFIER
+    OPEN_OUT NUMBER COMMA IDENTIFIER
     ;
 
 // PALETTE
 palette:
-    'Palette' (HEX_NUMBER COMMA?)*
+    PALETTE (HEX_NUMBER COMMA?)*
     ;
 
 // PAPER
 paper:
-    'Paper' expression
+    PAPER expression
     ;
 
 // PEN
 pen:
-    'Pen' expression
+    PEN expression
     ;
 
 // PLAY
@@ -297,12 +303,12 @@ playSound:
 
 // PLOT
 plot:
-    'Plot' expression COMMA expression
+    PLOT expression COMMA expression
     ;
 
 // PRINT (and PRINT #)
 printStatement:
-    'Print' printItem ((COMMA | SEMICOLON) printItem)*?
+    PRINT printItem ((COMMA | SEMICOLON) printItem)*?
     ;
 
 printItem:
@@ -312,27 +318,27 @@ printItem:
 
 // RAINBOW
 rainbow:
-    'Rainbow' expression COMMA expression COMMA expression COMMA expression
+    RAINBOW expression COMMA expression COMMA expression COMMA expression
     ;
 
 // SAM BANK
 samBank:
-    'SAM' 'BANK' NUMBER
+    SAM_BANK NUMBER
     ;
 
 // SAM LOOP OFF
 samLoopOff:
-    'SAM' 'LOOP' 'OFF'
+    SAM_LOOP_OFF
     ;
 
 // SCREEN
 chooseScreen:
-    'Screen' NUMBER
+    SCREEN NUMBER
     ;
 
 // SCREEN OFFSET
 screenOffset:
-    'Screen' 'Offset' NUMBER COMMA NUMBER COMMA NUMBER
+    SCREEN_OFFSET NUMBER COMMA NUMBER COMMA NUMBER
     ;
 
 // SCREEN OPEN
@@ -342,28 +348,28 @@ screenOpen:
 
 // SCREEN SWAP
 screenSwap:
-    'Screen' 'Swap'
+    SCREEN_SWAP
     ;
 
 // SET BUFFER
 setBuffer:
-    'Set' 'Buffer' NUMBER
+    SET_BUFFER NUMBER
     ;
 
 // SET RAINBOW
 setRainbow:
-    'Set' 'Rainbow' expression COMMA expression COMMA expression COMMA expression COMMA expression COMMA expression
+    SET_RAINBOW expression COMMA expression COMMA expression COMMA expression COMMA expression COMMA expression
     ;
 
 // SORT
 sort:
-    'Sort' arrayStructure
+    SORT arrayStructure
     ;
 
 // SPRITE
 sprite:
-    'Sprite' expression COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER)
-    | 'Off'
+    SPRITE expression COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER)
+    | OFF
     ;
 
 // TEXT
@@ -373,7 +379,7 @@ text:
 
 // WAIT
 wait:
-    'Wait' NUMBER
+    WAIT NUMBER
     ;
 
 // WAIT KEY
@@ -383,19 +389,19 @@ waitKey:
 
 // WAIT VBL
 waitVbl:
-    'Wait' 'Vbl'
+    WAIT_VBL
     ;
 
 // ---- Structures ------------------------------------------------------------
 
 // DATA
 dataStatement:
-    'Data' expression (COMMA expression)*
+    DATA expression (COMMA expression)*
     ;
 
 // DEF FN
 defFn:
-    DEF_FN IDENTIFIER ROUND_BRACKET_OPEN IDENTIFIER (COMMA IDENTIFIER)* ROUND_BRACKET_CLOSE '=' expression
+    DEF_FN IDENTIFIER ROUND_BRACKET_OPEN IDENTIFIER (COMMA IDENTIFIER)* ROUND_BRACKET_CLOSE EQUAL expression
     ;
 
 // DO ... LOOP
@@ -420,7 +426,7 @@ elseIfStatement:
 
 // EXIT
 exitLoop:
-    'Exit' NUMBER?
+    EXIT NUMBER?
     ;
 
 // EXIT IF
@@ -431,29 +437,29 @@ exitIf:
 // FN
 // FN is a Structure, but it returns a value, so it is listed in `factor:`.
 fnCall:
-    'Fn' IDENTIFIER ROUND_BRACKET_OPEN expression (COMMA expression)* ROUND_BRACKET_CLOSE
+    FN IDENTIFIER ROUND_BRACKET_OPEN expression (COMMA expression)* ROUND_BRACKET_CLOSE
     ;
 
 // FOR ... NEXT (and STEP)
 forLoop:
-    FOR IDENTIFIER '=' expression TO expression (STEP expression)?
+    FOR IDENTIFIER EQUAL expression TO expression (STEP expression)?
     statementList
     (NEXT IDENTIFIER | NEXT)
     ;
 
 // GLOBAL
 global:
-    'Global' (arrayStructure | IDENTIFIER) (COMMA (arrayStructure | IDENTIFIER))*?
+    GLOBAL (arrayStructure | IDENTIFIER) (COMMA (arrayStructure | IDENTIFIER))*?
     ;
 
 // GOSUB
 gosub:
-    'Gosub' IDENTIFIER
+    GOSUB IDENTIFIER
     ;
 
 // GOTO
 gotoLabel:
-    'Goto' IDENTIFIER
+    GOTO IDENTIFIER
     ;
 
 // IF ... END IF
@@ -461,11 +467,11 @@ ifStatement:
     IF expression comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
     statementList
     elseIfStatement*
-    ('End' 'if' | elseStatement | END_IF)
+    (elseStatement | END_IF)
     ;
 
 comparisonOperator:
-    '=' | '<>' | '>=' | '>' | '<=' | '<'
+    EQUAL | NOT_EQUAL | GREATER_EQUAL | GREATER | LESS_EQUAL | LESS
     ;
 
 logicalOperator:
@@ -488,7 +494,7 @@ ifKeyStateStatement:
 
 // INPUT #
 inputVariable:
-    'Input' HASH NUMBER COMMA IDENTIFIER HEX_NUMBER?
+    INPUT HASH NUMBER COMMA IDENTIFIER HEX_NUMBER?
     ;
 
 // LINE INPUT #
@@ -500,7 +506,7 @@ lineInputFile:
 // NOT is a Structure, but it returns a value, so it is listed in `factor:`. It applies to the
 // operand that follows it (`Not X+1` is `(Not X)+1`), like a unary minus.
 notOperator:
-    'Not' SUBTRACT? factor
+    NOT SUBTRACT? factor
     ;
 
 // ON BREAK PROC
@@ -510,7 +516,7 @@ onBreakProc:
 
 // ON ERROR
 onError:
-    ON_ERROR ('Goto' (IDENTIFIER | NUMBER))?
+    ON_ERROR (GOTO (IDENTIFIER | NUMBER))?
     ;
 
 // ON ERROR PROC
@@ -520,12 +526,12 @@ onErrorProc:
 
 // ON ... GOSUB
 onGosub:
-    'On' IDENTIFIER ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE 'Gosub' IDENTIFIER (COMMA IDENTIFIER)*
+    ON IDENTIFIER ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE GOSUB IDENTIFIER (COMMA IDENTIFIER)*
     ;
 
 // ON ... PROC
 onProc:
-    'On' IDENTIFIER PROC IDENTIFIER (COMMA IDENTIFIER)*
+    ON IDENTIFIER PROC IDENTIFIER (COMMA IDENTIFIER)*
     ;
 
 // POP PROC
@@ -536,7 +542,8 @@ popProc:
 // PROC (procedure call)
 procedureCall:
     IDENTIFIER SQUARE_BRACKET_OPEN expression (COMMA expression)* SQUARE_BRACKET_CLOSE
-    | IDENTIFIER
+    // A following colon belongs to a label, rather than a bare call + separator.
+    | { this._input.LA(2) !== this.constructor.COLON }? IDENTIFIER
     ;
 
 // PROCEDURE ... END PROC
@@ -548,7 +555,7 @@ procedure:
 
 // READ
 readStatement:
-    'Read' readTarget (COMMA readTarget)*
+    READ readTarget (COMMA readTarget)*
     ;
 
 readTarget:
@@ -558,9 +565,9 @@ readTarget:
 
 // REPEAT ... UNTIL
 repeatUntil:
-    'Repeat'
+    REPEAT
     statementList
-    'Until' 'Mouse' 'Key' '=' NUMBER
+    UNTIL MOUSE_KEY EQUAL NUMBER
     ;
 
 // RESTORE
@@ -590,7 +597,7 @@ sharedItem:
 
 // SWAP
 swap:
-    'Swap' IDENTIFIER COMMA IDENTIFIER
+    SWAP IDENTIFIER COMMA IDENTIFIER
     ;
 
 // THEN
@@ -616,7 +623,7 @@ whileWend:
 
 // Array assignment: A(1) = 2
 arrayAssignment:
-    arrayStructure '=' expression
+    arrayStructure EQUAL expression
     ;
 
 // Label: MyLabel:
@@ -626,74 +633,74 @@ label:
 
 // Variable assignment: X = 1
 variableAssignment:
-    IDENTIFIER '=' (expression | btstFunction)
+    IDENTIFIER EQUAL (expression | btstFunction)
     ;
 
 // ---- Functions -------------------------------------------------------------
 
 // ABS
 absFunction:
-    'Abs' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ABS ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // ACOS
 acosFunction:
-    'Acos' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ACOS ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // ASIN
 asinFunction:
-    'Asin' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ASIN ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // ATAN
 atanFunction:
-    'Atan' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ATAN ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // BTST
 btstFunction:
-    'Btst' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
+    BTST ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
     ;
 
 // COLOUR
 colourFunction:
-    'Colour' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    COLOUR ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // COS
 cosFunction:
-    'Cos' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    COS ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // EXP
 expFunction:
-    'Exp' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    EXP ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // FALSE
 falseFunction:
-    'False'
+    FALSE
     ;
 
 // HCOS
 hcosFunction:
-    'Hcos' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    HCOS ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // HSIN
 hsinFunction:
-    'Hsin' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    HSIN ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // HTAN
 htanFunction:
-    'Htan' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    HTAN ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // INT
 intFunction:
-    'Int' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    INT ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // KEY STATE
@@ -703,85 +710,53 @@ keyStateFunction:
 
 // LN
 lnFunction:
-    'Ln' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    LN ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // LOG
 logFunction:
-    'Log' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    LOG ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // MAX
 maxFunction:
-    'Max' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
+    MAX ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
     ;
 
 // MIN
 minFunction:
-    'Min' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
+    MIN ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
     ;
 
 // PI#
 piFunction:
-    'Pi#'
+    PI
     ;
 
 // RND
 rndFunction:
-    'Rnd' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    RND ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // SIN
 sinFunction:
-    'Sin' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    SIN ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // SQR
 sqrFunction:
-    'Sqr' ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    SQR ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
 // TRUE
 trueFunction:
-    'True'
-    ;
-
-// ---- AMCAF extension -------------------------------------------------------
-
-// BLITTER CLEAR
-blitterClear:
-    'Blitter' 'Clear' NUMBER COMMA NUMBER (COMMA expression COMMA expression TO expression COMMA expression)?
-    ;
-
-// BLITTER COPY
-blitterCopy:
-    'Blitter' 'Copy' 'Limit'? NUMBER COMMA NUMBER TO NUMBER COMMA NUMBER
-    ;
-
-// BLITTER FILL
-blitterFill:
-    'Blitter' 'Fill' NUMBER COMMA NUMBER (COMMA expression COMMA expression COMMA expression COMMA expression)?
-    ;
-
-// QCOS
-qcosFunction:
-    'Qcos' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
-    ;
-
-// QSIN
-qsinFunction:
-    'Qsin' ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
-    ;
-
-// TURBO DRAW
-turboDraw:
-    'Turbo' 'Draw' expression COMMA expression TO expression COMMA expression COMMA expression COMMA expression
+    TRUE
     ;
 
 // ---- Expressions -----------------------------------------------------------
 
 expression:
-    term ((ADD | SUBTRACT) term)* // Handle addition and subtraction
+    term ((PLUS | SUBTRACT) term)* // Handle addition and subtraction
     ;
 
 term:
@@ -811,8 +786,6 @@ factor:
     | minFunction
     | notOperator
     | piFunction
-    | qcosFunction
-    | qsinFunction
     | rndFunction
     | sinFunction
     | sqrFunction
@@ -831,79 +804,136 @@ arrayStructure:
 // ============================================================================
 
 // ---- Keywords --------------------------------------------------------------
-// Multi-word keywords are single tokens. Every keyword (and REM below) must stay
-// above IDENTIFIER: on equal-length matches the lexer picks the first rule.
-// Multi-word keywords end with a boundary check (fragments below), so they can't
-// end in the middle of a name: `Resume Labelled` is RESUME + IDENTIFIER, not
-// RESUME_LABEL + `led`. One-word keywords don't need it: `Resumed` is a longer
-// IDENTIFIER match.
+// Parser rules use named tokens only. Keywords are UPPER_SNAKE_CASE, sorted A-Z,
+// and precede IDENTIFIER so equal-length matches prefer the keyword.
+// Fixed multi-word commands are one token, separated by HSPACE (never a newline).
+// Their trailing boundary prevents prefixes such as Resume Labelled from matching
+// RESUME_LABEL. One-word keywords rely on the longer IDENTIFIER match instead.
+// caseInsensitive changes matching only: token text and string contents stay intact.
 
-SCREEN_OPEN: 'Screen Open' KEYWORD_BOUNDARY;
-LOAD_IFF: 'Load Iff' KEYWORD_BOUNDARY;
-LOWRES: 'Lowres';
-HIRES: 'Hires';
-CURS_OFF: 'Curs Off' KEYWORD_BOUNDARY;
-CURS_ON: 'Curs On' KEYWORD_BOUNDARY;
-INK: 'Ink';
-TEXT: 'Text';
-BAR: 'Bar';
-PLAY: 'Play';
-DO: 'Do';
-LOOP: 'Loop';
-FOR: 'For';
-TO: 'To';
-STEP: 'Step';
-NEXT: 'Next';
-IF: 'If';
-THEN: 'Then';
-ELSE: 'Else';
-ELSE_IF: 'Else If' KEYWORD_BOUNDARY;
-END_IF: 'End If' KEYWORD_BOUNDARY;
-EXIT_IF: 'Exit If' KEYWORD_BOUNDARY;
-WHILE: 'While';
-WEND: 'Wend';
-PROCEDURE: 'Procedure';
-END_PROC: 'End Proc' KEYWORD_BOUNDARY;
-WAIT_KEY: 'Wait Key' KEYWORD_BOUNDARY;
-KEY_STATE: 'Key State' KEYWORD_BOUNDARY;
 ABS: 'Abs';
-MAX: 'Max';
-MIN: 'Min';
-LOG: 'Log';
-LN: 'Ln';
-SQR: 'Sqr';
-EXP: 'Exp';
-PI: 'Pi#';
-TRUE: 'True';
-FALSE: 'False';
-NOT: 'Not';
-DEF_FN: 'Def Fn' KEYWORD_BOUNDARY;
-FN: 'Fn';
 ACOS: 'Acos';
+ADD: 'Add';
+AND: 'And';
 ASIN: 'Asin';
 ATAN: 'Atan';
+AUTOBACK: 'Autoback';
+BAR: 'Bar';
+BOB_OFF: 'Bob' HSPACE 'Off' KEYWORD_BOUNDARY;
+BOB_UPDATE_ON: 'Bob' HSPACE 'Update' HSPACE 'On' KEYWORD_BOUNDARY;
+BOX: 'Box';
+BTST: 'Btst';
+CIRCLE: 'Circle';
+CLEAR_KEY: 'Clear' HSPACE 'Key' KEYWORD_BOUNDARY;
+CLOSE: 'Close';
+CLS: 'Cls';
+COLOUR: 'Colour';
+COLOUR_BACK: 'Colour' HSPACE 'Back' KEYWORD_BOUNDARY;
+COS: 'Cos';
+CURS_OFF: 'Curs' HSPACE 'Off' KEYWORD_BOUNDARY;
+CURS_ON: 'Curs' HSPACE 'On' KEYWORD_BOUNDARY;
+DATA: 'Data';
+DEC: 'Dec';
+DEF_FN: 'Def' HSPACE 'Fn' KEYWORD_BOUNDARY;
+DEGREE: 'Degree';
+DIM: 'Dim';
+DO: 'Do';
+DOUBLE_BUFFER: 'Double' HSPACE 'Buffer' KEYWORD_BOUNDARY;
+DRAW: 'Draw';
+DRAW_TO: 'Draw' HSPACE 'To' KEYWORD_BOUNDARY;
+ELLIPSE: 'Ellipse';
+ELSE: 'Else';
+ELSE_IF: 'Else' HSPACE 'If' KEYWORD_BOUNDARY;
+END: 'End';
+END_IF: 'End' HSPACE 'If' KEYWORD_BOUNDARY;
+END_PROC: 'End' HSPACE 'Proc' KEYWORD_BOUNDARY;
+EXIT: 'Exit';
+EXIT_IF: 'Exit' HSPACE 'If' KEYWORD_BOUNDARY;
+EXP: 'Exp';
+FALSE: 'False';
+FLASH_OFF: 'Flash' HSPACE 'Off' KEYWORD_BOUNDARY;
+FLASH_ON: 'Flash' HSPACE 'On' KEYWORD_BOUNDARY;
+FN: 'Fn';
+FOR: 'For';
+GLOBAL: 'Global';
+GOSUB: 'Gosub';
+GOTO: 'Goto';
 HCOS: 'Hcos';
+HIDE: 'Hide';
+HIRES: 'Hires';
 HSIN: 'Hsin';
 HTAN: 'Htan';
-COLOUR: 'Colour';
-COLOUR_BACK: 'Colour Back' KEYWORD_BOUNDARY;
-DEC: 'Dec';
-DRAW: 'Draw';
-ELLIPSE: 'Ellipse';
+IF: 'If';
 INC: 'Inc';
-SORT: 'Sort';
-SWAP: 'Swap';
+INK: 'Ink';
+INPUT: 'Input';
 INT: 'Int';
-LINE_INPUT: 'Line Input' FILE_CHANNEL_BOUNDARY;
-ON_BREAK_PROC: 'On Break Proc' KEYWORD_BOUNDARY;
-ON_ERROR: 'On Error' KEYWORD_BOUNDARY;
-ON_ERROR_PROC: 'On Error Proc' KEYWORD_BOUNDARY;
+KEY_SPEED: 'Key' HSPACE 'Speed' KEYWORD_BOUNDARY;
+KEY_STATE: 'Key' HSPACE 'State' KEYWORD_BOUNDARY;
+LED_OFF: 'LED' HSPACE 'OFF' KEYWORD_BOUNDARY;
+LINE_INPUT: 'Line' HSPACE 'Input' FILE_CHANNEL_BOUNDARY;
+LN: 'Ln';
+LOAD: 'Load';
+LOAD_IFF: 'Load' HSPACE 'Iff' KEYWORD_BOUNDARY;
+LOCATE: 'Locate';
+LOG: 'Log';
+LOOP: 'Loop';
+LOWRES: 'Lowres';
+MAX: 'Max';
+MIN: 'Min';
+MOUSE_KEY: 'Mouse' HSPACE 'Key' KEYWORD_BOUNDARY;
+NEXT: 'Next';
+NOT: 'Not';
+OFF: 'Off';
+ON: 'On';
+ON_BREAK_PROC: 'On' HSPACE 'Break' HSPACE 'Proc' KEYWORD_BOUNDARY;
+ON_ERROR: 'On' HSPACE 'Error' KEYWORD_BOUNDARY;
+ON_ERROR_PROC: 'On' HSPACE 'Error' HSPACE 'Proc' KEYWORD_BOUNDARY;
+OPEN_IN: 'Open' HSPACE 'In' KEYWORD_BOUNDARY;
+OPEN_OUT: 'Open' HSPACE 'Out' KEYWORD_BOUNDARY;
+OR: 'Or';
+PALETTE: 'Palette';
+PAPER: 'Paper';
+PEN: 'Pen';
+PI: 'Pi#';
+PLAY: 'Play';
+PLOT: 'Plot';
+POP_PROC: 'Pop' HSPACE 'Proc' KEYWORD_BOUNDARY;
+PRINT: 'Print';
 PROC: 'Proc';
-POP_PROC: 'Pop Proc' KEYWORD_BOUNDARY;
+PROCEDURE: 'Procedure';
+RAINBOW: 'Rainbow';
+READ: 'Read';
+REPEAT: 'Repeat';
 RESTORE: 'Restore';
 RESUME: 'Resume';
-RESUME_LABEL: 'Resume Label' KEYWORD_BOUNDARY;
+RESUME_LABEL: 'Resume' HSPACE 'Label' KEYWORD_BOUNDARY;
+RND: 'Rnd';
+SAM_BANK: 'SAM' HSPACE 'BANK' KEYWORD_BOUNDARY;
+SAM_LOOP_OFF: 'SAM' HSPACE 'LOOP' HSPACE 'OFF' KEYWORD_BOUNDARY;
+SCREEN: 'Screen';
+SCREEN_OFFSET: 'Screen' HSPACE 'Offset' KEYWORD_BOUNDARY;
+SCREEN_OPEN: 'Screen' HSPACE 'Open' KEYWORD_BOUNDARY;
+SCREEN_SWAP: 'Screen' HSPACE 'Swap' KEYWORD_BOUNDARY;
+SET_BUFFER: 'Set' HSPACE 'Buffer' KEYWORD_BOUNDARY;
+SET_RAINBOW: 'Set' HSPACE 'Rainbow' KEYWORD_BOUNDARY;
 SHARED: 'Shared';
+SIN: 'Sin';
+SORT: 'Sort';
+SPRITE: 'Sprite';
+SQR: 'Sqr';
+STEP: 'Step';
+SWAP: 'Swap';
+TEXT: 'Text';
+THEN: 'Then';
+TO: 'To';
+TRUE: 'True';
+UNTIL: 'Until';
+WAIT: 'Wait';
+WAIT_KEY: 'Wait' HSPACE 'Key' KEYWORD_BOUNDARY;
+WAIT_VBL: 'Wait' HSPACE 'Vbl' KEYWORD_BOUNDARY;
+WEND: 'Wend';
+WHILE: 'While';
 
 // Fragments are reusable grammar pieces, not tokens. These inspect the next
 // character without consuming it; each boundary check is defined only once.
@@ -916,25 +946,27 @@ fragment FILE_CHANNEL_BOUNDARY:
     { !/[a-zA-Z_0-9$]/.test(String.fromCharCode(this._input.LA(1))) }?
     ;
 
-AND: [aA][nN][dD]; // case-insensitive: and, And, AND
-OR: [oO][rR]; // case-insensitive: or, Or, OR
-
 // ---- Comments --------------------------------------------------------------
 
 COMMENT: '\'' ~[\n\r]* -> skip;
-REM: 'Rem' ~[\n\r]* -> skip;
+REM: 'Rem' KEYWORD_BOUNDARY ~[\n\r]* -> skip;
 
 // ---- Literals and identifiers ----------------------------------------------
 
 NUMBER: [0-9]+ ('.' [0-9]+)?; // 42 or 3.14
-HEX_NUMBER: '$' [0-9A-Fa-f]+;
+HEX_NUMBER: '$' [0-9a-f]+;
 STRING: '"' (~["\r\n])* '"';
-IDENTIFIER: [a-zA-Z_] [a-zA-Z_0-9]* [$#]?; // A, A$ (string) or A# (float)
+IDENTIFIER: [a-z_] [a-z_0-9]* [$#]?; // A, A$ (string) or A# (float)
 
 // ---- Operators -------------------------------------------------------------
 
-COMPARISON: '=' | '<>' | '>=' | '>' | '<=' | '<';
-ADD: '+';
+EQUAL: '=';
+NOT_EQUAL: '<>';
+GREATER_EQUAL: '>=';
+GREATER: '>';
+LESS_EQUAL: '<=';
+LESS: '<';
+PLUS: '+';
 SUBTRACT: '-';
 MULTIPLY: '*';
 DIVIDE: '/';
@@ -963,6 +995,10 @@ NEWLINE:
     | '\r'
     ;
 
+fragment HSPACE:
+    [ \t]+
+    ;
+
 WS:
-    [ \t]+ -> skip
+    HSPACE -> skip
     ;

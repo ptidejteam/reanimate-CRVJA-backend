@@ -1,42 +1,46 @@
 import { amiga12BitToCssRgb } from '../../../utils/amiga-color.js';
-import BaseHandler from './base-handler.js';
 
 /** AMOS commands of the category "Instruction", sorted A-Z by AMOS name. */
-export default class Instructions extends BaseHandler {
+export default class Instructions {
+  constructor(context) {
+    this.context = context;
+    this.expressions = context.expressions;
+  }
+
   // ADD
   enterAdd(ctx) {
     let variable = ctx.IDENTIFIER().getText();
-    let valueExpression = this.expr(ctx.expression(0));
+    let valueExpression = this.expressions.translate(ctx.expression(0));
 
-    this.declareVariable(variable);
+    this.context.declareVariable(variable);
 
     let valueStarter;
     let valueEndIteration;
 
     if (ctx.expression().length > 1) {
-      valueStarter = this.expr(ctx.expression(1));
-      valueEndIteration = this.expr(ctx.expression(2));
+      valueStarter = this.expressions.translate(ctx.expression(1));
+      valueEndIteration = this.expressions.translate(ctx.expression(2));
 
-      this.emit(`
+      this.context.emit(`
 ${variable} = (${variable} + ${valueExpression}) % ${valueEndIteration};
 if (${variable} < ${valueStarter}) {
     ${variable} += ${valueEndIteration};
 }`);
     } else {
-      this.emit(`${variable} = ${variable} + ${valueExpression};`);
+      this.context.emit(`${variable} = ${variable} + ${valueExpression};`);
     }
   }
 
   // BAR
   enterBar(ctx) {
-    const x1 = this.expr(ctx.expression(0));
-    const y1 = this.expr(ctx.expression(1));
-    const x2 = this.expr(ctx.expression(2));
-    const y2 = this.expr(ctx.expression(3));
+    const x1 = this.expressions.translate(ctx.expression(0));
+    const y1 = this.expressions.translate(ctx.expression(1));
+    const x2 = this.expressions.translate(ctx.expression(2));
+    const y2 = this.expressions.translate(ctx.expression(3));
 
     const idBar = `"Bar_" + (${x1}) + "_" + (${y1})`;
 
-    this.emit(`
+    this.context.emit(`
 {
 const idBar = ${idBar};
 const x1 = ${x1};
@@ -66,14 +70,14 @@ screenBarDiv.style.zIndex = 10;
 
   // BOX
   enterBox(ctx) {
-    const x1 = this.expr(ctx.expression(0));
-    const y1 = this.expr(ctx.expression(1));
-    const x2 = this.expr(ctx.expression(2));
-    const y2 = this.expr(ctx.expression(3));
+    const x1 = this.expressions.translate(ctx.expression(0));
+    const y1 = this.expressions.translate(ctx.expression(1));
+    const x2 = this.expressions.translate(ctx.expression(2));
+    const y2 = this.expressions.translate(ctx.expression(3));
 
     const boxID = `"Box_" + ${x1} + "_" + ${y1} + "_" + ${x2} + "_" + ${y2}`;
 
-    this.emit(`
+    this.context.emit(`
 {
 const idBox = ${boxID};
 let boxDiv = document.getElementById(idBox);
@@ -95,12 +99,12 @@ boxDiv.style.zIndex = 10;
 
   // CIRCLE
   enterCircle(ctx) {
-    const x = this.expr(ctx.expression(0));
-    const y = this.expr(ctx.expression(1));
-    const r = this.expr(ctx.expression(2));
+    const x = this.expressions.translate(ctx.expression(0));
+    const y = this.expressions.translate(ctx.expression(1));
+    const r = this.expressions.translate(ctx.expression(2));
     const circleID = `"Circle_" + (${x}) + "_" + (${y}) + "_" + (${r})`;
 
-    this.emit(`
+    this.context.emit(`
 {
 const circleId = ${circleID};
 let circleDiv = document.getElementById(circleId);
@@ -126,7 +130,7 @@ circleDiv.style.backgroundColor = getColour(Ink);
   enterCloseFile(ctx) {
     const channel = ctx.children[1]?.getText();
 
-    this.emit(`closeChannel(${channel});`);
+    this.context.emit(`closeChannel(${channel});`);
   }
 
   // CLS
@@ -135,7 +139,7 @@ circleDiv.style.backgroundColor = getColour(Ink);
 
     if (exprs.length === 0) {
       // Cls: clear the screen with the Paper colour
-      this.emit(`
+      this.context.emit(`
 const amosScreen = document.getElementById('amos-screen');
 if (amosScreen) {
     amosScreen.innerHTML = '';
@@ -143,8 +147,8 @@ if (amosScreen) {
 }`);
     } else if (exprs.length === 1) {
       // Cls colour: clear the screen with that colour
-      const color = this.expr(exprs[0]);
-      this.emit(`
+      const color = this.expressions.translate(exprs[0]);
+      this.context.emit(`
 const amosScreen = document.getElementById('amos-screen');
 if (amosScreen) {
     amosScreen.innerHTML = '';
@@ -152,13 +156,13 @@ if (amosScreen) {
 }`);
     } else if (exprs.length >= 5) {
       // Cls colour, x1, y1 To x2, y2: clear that rectangle and fill it with the colour
-      const color = this.expr(exprs[0]);
-      const x1 = this.expr(exprs[1]);
-      const y1 = this.expr(exprs[2]);
-      const x2 = this.expr(exprs[3]);
-      const y2 = this.expr(exprs[4]);
+      const color = this.expressions.translate(exprs[0]);
+      const x1 = this.expressions.translate(exprs[1]);
+      const y1 = this.expressions.translate(exprs[2]);
+      const x2 = this.expressions.translate(exprs[3]);
+      const y2 = this.expressions.translate(exprs[4]);
 
-      this.emit(`
+      this.context.emit(`
 {
     const clearColor = colorMapping[${color}];
     const clearX1 = ${x1};
@@ -201,19 +205,19 @@ if (amosScreen) {
 
   // CURS OFF
   enterCursOff(ctx) {
-    this.emit("document.getElementById('amos-screen').style.cursor = 'none';");
+    this.context.emit("document.getElementById('amos-screen').style.cursor = 'none';");
   }
 
   // CURS ON
   enterCursOn(ctx) {
-    this.emit("document.getElementById('amos-screen').style.cursor = 'auto';");
+    this.context.emit("document.getElementById('amos-screen').style.cursor = 'auto';");
   }
 
   // DEC
   enterDec(ctx) {
     const variable = ctx.IDENTIFIER().getText();
     const expression = `${variable} = ${variable} - 1`;
-    this.emit(expression);
+    this.context.emit(expression);
     //console.log('To be implemented...');
   }
 
@@ -224,39 +228,39 @@ if (amosScreen) {
       const name = struct.IDENTIFIER(0)?.getText();
 
       const fill = name.endsWith('$') ? '""' : '0';
-      const sizes = struct.expression().map((e) => this.expr(e));
+      const sizes = struct.expression().map((e) => this.expressions.translate(e));
 
       const init = sizes.reduceRight(
         (inner, size) => `Array.from({ length: (${size}) + 1 }, () => ${inner})`,
-        fill
+        fill,
       );
 
-      this.emit(`const ${name} = ${init};`);
+      this.context.emit(`const ${name} = ${init};`);
 
       /*const numberOfDimensions = struct.expression().length;
-      let dimension = this.expr(struct.expression(0));
-      this.emit(`const ${name} = Array(${dimension}).fill(0)`);
+      let dimension = this.expressions.translate(struct.expression(0));
+      this.context.emit(`const ${name} = Array(${dimension}).fill(0)`);
 
       for (let i = 1; i < numberOfDimensions; i++) {
-        let dimension = this.expr(struct.expression(i));
-        this.emit(`.map(x => Array(${dimension}).fill(0)`);
+        let dimension = this.expressions.translate(struct.expression(i));
+        this.context.emit(`.map(x => Array(${dimension}).fill(0)`);
       }
       for (let i = 1; i < numberOfDimensions; i++) {
-        this.emit(')');
+        this.context.emit(')');
       }
 
-      this.emit(';');*/
+      this.context.emit(';');*/
     }
   }
 
   // DRAW
-   enterDraw(ctx) {
-    const x1 = this.expr(ctx.expression(0));
-    const y1 = this.expr(ctx.expression(1));
-    const x2 = this.expr(ctx.expression(2));
-    const y2 = this.expr(ctx.expression(3));
+  enterDraw(ctx) {
+    const x1 = this.expressions.translate(ctx.expression(0));
+    const y1 = this.expressions.translate(ctx.expression(1));
+    const x2 = this.expressions.translate(ctx.expression(2));
+    const y2 = this.expressions.translate(ctx.expression(3));
 
-    this.emit(`
+    this.context.emit(`
 {
 const drawX1 = ${x1};
 const drawY1 = ${y1};
@@ -277,13 +281,12 @@ graphicCursorY = drawY2;
 }`);
   }
 
-
-    // DRAW TO
+  // DRAW TO
   enterDrawTo(ctx) {
-    const x = this.expr(ctx.expression(0));
-    const y = this.expr(ctx.expression(1));
+    const x = this.expressions.translate(ctx.expression(0));
+    const y = this.expressions.translate(ctx.expression(1));
 
-    this.emit(`
+    this.context.emit(`
 {
 const drawX1 = graphicCursorX;
 const drawY1 = graphicCursorY;
@@ -305,21 +308,31 @@ graphicCursorY = drawY2;
   }
 
   // ELLIPSE
-  enterEllipse = (ctx) => this.emit(`document.getElementById("amos-screen").appendChild(a=document.createElement("canvas"));a.ellipse(${this.expr(ctx.expression(0))},${this.expr(ctx.expression(1))},${this.expr(ctx.expression(2))},${this.expr(ctx.expression(3))})`);
+  enterEllipse(ctx) {
+    const x = this.expressions.translate(ctx.expression(0));
+    const y = this.expressions.translate(ctx.expression(1));
+    const radiusX = this.expressions.translate(ctx.expression(2));
+    const radiusY = this.expressions.translate(ctx.expression(3));
+
+    this.context.emit(`
+document.getElementById("amos-screen").appendChild(a=document.createElement("canvas"));
+a.ellipse(${x},${y},${radiusX},${radiusY})
+`);
+  }
 
   // INC
   enterInc(ctx) {
     const variable = ctx.IDENTIFIER().getText();
     const expression = `${variable} = ${variable} + 1`;
-    this.emit(expression);
+    this.context.emit(expression);
     //console.log('To be implemented...');
   }
 
   // INK
   enterInk(ctx) {
-    const colorIndexExp = this.expr(ctx.children[1]);
+    const colorIndexExp = this.expressions.translate(ctx.children[1]);
 
-    this.emit(`Ink = ${colorIndexExp};`);
+    this.context.emit(`Ink = ${colorIndexExp};`);
   }
 
   // LOAD
@@ -327,26 +340,26 @@ graphicCursorY = drawY2;
     const fileName = ctx.children[1]?.getText();
     const bankId = ctx.children[3]?.getText();
     if (!bankId) {
-      this.emit(`loadBank('${fileName}', 1);`);
+      this.context.emit(`loadBank('${fileName}', 1);`);
     } else {
-      this.emit(`loadBank('${fileName}', ${bankId});`);
+      this.context.emit(`loadBank('${fileName}', ${bankId});`);
     }
   }
 
   // OPEN IN
   enterOpenIn(ctx) {
-    const channel = ctx.children[2]?.getText();
-    const fileName = ctx.children[4]?.getText();
+    const channel = ctx.NUMBER().getText();
+    const fileName = ctx.IDENTIFIER().getText();
 
-    this.emit(`openFile('${fileName}', ${channel}, 'w');`);
+    this.context.emit(`openFile('${fileName}', ${channel}, 'w');`);
   }
 
   // OPEN OUT
   enterOpenOut(ctx) {
-    const channel = ctx.children[2]?.getText();
-    const fileName = ctx.children[4]?.getText();
+    const channel = ctx.NUMBER().getText();
+    const fileName = ctx.IDENTIFIER().getText();
 
-    this.emit(`openFile('${fileName}', ${channel}, 'r');`);
+    this.context.emit(`openFile('${fileName}', ${channel}, 'r');`);
   }
 
   // PALETTE
@@ -376,42 +389,42 @@ graphicCursorY = drawY2;
       hexColors.push(currentHex);
     }
 
-    this.translator.colorMapping = {};
+    this.context.colorMapping = {};
     hexColors.forEach((hex, index) => {
       const hexValue = parseInt(hex.slice(1), 16); // without the '$'
 
-      this.translator.colorMapping[index] = amiga12BitToCssRgb(hexValue);
+      this.context.colorMapping[index] = amiga12BitToCssRgb(hexValue);
     });
-    this.translator.palette = `const colorMapping = ${JSON.stringify(this.translator.colorMapping, null, 2)};`;
+    this.context.palette = `const colorMapping = ${JSON.stringify(this.context.colorMapping, null, 2)};`;
   }
 
   // PAPER
   enterPaper(ctx) {
-    const color = this.expr(ctx.children[1]);
-    this.emit(`Paper = ${color};`);
+    const color = this.expressions.translate(ctx.children[1]);
+    this.context.emit(`Paper = ${color};`);
   }
 
   // PEN
   enterPen(ctx) {
-    const colorIndexExp = this.expr(ctx.children[1]);
+    const colorIndexExp = this.expressions.translate(ctx.children[1]);
 
-    this.emit(`Ink = ${colorIndexExp};`);
+    this.context.emit(`Ink = ${colorIndexExp};`);
   }
 
   // PLAY
   enterPlaySound(ctx) {
-    const soundIndex = this.expr(ctx.expression());
+    const soundIndex = this.expressions.translate(ctx.expression());
     const duration = ctx.NUMBER().getText();
 
-    this.emit(`soundPlayer(${soundIndex}, ${duration} * 1000);`);
+    this.context.emit(`soundPlayer(${soundIndex}, ${duration} * 1000);`);
   }
 
   // PLOT
   enterPlot(ctx) {
-    const x = this.expr(ctx.expression(0));
-    const y = this.expr(ctx.expression(1));
+    const x = this.expressions.translate(ctx.expression(0));
+    const y = this.expressions.translate(ctx.expression(1));
 
-    this.emit(`
+    this.context.emit(`
 {
 const plotDiv = document.createElement('div');
 plotDiv.style.position = 'absolute';
@@ -432,16 +445,16 @@ document.getElementById('amos-screen').appendChild(plotDiv);
     if (firstOption.HASH()) {
       // PRINT #: write to a file
       const channel = firstOption.NUMBER().getText();
-      const content = this.expr(ctx.printItem(1)?.expression());
-      this.emit(`writeToChannel(${channel}, ${content});`);
+      const content = this.expressions.translate(ctx.printItem(1)?.expression());
+      this.context.emit(`writeToChannel(${channel}, ${content});`);
       return;
     }
     for (let i = 0; i < ctx.printItem().length; i++) {
       const expression = ctx.printItem(i)?.expression();
 
       if (expression) {
-        const text = this.expr(expression);
-        this.emit(
+        const text = this.expressions.translate(expression);
+        this.context.emit(
           `\n{\nlet printId='printDiv${i}_'+String(${text});\nlet printEl=document.getElementById(printId);\nwhile(printEl)printEl=document.getElementById(printId=printId+'_');\nprintEl=document.createElement('div');\nprintEl.id=printId;\nprintEl.style.position='relative';\nprintEl.style.left=printEl.style.top='50%';\nprintEl.style.fontSize='14px';\nprintEl.style.zIndex='999';\ndocument.getElementById('amos-screen').appendChild(printEl);\nprintEl.innerText=${text};\nprintEl.style.color=getColour(Ink);\n}`,
         );
       }
@@ -454,7 +467,7 @@ document.getElementById('amos-screen').appendChild(plotDiv);
     const height = ctx.children[5]?.getText();
     const color = ctx.children[7]?.getText();
 
-    this.emit(`
+    this.context.emit(`
 const screenDiv = document.createElement('div');
 screenDiv.style.width = '${width}px';
 screenDiv.style.height = '${height}px';
@@ -474,30 +487,27 @@ document.getElementById('amos-screen').style.backgroundColor = 'black';`);
     const name = struct.IDENTIFIER(0)?.getText();
     const indexes = struct.expression();
 
-    if (indexes.length !== 1){
+    if (indexes.length !== 1) {
       throw new Error(`Line ${ctx.start.line}: SORT only supports one-dimensional arrays`);
     }
 
     // AMOS requires the first element: index 0
-    if(Number(indexes[0].getText()) !== 0){
-      throw new Error(
-        `Line ${ctx.start.line}: SORT must start at index 0, e.g., Sort ${name}(0)`
-      );
+    if (Number(indexes[0].getText()) !== 0) {
+      throw new Error(`Line ${ctx.start.line}: SORT must start at index 0, e.g., Sort ${name}(0)`);
     }
 
-    const comparator = name.endsWith('$') 
-      ? '(a, b) => (a < b ? -1: a > b ? 1 : 0)' 
+    const comparator = name.endsWith('$')
+      ? '(a, b) => (a < b ? -1: a > b ? 1 : 0)'
       : '(a, b) => a - b';
 
-    this.emit(`${name}.sort(${comparator});`);
-
+    this.context.emit(`${name}.sort(${comparator});`);
   }
 
   // SPRITE
   enterSprite(ctx) {
     const spriteExpression = ctx.expression();
     if (!spriteExpression) {
-      this.emit(`
+      this.context.emit(`
 {
     const screen = document.getElementById('amos-screen');
     if (screen) {
@@ -508,19 +518,19 @@ document.getElementById('amos-screen').style.backgroundColor = 'black';`);
       return;
     }
 
-    const spriteNumber = this.expr(spriteExpression);
+    const spriteNumber = this.expressions.translate(spriteExpression);
     const x = ctx.children[3]?.getText();
     const y = ctx.children[5]?.getText();
     const bankImgIndex = ctx.children[7]?.getText();
-    this.emit(`renderSprite(${spriteNumber}, ${x}, ${y}, ${bankImgIndex});`);
+    this.context.emit(`renderSprite(${spriteNumber}, ${x}, ${y}, ${bankImgIndex});`);
   }
 
   // TEXT
   enterText(ctx) {
     const text = (ctx.STRING() || ctx.IDENTIFIER())?.getText();
 
-    const x = this.expr(ctx.expression(0));
-    const y = this.expr(ctx.expression(1));
+    const x = this.expressions.translate(ctx.expression(0));
+    const y = this.expressions.translate(ctx.expression(1));
 
     const isNumeric = (str) => /^\d+$/.test(str);
     const xValue = isNumeric(x) ? `'${x}px'` : `(${x}) + 'px'`;
@@ -528,7 +538,7 @@ document.getElementById('amos-screen').style.backgroundColor = 'black';`);
 
     const textId = `"textDiv_" + (${x}) + "_" + (${y})`;
 
-    this.emit(`
+    this.context.emit(`
 {
 const textId = ${textId};
 let textEl = document.getElementById(textId);
@@ -553,6 +563,6 @@ textEl.style.backgroundColor = getColour(Paper);
     const waitTicks = ctx.NUMBER().getText();
     const ms = parseInt(waitTicks) * 20; // AMOS = ~50fps
 
-    this.emit(`await new Promise(r => setTimeout(r, ${ms}));`);
+    this.context.emit(`await new Promise(r => setTimeout(r, ${ms}));`);
   }
 }

@@ -1,8 +1,8 @@
 import antlr4 from 'antlr4';
-import AmosTranslator from './amos-translator.js';
+import AMOSTranslator from './amos-translator.js';
 import AMOSParser from './grammar/generated/AMOSParser.js';
 import AMOSLexer from './grammar/generated/AMOSLexer.js';
-import AmosErrorListener from './amos-error-listener.js';
+import AMOSErrorListener from './amos-error-listener.js';
 import prettier from 'prettier';
 
 export default class AMOSTranspiler {
@@ -10,7 +10,7 @@ export default class AMOSTranspiler {
     const chars = new antlr4.InputStream(amosCode);
     const lexer = new AMOSLexer(chars);
 
-    const amosErrorListener = new AmosErrorListener();
+    const amosErrorListener = new AMOSErrorListener();
     lexer.removeErrorListeners();
     lexer.addErrorListener(amosErrorListener);
 
@@ -23,7 +23,7 @@ export default class AMOSTranspiler {
     const tree = parser.program();
     const { lexicalErrors, syntaxErrors } = amosErrorListener;
 
-    const translator = new AmosTranslator();
+    const translator = new AMOSTranslator();
     const walker = new antlr4.tree.ParseTreeWalker();
     walker.walk(translator, tree);
 

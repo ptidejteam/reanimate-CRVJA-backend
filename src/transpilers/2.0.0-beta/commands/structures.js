@@ -1,136 +1,156 @@
-import AMOSParser from '../grammar/generated/AMOSParser.js';
-import BaseHandler from './base-handler.js';
+import { getRuleName } from '../core/handler-dispatcher.js';
 
 /**
  * AMOS commands of the category "Structure", sorted A-Z by AMOS name, followed by
  * the language syntax that has no category (assignments).
  */
-export default class Structures extends BaseHandler {
+export default class Structures {
+  constructor(context) {
+    this.context = context;
+    this.expressions = context.expressions;
+  }
+
   // DATA
   enterDataStatement(ctx) {
-    if (!this.translator.hasDataMatrix) {
-      this.translator.hasDataMatrix = true;
-      this.emit('const dataMatrix = [];');
+    if (!this.context.hasDataMatrix) {
+      this.context.hasDataMatrix = true;
+      this.context.emit('const dataMatrix = [];');
     }
 
     // All Data values form one list, read in order by Read
-    const values = ctx.expression().map((expression) => this.expr(expression));
+    const values = ctx.expression().map((expression) => this.expressions.translate(expression));
     const row = `${values.join(', ')}`;
-    this.emit(`dataMatrix.push(${row});`);
+    this.context.emit(`dataMatrix.push(${row});`);
   }
 
   // DEF FN
-  enterDefFn = (ctx) => this.emit(`${ctx.IDENTIFIER(0).getText()}=(${Array.from(Array(ctx.IDENTIFIER().length - 1), (_, i) => ctx.IDENTIFIER(i + 1).getText())})=>${this.expr(ctx.expression())};`);
+  enterDefFn(ctx) {
+    const name = ctx.IDENTIFIER(0).getText();
+    const parameters = ctx
+      .IDENTIFIER()
+      .slice(1)
+      .map((identifier) => identifier.getText());
+    const expression = this.expressions.translate(ctx.expression());
+
+    this.context.emit(`${name}=(${parameters.join(',')})=>${expression};`);
+  }
 
   // DO ... LOOP
   enterDoLoop(ctx) {
-    this.translator.incrementCurrentLoop();
-    this.emit('loop' + this.translator.currentLoop + ': while(true) {');
+    this.context.incrementCurrentLoop();
+    this.context.emit('loop' + this.context.currentLoop + ': while(true) {');
   }
 
   exitDoLoop(ctx) {
-    this.translator.decrementCurrentLoop();
-    this.emit('await new Promise(r => setTimeout(r, 16));}');
+    this.context.decrementCurrentLoop();
+    this.context.emit('await new Promise(r => setTimeout(r, 16));}');
   }
 
   // ELSE
   enterElseStatement(ctx) {
-    this.emit('} else {');
+    this.context.emit('} else {');
   }
 
   exitElseStatement(ctx) {
-    this.emit('');
+    this.context.emit('');
   }
 
   // ELSE IF
   enterElseIfStatement(ctx) {
-    this.emit(`} else if (${this.ifCondition(ctx.condition())}) {`);
+    this.context.emit(`} else if (${this.ifCondition(ctx.condition())}) {`);
   }
 
   // EXIT
   enterExitLoop(ctx) {
     const count = ctx.NUMBER() ? parseInt(ctx.NUMBER().getText(), 10) : 1; // Exit without a number is the same as Exit 1
-    const depth = this.translator.currentLoop;
+    const depth = this.context.currentLoop;
 
-    this.emit('break loop' + (depth - count + 1) + ';');
+    this.context.emit('break loop' + (depth - count + 1) + ';');
   }
 
   // EXIT IF
   enterExitIf(ctx) {
     const condition = this.ifCondition(ctx.condition());
     const count = ctx.NUMBER() ? parseInt(ctx.NUMBER().getText(), 10) : 1; // Exit without a number is the same as Exit 1
-    const depth = this.translator.currentLoop;
+    const depth = this.context.currentLoop;
 
-    this.emit(`if (${condition}) { break loop${depth - count + 1}; }`);
+    this.context.emit(`if (${condition}) { break loop${depth - count + 1}; }`);
   }
 
   // FN
   // FN is a Structure, but it returns a value inside an expression (Print Fn X(1,10,100)),
-  // so it is translated by a visitX method.
-  visitFnCall = (ctx) => `${ctx.IDENTIFIER().getText()}(${ctx.expression().map(expr => this.expr(expr)).join(',')})`;
+  // so it is translated by a translateX method.
+  translateFnCall(ctx) {
+    const name = ctx.IDENTIFIER().getText();
+    const args = ctx
+      .expression()
+      .map((expression) => this.expressions.translate(expression))
+      .join(',');
+
+    return `${name}(${args})`;
+  }
 
   // FOR ... NEXT (and STEP)
   // STEP is a Structure, but it is part of the forLoop rule (For I=1 To 9 Step 2),
   // so it is translated here.
   enterForLoop(ctx) {
     let variable = ctx.IDENTIFIER(0).getText();
-    let start = this.expr(ctx.expression(0));
-    let end = this.expr(ctx.expression(1));
+    let start = this.expressions.translate(ctx.expression(0));
+    let end = this.expressions.translate(ctx.expression(1));
 
-      this.declareVariable(variable);
+    this.context.declareVariable(variable);
 
     if (!ctx.STEP()) {
-      this.emit(`for (${variable} = ${start}; ${variable} <= ${end}; ${variable}++) {`);
+      this.context.emit(`for (${variable} = ${start}; ${variable} <= ${end}; ${variable}++) {`);
       return;
     }
 
-    const step = this.expr(ctx.expression(2));
+    const step = this.expressions.translate(ctx.expression(2));
     let condition;
 
     if (isNaN(Number(step))) {
       condition = `(${step}) >= 0 ? ${variable} <= ${end} : ${variable} >= ${end}`;
     } else if (Number(step) < 0) {
-
       condition = `${variable} >= ${end}`;
     } else {
       condition = `${variable} <= ${end}`;
     }
 
-    this.emit(`for (${variable} = ${start}; ${condition}; ${variable} += ${step}) {`);
-     }
+    this.context.emit(`for (${variable} = ${start}; ${condition}; ${variable} += ${step}) {`);
+  }
 
   exitForLoop(ctx) {
-    this.emit('}');
+    this.context.emit('}');
   }
 
   // GLOBAL
   enterGlobal(ctx) {
     for (let i = 0; i < ctx.IDENTIFIER().length; i++) {
-      this.translator.globalVariablesSet.add(ctx.IDENTIFIER(i).getText());
+      this.context.globalVariablesSet.add(ctx.IDENTIFIER(i).getText());
     }
     for (let i = 0; i < ctx.arrayStructure().length; i++) {
-      this.translator.globalVariablesSet.add(ctx.arrayStructure(i).IDENTIFIER(0).getText());
+      this.context.globalVariablesSet.add(ctx.arrayStructure(i).IDENTIFIER(0).getText());
     }
   }
 
   // IF ... END IF
   enterIfStatement(ctx) {
-    this.emit(`if (${this.ifCondition(ctx)}) {`);
+    this.context.emit(`if (${this.ifCondition(ctx)}) {`);
   }
 
   exitIfStatement(ctx) {
-    this.emit('}');
+    this.context.emit('}');
   }
 
   // IF KEY STATE(...) ... END IF
   // KEY STATE is a Function, but the grammar only accepts it as the condition of If / While,
   // so it is translated here.
   enterIfKeyStateStatement(ctx) {
-    this.emit(`if (${this.keyStateCondition(ctx.keyStateFunction())}) {`);
+    this.context.emit(`if (${this.keyStateCondition(ctx.keyStateFunction())}) {`);
   }
 
   exitIfKeyStateStatement(ctx) {
-    this.emit('}');
+    this.context.emit('}');
   }
 
   // INPUT #
@@ -141,7 +161,7 @@ export default class Structures extends BaseHandler {
     let variable = ctx.children[4]?.getText() || '';
     if (ctx.children[5]) variable += ctx.children[5].getText();
 
-    this.emit(
+    this.context.emit(
       `\nlet ${variable} = '';\nreadFromChannel(${channel}, (data) => {\n    ${variable} = data;\n});`,
     );
   }
@@ -153,10 +173,10 @@ export default class Structures extends BaseHandler {
 
   // NOT
   // NOT is a Structure, but it returns a value inside an expression (X = Not Y),
-  // so it is translated by a visitX method.
-  visitNotOperator(ctx) {
+  // so it is translated by a translateX method.
+  translateNotOperator(ctx) {
     const minus = ctx.SUBTRACT() ? '-' : '';
-    const value = this.expr(ctx.factor());
+    const value = this.expressions.translate(ctx.factor());
     return `~(${minus}${value})`;
   }
 
@@ -197,12 +217,12 @@ export default class Structures extends BaseHandler {
       // Case 2: Calling a procedure with some parameters
       const args = ctx
         .expression()
-        .map((expr) => this.expr(expr))
+        .map((expr) => this.expressions.translate(expr))
         .join(', ');
       callCode = `${name}(${args});`;
     }
 
-    this.emit(`${callCode}`);
+    this.context.emit(`${callCode}`);
   }
 
   // PROCEDURE ... END PROC
@@ -216,25 +236,25 @@ export default class Structures extends BaseHandler {
     }
     let props = params.join(', ');
 
-    this.translator.scopes.push({});
+    this.context.scopes.push({});
     for (const param of params) {
       // A procedure parameter is already a binding in the generated function scope
-      this.translator.currentScope[param] = this.translator.defaultValueFor(param);
+      this.context.currentScope[param] = this.context.defaultValueFor(param);
     }
 
     // Main-program variables that are not Global become locals of the procedure
     let localDeclarations = '';
-    for (let varName of Object.keys(this.translator.scopes[0])) {
-      if (!this.translator.globalVariablesSet.has(varName) && !params.includes(varName)) {
-        let defaultValue = this.translator.defaultValueFor(varName);
+    for (let varName of Object.keys(this.context.scopes[0])) {
+      if (!this.context.globalVariablesSet.has(varName) && !params.includes(varName)) {
+        let defaultValue = this.context.defaultValueFor(varName);
         localDeclarations += `\n  let ${varName} = ${defaultValue};`;
-        this.translator.currentScope[varName] = defaultValue;
+        this.context.currentScope[varName] = defaultValue;
       }
     }
 
-    this.translator.functionDeclarationSupport += `let lastTime${name} = 0; let timeoutId${name} = null;`;
+    this.context.functionDeclarationSupport += `let lastTime${name} = 0; let timeoutId${name} = null;`;
 
-    this.emit(`
+    this.context.emit(`
 function ${name}(${props}) {
     const currentTime = Date.now();
     const timeSinceLastCall = currentTime - lastTime${name};
@@ -251,28 +271,30 @@ ${localDeclarations}`);
   }
 
   exitProcedure(ctx) {
-    this.translator.scopes.pop();
-    this.emit('}');
+    this.context.scopes.pop();
+    this.context.emit('}');
   }
 
   // READ
   enterReadStatement(ctx) {
     for (const target of ctx.readTarget()) {
       const arrayTarget = target.arrayStructure();
-      const targetCode = arrayTarget ? this.expr(arrayTarget) : target.IDENTIFIER().getText();
+      const targetCode = arrayTarget
+        ? this.expressions.translate(arrayTarget)
+        : target.IDENTIFIER().getText();
 
       // TODO: AMOS should report an error if dataMatrixPointer > dataMatrix.length
-      this.emit(`${targetCode} = dataMatrix[dataMatrixPointer++];`);
+      this.context.emit(`${targetCode} = dataMatrix[dataMatrixPointer++];`);
     }
   }
 
   // REPEAT ... UNTIL
   enterRepeatUntil(ctx) {
-    this.emit('setInterval(() => { currentTimer = Date.now(); Timer++;');
+    this.context.emit('setInterval(() => { currentTimer = Date.now(); Timer++;');
   }
 
   exitRepeatUntil(ctx) {
-    this.emit('Timer = 9; }, 16);');
+    this.context.emit('Timer = 9; }, 16);');
   }
 
   // RESTORE
@@ -300,34 +322,34 @@ ${localDeclarations}`);
     const first = ctx.IDENTIFIER(0).getText();
     const second = ctx.IDENTIFIER(1).getText();
 
-    this.declareVariable(first);
-    this.declareVariable(second);
-    this.emit(`[${first}, ${second}] = [${second}, ${first}];`);
+    this.context.declareVariable(first);
+    this.context.declareVariable(second);
+    this.context.emit(`[${first}, ${second}] = [${second}, ${first}];`);
   }
 
   // THEN
   // Single-line If: If X=1 Then Print "A" Else Print "B"
   enterIfThenStatement(ctx) {
-    this.emit(`if (${this.ifCondition(ctx.condition())}) {`);
+    this.context.emit(`if (${this.ifCondition(ctx.condition())}) {`);
   }
 
   exitIfThenStatement(ctx) {
-    this.emit('}');
+    this.context.emit('}');
   }
 
   enterIfThenElse(ctx) {
-    this.emit('} else {');
+    this.context.emit('} else {');
   }
 
   // WHILE ... WEND
   // KEY STATE is a Function, but the grammar only accepts it as the condition of If / While,
   // so it is translated here.
   enterWhileWend(ctx) {
-    this.emit(`\nif (${this.keyStateCondition(ctx.keyStateFunction())}) {`);
+    this.context.emit(`\nif (${this.keyStateCondition(ctx.keyStateFunction())}) {`);
   }
 
   exitWhileWend(ctx) {
-    this.emit('}');
+    this.context.emit('}');
   }
 
   // Not in the command index: language syntax without a category.
@@ -336,15 +358,15 @@ ${localDeclarations}`);
   enterArrayAssignment(ctx) {
     const struct = ctx.arrayStructure();
 
-    const arrayTarget = this.expr(struct);
-    const arrayValue = this.expr(ctx.expression());
-    this.emit(` ${arrayTarget} = ${arrayValue};`);
+    const arrayTarget = this.expressions.translate(struct);
+    const arrayValue = this.expressions.translate(ctx.expression());
+    this.context.emit(` ${arrayTarget} = ${arrayValue};`);
   }
 
   // Variable assignment: X = 1
   enterVariableAssignment(ctx) {
     let name = ctx.children[0].getText();
-    let value = this.expr(ctx.children[2]);
+    let value = this.expressions.translate(ctx.children[2]);
 
     let lineNumber = ctx.start.line;
     if (name !== 'Timer') {
@@ -354,8 +376,8 @@ ${localDeclarations}`);
         );
       }
 
-      this.declareVariable(name);
-      this.emit(`${name} = ${value};`);
+      this.context.declareVariable(name);
+      this.context.emit(`${name} = ${value};`);
     }
   }
 
@@ -365,13 +387,14 @@ ${localDeclarations}`);
     let condition = '';
 
     for (const child of ctx.children) {
-      if (child instanceof AMOSParser.KeyStateFunctionContext) {
+      const rule = getRuleName(child);
+      if (rule === 'keyStateFunction') {
         condition += this.keyStateCondition(child);
-      } else if (child instanceof AMOSParser.ExpressionContext) {
-        condition += this.expr(child);
-      } else if (child instanceof AMOSParser.LogicalOperatorContext) {
+      } else if (rule === 'expression') {
+        condition += this.expressions.translate(child);
+      } else if (rule === 'logicalOperator') {
         condition += child.AND() ? ' && ' : ' || ';
-      } else if (child instanceof AMOSParser.ComparisonOperatorContext) {
+      } else if (rule === 'comparisonOperator') {
         let comparator = child.getText();
         // Special cases for = and <>
         if (comparator === '=') comparator = '==';
@@ -386,9 +409,9 @@ ${localDeclarations}`);
   keyStateCondition(ctx) {
     // AMOS scan codes are hexadecimal ($10): keyMapping is indexed by their decimal value.
     // Cf. https://www.cknow.com/cms/articles/what-is-a-scan-code.html
-    const scanCode = this.expr(ctx.expression()).replace(/\$[0-9A-Fa-f]+/g, (hex) =>
-      parseInt(hex.substring(1), 16),
-    );
+    const scanCode = this.expressions
+      .translate(ctx.expression())
+      .replace(/\$[0-9A-Fa-f]+/g, (hex) => parseInt(hex.substring(1), 16));
     return `currentPressedKey === keyMapping[${scanCode}]`;
   }
 }

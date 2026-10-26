@@ -1,132 +1,137 @@
-import BaseHandler from './base-handler.js';
-
 /**
  * AMOS commands of the category "Function", sorted A-Z by AMOS name.
  * Each method returns the JavaScript expression that replaces the function call.
  */
-export default class Functions extends BaseHandler {
+export default class Functions {
+  constructor(context) {
+    this.context = context;
+    this.expressions = context.expressions;
+  }
+
   // ABS
-  visitAbsFunction(ctx) {
-    const value = this.expr(ctx.expression());
+  translateAbsFunction(ctx) {
+    const value = this.expressions.translate(ctx.expression());
     return `Math.abs(${value})`;
   }
 
   // ACOS
-  visitAcosFunction(ctx) {
-    const value = this.expr(ctx.expression());
+  translateAcosFunction(ctx) {
+    const value = this.expressions.translate(ctx.expression());
     return `Math.acos(${value})`;
   }
 
   // ASIN
-  visitAsinFunction(ctx) {
-    const value = this.expr(ctx.expression());
+  translateAsinFunction(ctx) {
+    const value = this.expressions.translate(ctx.expression());
     return `Math.asin(${value})`;
   }
 
   // ATAN
-  visitAtanFunction(ctx) {
-    const value = this.expr(ctx.expression());
+  translateAtanFunction(ctx) {
+    const value = this.expressions.translate(ctx.expression());
     return `Math.atan(${value})`;
   }
 
   // COLOUR
-  visitColourFunction(ctx) {
+  translateColourFunction(ctx) {
     console.log('To be implemented...');
     return `0`;
   }
 
   // COS
-  visitCosFunction(ctx) {
-    const angle = this.expr(ctx.expression());
+  translateCosFunction(ctx) {
+    const angle = this.expressions.translate(ctx.expression());
     return `Math.cos(${angle})`;
   }
 
   // EXP
-  visitExpFunction(ctx) {
-    const value = this.expr(ctx.expression());
+  translateExpFunction(ctx) {
+    const value = this.expressions.translate(ctx.expression());
     return `Math.exp(${value})`;
   }
 
   // HCOS
-  visitHcosFunction(ctx) {
-    const angle = this.expr(ctx.expression());
+  translateHcosFunction(ctx) {
+    const angle = this.expressions.translate(ctx.expression());
     return `Math.cosh(${angle})`;
   }
 
   // HSIN
-  visitHsinFunction(ctx) {
-    const angle = this.expr(ctx.expression());
+  translateHsinFunction(ctx) {
+    const angle = this.expressions.translate(ctx.expression());
     return `Math.sinh(${angle})`;
   }
 
   // HTAN
-  visitHtanFunction(ctx) {
-    const angle = this.expr(ctx.expression());
+  translateHtanFunction(ctx) {
+    const angle = this.expressions.translate(ctx.expression());
     return `Math.tanh(${angle})`;
   }
 
   // INT
-  visitIntFunction = ctx => (`Math.floor(${this.expr(ctx.expression())})`);
+  translateIntFunction(ctx) {
+    const value = this.expressions.translate(ctx.expression());
+    return `Math.floor(${value})`;
+  }
 
   // LN
-  visitLnFunction(ctx) {
-    const value = this.expr(ctx.expression());
+  translateLnFunction(ctx) {
+    const value = this.expressions.translate(ctx.expression());
     return `Math.log(${value})`;
   }
 
   // LOG
-  visitLogFunction(ctx) {
-    const value = this.expr(ctx.expression());
+  translateLogFunction(ctx) {
+    const value = this.expressions.translate(ctx.expression());
     return `Math.log10(${value})`;
   }
 
   // MAX
-  visitMaxFunction(ctx) {
-    const value1 = this.expr(ctx.expression(0));
-    const value2 = this.expr(ctx.expression(1));
+  translateMaxFunction(ctx) {
+    const value1 = this.expressions.translate(ctx.expression(0));
+    const value2 = this.expressions.translate(ctx.expression(1));
 
     return `Math.max(${value1}, ${value2})`;
   }
 
   // MIN
-  visitMinFunction(ctx) {
-    const value1 = this.expr(ctx.expression(0));
-    const value2 = this.expr(ctx.expression(1));
+  translateMinFunction(ctx) {
+    const value1 = this.expressions.translate(ctx.expression(0));
+    const value2 = this.expressions.translate(ctx.expression(1));
 
     return `Math.min(${value1}, ${value2})`;
   }
 
   // PI#
-  visitPiFunction(ctx) {
-    //console.log('To be implemented...');
+  translatePiFunction(ctx) {
     return `Math.PI`;
   }
 
   // RND
-  visitRndFunction(ctx) {
-    const angle = this.expr(ctx.expression());
+  translateRndFunction(ctx) {
+    const angle = this.expressions.translate(ctx.expression());
     return `Math.floor(Math.random() * (${angle} + 1))`;
   }
 
   // SIN
-  visitSinFunction(ctx) {
-    const angle = this.expr(ctx.expression());
+  translateSinFunction(ctx) {
+    const angle = this.expressions.translate(ctx.expression());
     return `Math.sin(${angle})`;
   }
 
   // SQR
-  visitSqrFunction(ctx) {
-    const value = this.expr(ctx.expression());
+  translateSqrFunction(ctx) {
+    const value = this.expressions.translate(ctx.expression());
     return `Math.sqrt(${value})`;
   }
 
   // TRUE
-  visitTrueFunction(ctx) {
+  translateTrueFunction(ctx) {
     return `(-1)`;
   }
 
   // FALSE
-  visitFalseFunction(ctx) {
+  translateFalseFunction(ctx) {
     return `(0)`;
   }
 }
