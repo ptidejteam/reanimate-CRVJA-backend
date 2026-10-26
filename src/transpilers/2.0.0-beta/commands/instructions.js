@@ -589,7 +589,5 @@ textEl.style.backgroundColor = getColour(Paper);
   }
 
   // WAIT KEY
-  enterWaitKey(ctx) {
-    console.log('to be implemented');
-  }
+  enterWaitKey(_) {this.context.emit(`await new Promise(r=>(s=document).addEventListener(t='keydown',u=()=>{s.removeEventListener(t,u);r()}))`);}
 }

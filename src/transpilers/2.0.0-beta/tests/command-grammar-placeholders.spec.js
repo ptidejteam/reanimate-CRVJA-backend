@@ -134,7 +134,6 @@ const placeholders = [
   ['Randomize Timer', Instructions, 'enterRandomize'],
   ['Degree', Instructions, 'enterDegree'],
   ['Radian', Instructions, 'enterRadian'],
-  ['Wait Key', Instructions, 'enterWaitKey'],
   ['RESULT=X Sprite(1)', Functions, 'translateXSpriteFunction'],
   ['RESULT=Y Sprite(1)', Functions, 'translateYSpriteFunction'],
   ['RESULT=Sprite Col(1)', Functions, 'translateSpriteColFunction'],
