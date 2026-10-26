@@ -1,6 +1,5 @@
 import { getRuleName } from './handler-dispatcher.js';
 
-/** Translates expression syntax and resolves function handlers from any owning parser. */
 export default class ExpressionTranslator {
   constructor(dispatcher) {
     this.dispatcher = dispatcher;
@@ -22,7 +21,7 @@ export default class ExpressionTranslator {
       case 'arrayStructure':
         return this.translateArray(node);
       default: {
-        const handler = this.dispatcher.get('visit', node);
+        const handler = this.dispatcher.getExpressionHandler(node);
         if (!handler) throw new Error(`No expression handler for rule "${rule}"`);
         return handler(node);
       }

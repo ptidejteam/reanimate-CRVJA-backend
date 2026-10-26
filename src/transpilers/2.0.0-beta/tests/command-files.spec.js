@@ -1,5 +1,4 @@
-import AMOSListener from '../grammar/generated/AMOSListener.js';
-import AMOSVisitor from '../grammar/generated/AMOSVisitor.js';
+import AMOSParser from '../grammar/generated/AMOSParser.js';
 import HandlerDispatcher from '../core/handler-dispatcher.js';
 import TranslationContext from '../core/translation-context.js';
 import ExpressionTranslator from '../core/expression-translator.js';
@@ -15,14 +14,17 @@ const handlers = [new Instructions(context), new Structures(context), new Functi
 // method whose name matches no grammar rule, e.g. a typo, would never be called.
 const methods = handlers.flatMap((file) =>
   Object.getOwnPropertyNames(Object.getPrototypeOf(file)).filter((name) =>
-    /^(enter|exit|visit)[A-Z]/.test(name),
+    /^(enter|exit|translate)[A-Z]/.test(name),
   ),
 );
 
-test('every enterX, exitX and visitX method in commands/ matches a grammar rule', () => {
-  const unknown = methods.filter(
-    (method) => !(method in AMOSListener.prototype) && !(method in AMOSVisitor.prototype),
-  );
+test('every enterX, exitX and translateX method in commands/ matches a grammar rule', () => {
+  const rules = new Set(AMOSParser.ruleNames);
+  const unknown = methods.filter((method) => {
+    const suffix = method.replace(/^(enter|exit|translate)/, '');
+    const rule = suffix[0].toLowerCase() + suffix.slice(1);
+    return !rules.has(rule);
+  });
 
   expect(unknown).toEqual([]);
 });
@@ -31,5 +33,5 @@ test('each grammar rule is translated in one command file only', () => {
   const duplicates = methods.filter((method, index) => methods.indexOf(method) !== index);
 
   expect(duplicates).toEqual([]);
-  expect(() => dispatcher.register(handlers)).not.toThrow();
+  expect(() => dispatcher.registerHandlers(handlers)).not.toThrow();
 });

@@ -44,7 +44,7 @@ function services() {
   const dispatcher = new HandlerDispatcher();
   const expressions = new ExpressionTranslator(dispatcher);
   const context = new TranslationContext(expressions);
-  dispatcher.register([new Functions(context), new Structures(context)]);
+  dispatcher.registerHandlers([new Functions(context), new Structures(context)]);
   return { dispatcher, expressions, context };
 }
 

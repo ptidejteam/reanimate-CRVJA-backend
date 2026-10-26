@@ -55,8 +55,12 @@ and the current program's scope and state. This API replaces the previous transl
 Handlers are standalone classes whose constructors store `this.context` and
 `this.expressions`, or they can use the context directly. A mini-transpiler can lazily construct a
 local `HandlerDispatcher` and reuse it for later statements. The dispatcher binds methods
-to their instances and resolves `enterX`, `exitX`, and `visitX` through owning parser rule
+to their instances and resolves `enterX`, `exitX`, and `translateX` through owning parser rule
 names. It does not register the extension's commands globally.
+
+`translateX` methods return JavaScript expression fragments and are retrieved through
+`dispatcher.getExpressionHandler(node)`. `enterX` and `exitX` handle listener events.
+These are handler naming conventions, independent of ANTLR's visitor API.
 
 For example, a statement handler can reuse core expression translation:
 
@@ -187,7 +191,8 @@ npm test -- --runInBand src/transpilers/2.0.0-beta/tests
 `npm run antlr` invokes `grammar/generate-grammars.mjs`, using the existing ANTLR JAR
 to generate AMOS before the extension grammars. It discovers `.g4` files in immediate
 extension subdirectories, supplies the core grammar import path, and formats generated
-JavaScript with Prettier. Only this version's generated files are written.
+JavaScript with Prettier. It uses `-no-visitor` and removes stale generated visitor files.
+Only this version's generated files are written.
 Run it after adding or changing a grammar; handler-only changes do not require it.
 The generator is a development tool and does not run during transpilation.
 

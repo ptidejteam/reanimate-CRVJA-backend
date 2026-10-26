@@ -55,7 +55,7 @@ export default class AMOSTranspiler {
     const dispatcher = new HandlerDispatcher();
     const expressions = new ExpressionTranslator(dispatcher);
     const context = new TranslationContext(expressions);
-    dispatcher.register([
+    dispatcher.registerHandlers([
       new Instructions(context),
       new Structures(context),
       new Functions(context),

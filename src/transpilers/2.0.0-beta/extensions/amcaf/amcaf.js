@@ -40,7 +40,7 @@ export default class Amcaf {
   }
 
   // QCOS
-  visitQcosFunction(ctx) {
+  translateQcosFunction(ctx) {
     const expressions = ctx.expression();
     const angle = this.expressions.translate(expressions[0]);
     const radius = this.expressions.translate(expressions[1]);
@@ -48,7 +48,7 @@ export default class Amcaf {
   }
 
   // QSIN
-  visitQsinFunction(ctx) {
+  translateQsinFunction(ctx) {
     const expressions = ctx.expression();
     const angle = this.expressions.translate(expressions[0]);
     const radius = this.expressions.translate(expressions[1]);

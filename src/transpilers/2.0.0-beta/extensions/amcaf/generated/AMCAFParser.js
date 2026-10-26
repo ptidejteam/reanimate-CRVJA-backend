@@ -2,8 +2,6 @@
 // jshint ignore: start
 import antlr4 from 'antlr4';
 import AMCAFListener from './AMCAFListener.js';
-import AMCAFVisitor from './AMCAFVisitor.js';
-
 const serializedATN = [
   4, 1, 162, 1249, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7, 4, 2, 5, 7, 5, 2, 6, 7,
   6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7, 10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2,
@@ -6361,14 +6359,6 @@ class AmcafStatementContext extends antlr4.ParserRuleContext {
       listener.exitAmcafStatement(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitAmcafStatement(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class AmcafFunctionContext extends antlr4.ParserRuleContext {
@@ -6401,14 +6391,6 @@ class AmcafFunctionContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitAmcafFunction(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitAmcafFunction(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -6478,14 +6460,6 @@ class BlitterClearContext extends antlr4.ParserRuleContext {
       listener.exitBlitterClear(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitBlitterClear(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class BlitterCopyContext extends antlr4.ParserRuleContext {
@@ -6544,14 +6518,6 @@ class BlitterCopyContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitBlitterCopy(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitBlitterCopy(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -6617,14 +6583,6 @@ class BlitterFillContext extends antlr4.ParserRuleContext {
       listener.exitBlitterFill(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitBlitterFill(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class QcosFunctionContext extends antlr4.ParserRuleContext {
@@ -6678,14 +6636,6 @@ class QcosFunctionContext extends antlr4.ParserRuleContext {
       listener.exitQcosFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitQcosFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class QsinFunctionContext extends antlr4.ParserRuleContext {
@@ -6737,14 +6687,6 @@ class QsinFunctionContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitQsinFunction(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitQsinFunction(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -6803,14 +6745,6 @@ class TurboDrawContext extends antlr4.ParserRuleContext {
       listener.exitTurboDraw(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitTurboDraw(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ProgramContext extends antlr4.ParserRuleContext {
@@ -6843,14 +6777,6 @@ class ProgramContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitProgram(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitProgram(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -6910,14 +6836,6 @@ class StatementListContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitStatementList(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitStatementList(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -7262,14 +7180,6 @@ class StatementContext extends antlr4.ParserRuleContext {
       listener.exitStatement(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitStatement(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ExtensionStatementContext extends antlr4.ParserRuleContext {
@@ -7298,14 +7208,6 @@ class ExtensionStatementContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitExtensionStatement(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitExtensionStatement(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -7368,14 +7270,6 @@ class AddContext extends antlr4.ParserRuleContext {
       listener.exitAdd(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitAdd(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class AutobackContext extends antlr4.ParserRuleContext {
@@ -7408,14 +7302,6 @@ class AutobackContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitAutoback(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitAutoback(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -7474,14 +7360,6 @@ class BarContext extends antlr4.ParserRuleContext {
       listener.exitBar(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitBar(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class BobOffContext extends antlr4.ParserRuleContext {
@@ -7512,14 +7390,6 @@ class BobOffContext extends antlr4.ParserRuleContext {
       listener.exitBobOff(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitBobOff(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class BobUpdateOnContext extends antlr4.ParserRuleContext {
@@ -7548,14 +7418,6 @@ class BobUpdateOnContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitBobUpdateOn(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitBobUpdateOn(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -7614,14 +7476,6 @@ class BoxContext extends antlr4.ParserRuleContext {
       listener.exitBox(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitBox(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class CircleContext extends antlr4.ParserRuleContext {
@@ -7674,14 +7528,6 @@ class CircleContext extends antlr4.ParserRuleContext {
       listener.exitCircle(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitCircle(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ClearKeyContext extends antlr4.ParserRuleContext {
@@ -7710,14 +7556,6 @@ class ClearKeyContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitClearKey(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitClearKey(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -7752,14 +7590,6 @@ class CloseFileContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitCloseFile(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitCloseFile(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -7818,14 +7648,6 @@ class ClsContext extends antlr4.ParserRuleContext {
       listener.exitCls(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitCls(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ColourContext extends antlr4.ParserRuleContext {
@@ -7871,14 +7693,6 @@ class ColourContext extends antlr4.ParserRuleContext {
       listener.exitColour(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitColour(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ColourBackContext extends antlr4.ParserRuleContext {
@@ -7913,14 +7727,6 @@ class ColourBackContext extends antlr4.ParserRuleContext {
       listener.exitColourBack(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitColourBack(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class CursOffContext extends antlr4.ParserRuleContext {
@@ -7951,14 +7757,6 @@ class CursOffContext extends antlr4.ParserRuleContext {
       listener.exitCursOff(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitCursOff(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class CursOnContext extends antlr4.ParserRuleContext {
@@ -7987,14 +7785,6 @@ class CursOnContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitCursOn(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitCursOn(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -8031,14 +7821,6 @@ class DecContext extends antlr4.ParserRuleContext {
       listener.exitDec(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitDec(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class DegreeContext extends antlr4.ParserRuleContext {
@@ -8067,14 +7849,6 @@ class DegreeContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitDegree(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitDegree(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -8129,14 +7903,6 @@ class ArrayDeclarationContext extends antlr4.ParserRuleContext {
       listener.exitArrayDeclaration(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitArrayDeclaration(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class DoubleBufferContext extends antlr4.ParserRuleContext {
@@ -8165,14 +7931,6 @@ class DoubleBufferContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitDoubleBuffer(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitDoubleBuffer(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -8231,14 +7989,6 @@ class DrawContext extends antlr4.ParserRuleContext {
       listener.exitDraw(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitDraw(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class DrawToContext extends antlr4.ParserRuleContext {
@@ -8282,14 +8032,6 @@ class DrawToContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitDrawTo(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitDrawTo(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -8344,14 +8086,6 @@ class EllipseContext extends antlr4.ParserRuleContext {
       listener.exitEllipse(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitEllipse(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class FlashOffContext extends antlr4.ParserRuleContext {
@@ -8382,14 +8116,6 @@ class FlashOffContext extends antlr4.ParserRuleContext {
       listener.exitFlashOff(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitFlashOff(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class FlashOnContext extends antlr4.ParserRuleContext {
@@ -8418,14 +8144,6 @@ class FlashOnContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitFlashOn(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitFlashOn(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -8462,14 +8180,6 @@ class HideContext extends antlr4.ParserRuleContext {
       listener.exitHide(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitHide(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class IncContext extends antlr4.ParserRuleContext {
@@ -8504,14 +8214,6 @@ class IncContext extends antlr4.ParserRuleContext {
       listener.exitInc(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitInc(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class InkContext extends antlr4.ParserRuleContext {
@@ -8544,14 +8246,6 @@ class InkContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitInk(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitInk(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -8599,14 +8293,6 @@ class KeySpeedContext extends antlr4.ParserRuleContext {
       listener.exitKeySpeed(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitKeySpeed(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class LedOffContext extends antlr4.ParserRuleContext {
@@ -8635,14 +8321,6 @@ class LedOffContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitLedOff(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitLedOff(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -8691,14 +8369,6 @@ class LoadBankContext extends antlr4.ParserRuleContext {
       listener.exitLoadBank(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitLoadBank(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class LoadIffContext extends antlr4.ParserRuleContext {
@@ -8735,14 +8405,6 @@ class LoadIffContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitLoadIff(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitLoadIff(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -8790,14 +8452,6 @@ class LocateContext extends antlr4.ParserRuleContext {
       listener.exitLocate(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitLocate(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class OpenInContext extends antlr4.ParserRuleContext {
@@ -8840,14 +8494,6 @@ class OpenInContext extends antlr4.ParserRuleContext {
       listener.exitOpenIn(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitOpenIn(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class OpenOutContext extends antlr4.ParserRuleContext {
@@ -8888,14 +8534,6 @@ class OpenOutContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitOpenOut(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitOpenOut(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -8950,14 +8588,6 @@ class PaletteContext extends antlr4.ParserRuleContext {
       listener.exitPalette(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitPalette(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class PaperContext extends antlr4.ParserRuleContext {
@@ -8992,14 +8622,6 @@ class PaperContext extends antlr4.ParserRuleContext {
       listener.exitPaper(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitPaper(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class PenContext extends antlr4.ParserRuleContext {
@@ -9032,14 +8654,6 @@ class PenContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitPen(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitPen(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -9082,14 +8696,6 @@ class PlaySoundContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitPlaySound(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitPlaySound(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -9135,14 +8741,6 @@ class PlotContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitPlot(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitPlot(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -9208,14 +8806,6 @@ class PrintStatementContext extends antlr4.ParserRuleContext {
       listener.exitPrintStatement(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitPrintStatement(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class PrintItemContext extends antlr4.ParserRuleContext {
@@ -9252,14 +8842,6 @@ class PrintItemContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitPrintItem(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitPrintItem(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -9314,14 +8896,6 @@ class RainbowContext extends antlr4.ParserRuleContext {
       listener.exitRainbow(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitRainbow(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class SamBankContext extends antlr4.ParserRuleContext {
@@ -9356,14 +8930,6 @@ class SamBankContext extends antlr4.ParserRuleContext {
       listener.exitSamBank(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitSamBank(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class SamLoopOffContext extends antlr4.ParserRuleContext {
@@ -9392,14 +8958,6 @@ class SamLoopOffContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitSamLoopOff(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitSamLoopOff(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -9434,14 +8992,6 @@ class ChooseScreenContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitChooseScreen(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitChooseScreen(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -9494,14 +9044,6 @@ class ScreenOffsetContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitScreenOffset(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitScreenOffset(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -9564,14 +9106,6 @@ class ScreenOpenContext extends antlr4.ParserRuleContext {
       listener.exitScreenOpen(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitScreenOpen(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ScreenSwapContext extends antlr4.ParserRuleContext {
@@ -9600,14 +9134,6 @@ class ScreenSwapContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitScreenSwap(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitScreenSwap(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -9642,14 +9168,6 @@ class SetBufferContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitSetBuffer(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitSetBuffer(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -9704,14 +9222,6 @@ class SetRainbowContext extends antlr4.ParserRuleContext {
       listener.exitSetRainbow(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitSetRainbow(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class SortContext extends antlr4.ParserRuleContext {
@@ -9744,14 +9254,6 @@ class SortContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitSort(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitSort(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -9825,14 +9327,6 @@ class SpriteContext extends antlr4.ParserRuleContext {
       listener.exitSprite(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitSprite(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class TextContext extends antlr4.ParserRuleContext {
@@ -9893,14 +9387,6 @@ class TextContext extends antlr4.ParserRuleContext {
       listener.exitText(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitText(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class WaitContext extends antlr4.ParserRuleContext {
@@ -9935,14 +9421,6 @@ class WaitContext extends antlr4.ParserRuleContext {
       listener.exitWait(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitWait(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class WaitKeyContext extends antlr4.ParserRuleContext {
@@ -9973,14 +9451,6 @@ class WaitKeyContext extends antlr4.ParserRuleContext {
       listener.exitWaitKey(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitWaitKey(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class WaitVblContext extends antlr4.ParserRuleContext {
@@ -10009,14 +9479,6 @@ class WaitVblContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitWaitVbl(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitWaitVbl(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -10069,14 +9531,6 @@ class DataStatementContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitDataStatement(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitDataStatement(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -10147,14 +9601,6 @@ class DefFnContext extends antlr4.ParserRuleContext {
       listener.exitDefFn(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitDefFn(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class DoLoopContext extends antlr4.ParserRuleContext {
@@ -10191,14 +9637,6 @@ class DoLoopContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitDoLoop(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitDoLoop(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -10239,14 +9677,6 @@ class ElseStatementContext extends antlr4.ParserRuleContext {
       listener.exitElseStatement(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitElseStatement(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ElseIfStatementContext extends antlr4.ParserRuleContext {
@@ -10285,14 +9715,6 @@ class ElseIfStatementContext extends antlr4.ParserRuleContext {
       listener.exitElseIfStatement(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitElseIfStatement(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ExitLoopContext extends antlr4.ParserRuleContext {
@@ -10325,14 +9747,6 @@ class ExitLoopContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitExitLoop(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitExitLoop(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -10375,14 +9789,6 @@ class ExitIfContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitExitIf(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitExitIf(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -10447,14 +9853,6 @@ class FnCallContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitFnCall(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitFnCall(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -10529,14 +9927,6 @@ class ForLoopContext extends antlr4.ParserRuleContext {
       listener.exitForLoop(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitForLoop(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class GlobalContext extends antlr4.ParserRuleContext {
@@ -10600,14 +9990,6 @@ class GlobalContext extends antlr4.ParserRuleContext {
       listener.exitGlobal(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitGlobal(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class GosubContext extends antlr4.ParserRuleContext {
@@ -10642,14 +10024,6 @@ class GosubContext extends antlr4.ParserRuleContext {
       listener.exitGosub(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitGosub(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class GotoLabelContext extends antlr4.ParserRuleContext {
@@ -10682,14 +10056,6 @@ class GotoLabelContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitGotoLabel(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitGotoLabel(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -10778,14 +10144,6 @@ class IfStatementContext extends antlr4.ParserRuleContext {
       listener.exitIfStatement(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitIfStatement(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ComparisonOperatorContext extends antlr4.ParserRuleContext {
@@ -10836,14 +10194,6 @@ class ComparisonOperatorContext extends antlr4.ParserRuleContext {
       listener.exitComparisonOperator(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitComparisonOperator(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class LogicalOperatorContext extends antlr4.ParserRuleContext {
@@ -10876,14 +10226,6 @@ class LogicalOperatorContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitLogicalOperator(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitLogicalOperator(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -10949,14 +10291,6 @@ class ConditionContext extends antlr4.ParserRuleContext {
       listener.exitCondition(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitCondition(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class IfKeyStateStatementContext extends antlr4.ParserRuleContext {
@@ -11014,14 +10348,6 @@ class IfKeyStateStatementContext extends antlr4.ParserRuleContext {
       listener.exitIfKeyStateStatement(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitIfKeyStateStatement(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class InputVariableContext extends antlr4.ParserRuleContext {
@@ -11070,14 +10396,6 @@ class InputVariableContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitInputVariable(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitInputVariable(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -11140,14 +10458,6 @@ class LineInputFileContext extends antlr4.ParserRuleContext {
       listener.exitLineInputFile(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitLineInputFile(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class NotOperatorContext extends antlr4.ParserRuleContext {
@@ -11186,14 +10496,6 @@ class NotOperatorContext extends antlr4.ParserRuleContext {
       listener.exitNotOperator(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitNotOperator(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class OnBreakProcContext extends antlr4.ParserRuleContext {
@@ -11226,14 +10528,6 @@ class OnBreakProcContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitOnBreakProc(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitOnBreakProc(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -11278,14 +10572,6 @@ class OnErrorContext extends antlr4.ParserRuleContext {
       listener.exitOnError(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitOnError(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class OnErrorProcContext extends antlr4.ParserRuleContext {
@@ -11318,14 +10604,6 @@ class OnErrorProcContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitOnErrorProc(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitOnErrorProc(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -11396,14 +10674,6 @@ class OnGosubContext extends antlr4.ParserRuleContext {
       listener.exitOnGosub(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitOnGosub(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class OnProcContext extends antlr4.ParserRuleContext {
@@ -11460,14 +10730,6 @@ class OnProcContext extends antlr4.ParserRuleContext {
       listener.exitOnProc(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitOnProc(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class PopProcContext extends antlr4.ParserRuleContext {
@@ -11496,14 +10758,6 @@ class PopProcContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitPopProc(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitPopProc(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -11564,14 +10818,6 @@ class ProcedureCallContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitProcedureCall(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitProcedureCall(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -11642,14 +10888,6 @@ class ProcedureContext extends antlr4.ParserRuleContext {
       listener.exitProcedure(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitProcedure(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ReadStatementContext extends antlr4.ParserRuleContext {
@@ -11702,14 +10940,6 @@ class ReadStatementContext extends antlr4.ParserRuleContext {
       listener.exitReadStatement(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitReadStatement(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ReadTargetContext extends antlr4.ParserRuleContext {
@@ -11742,14 +10972,6 @@ class ReadTargetContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitReadTarget(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitReadTarget(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -11802,14 +11024,6 @@ class RepeatUntilContext extends antlr4.ParserRuleContext {
       listener.exitRepeatUntil(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitRepeatUntil(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class RestoreContext extends antlr4.ParserRuleContext {
@@ -11842,14 +11056,6 @@ class RestoreContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitRestore(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitRestore(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -11894,14 +11100,6 @@ class ResumeContext extends antlr4.ParserRuleContext {
       listener.exitResume(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitResume(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ResumeLabelContext extends antlr4.ParserRuleContext {
@@ -11934,14 +11132,6 @@ class ResumeLabelContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitResumeLabel(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitResumeLabel(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -11996,14 +11186,6 @@ class SharedContext extends antlr4.ParserRuleContext {
       listener.exitShared(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitShared(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class SharedItemContext extends antlr4.ParserRuleContext {
@@ -12044,14 +11226,6 @@ class SharedItemContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitSharedItem(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitSharedItem(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -12097,14 +11271,6 @@ class SwapContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitSwap(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitSwap(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -12168,14 +11334,6 @@ class IfThenStatementContext extends antlr4.ParserRuleContext {
       listener.exitIfThenStatement(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitIfThenStatement(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class IfThenElseContext extends antlr4.ParserRuleContext {
@@ -12215,14 +11373,6 @@ class IfThenElseContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitIfThenElse(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitIfThenElse(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -12267,14 +11417,6 @@ class WhileWendContext extends antlr4.ParserRuleContext {
       listener.exitWhileWend(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitWhileWend(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ArrayAssignmentContext extends antlr4.ParserRuleContext {
@@ -12313,14 +11455,6 @@ class ArrayAssignmentContext extends antlr4.ParserRuleContext {
       listener.exitArrayAssignment(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitArrayAssignment(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class LabelContext extends antlr4.ParserRuleContext {
@@ -12353,14 +11487,6 @@ class LabelContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitLabel(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitLabel(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -12405,14 +11531,6 @@ class VariableAssignmentContext extends antlr4.ParserRuleContext {
       listener.exitVariableAssignment(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitVariableAssignment(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class AbsFunctionContext extends antlr4.ParserRuleContext {
@@ -12453,14 +11571,6 @@ class AbsFunctionContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitAbsFunction(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitAbsFunction(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -12505,14 +11615,6 @@ class AcosFunctionContext extends antlr4.ParserRuleContext {
       listener.exitAcosFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitAcosFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class AsinFunctionContext extends antlr4.ParserRuleContext {
@@ -12555,14 +11657,6 @@ class AsinFunctionContext extends antlr4.ParserRuleContext {
       listener.exitAsinFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitAsinFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class AtanFunctionContext extends antlr4.ParserRuleContext {
@@ -12603,14 +11697,6 @@ class AtanFunctionContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitAtanFunction(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitAtanFunction(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -12666,14 +11752,6 @@ class BtstFunctionContext extends antlr4.ParserRuleContext {
       listener.exitBtstFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitBtstFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ColourFunctionContext extends antlr4.ParserRuleContext {
@@ -12714,14 +11792,6 @@ class ColourFunctionContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitColourFunction(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitColourFunction(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -12766,14 +11836,6 @@ class CosFunctionContext extends antlr4.ParserRuleContext {
       listener.exitCosFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitCosFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ExpFunctionContext extends antlr4.ParserRuleContext {
@@ -12816,14 +11878,6 @@ class ExpFunctionContext extends antlr4.ParserRuleContext {
       listener.exitExpFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitExpFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class FalseFunctionContext extends antlr4.ParserRuleContext {
@@ -12852,14 +11906,6 @@ class FalseFunctionContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitFalseFunction(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitFalseFunction(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -12904,14 +11950,6 @@ class HcosFunctionContext extends antlr4.ParserRuleContext {
       listener.exitHcosFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitHcosFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class HsinFunctionContext extends antlr4.ParserRuleContext {
@@ -12952,14 +11990,6 @@ class HsinFunctionContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitHsinFunction(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitHsinFunction(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -13004,14 +12034,6 @@ class HtanFunctionContext extends antlr4.ParserRuleContext {
       listener.exitHtanFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitHtanFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class IntFunctionContext extends antlr4.ParserRuleContext {
@@ -13052,14 +12074,6 @@ class IntFunctionContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitIntFunction(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitIntFunction(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -13104,14 +12118,6 @@ class KeyStateFunctionContext extends antlr4.ParserRuleContext {
       listener.exitKeyStateFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitKeyStateFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class LnFunctionContext extends antlr4.ParserRuleContext {
@@ -13154,14 +12160,6 @@ class LnFunctionContext extends antlr4.ParserRuleContext {
       listener.exitLnFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitLnFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class LogFunctionContext extends antlr4.ParserRuleContext {
@@ -13202,14 +12200,6 @@ class LogFunctionContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitLogFunction(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitLogFunction(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -13265,14 +12255,6 @@ class MaxFunctionContext extends antlr4.ParserRuleContext {
       listener.exitMaxFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitMaxFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class MinFunctionContext extends antlr4.ParserRuleContext {
@@ -13326,14 +12308,6 @@ class MinFunctionContext extends antlr4.ParserRuleContext {
       listener.exitMinFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitMinFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class PiFunctionContext extends antlr4.ParserRuleContext {
@@ -13362,14 +12336,6 @@ class PiFunctionContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitPiFunction(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitPiFunction(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -13414,14 +12380,6 @@ class RndFunctionContext extends antlr4.ParserRuleContext {
       listener.exitRndFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitRndFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class SinFunctionContext extends antlr4.ParserRuleContext {
@@ -13462,14 +12420,6 @@ class SinFunctionContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitSinFunction(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitSinFunction(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -13514,14 +12464,6 @@ class SqrFunctionContext extends antlr4.ParserRuleContext {
       listener.exitSqrFunction(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitSqrFunction(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class TrueFunctionContext extends antlr4.ParserRuleContext {
@@ -13550,14 +12492,6 @@ class TrueFunctionContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitTrueFunction(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitTrueFunction(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -13617,14 +12551,6 @@ class ExpressionContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitExpression(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitExpression(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -13688,14 +12614,6 @@ class TermContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitTerm(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitTerm(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }
@@ -13848,14 +12766,6 @@ class FactorContext extends antlr4.ParserRuleContext {
       listener.exitFactor(this);
     }
   }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitFactor(this);
-    } else {
-      return visitor.visitChildren(this);
-    }
-  }
 }
 
 class ArrayStructureContext extends antlr4.ParserRuleContext {
@@ -13914,14 +12824,6 @@ class ArrayStructureContext extends antlr4.ParserRuleContext {
   exitRule(listener) {
     if (listener instanceof AMCAFListener) {
       listener.exitArrayStructure(this);
-    }
-  }
-
-  accept(visitor) {
-    if (visitor instanceof AMCAFVisitor) {
-      return visitor.visitArrayStructure(this);
-    } else {
-      return visitor.visitChildren(this);
     }
   }
 }

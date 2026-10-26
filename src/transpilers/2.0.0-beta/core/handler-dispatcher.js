@@ -3,14 +3,14 @@ export function getRuleName(node) {
   return node?.parser?.ruleNames[node.ruleIndex];
 }
 
-/** Resolves the existing enterX/exitX/visitX convention without a coordinator. */
+/** Resolves listener-event handlers and expression translators by grammar rule. */
 export default class HandlerDispatcher {
   constructor(handlers = []) {
-    this.handlers = { enter: new Map(), exit: new Map(), visit: new Map() };
-    this.register(handlers);
+    this.handlers = { enter: new Map(), exit: new Map(), expression: new Map() };
+    this.registerHandlers(handlers);
   }
 
-  register(handlers) {
+  registerHandlers(handlers) {
     for (const handler of handlers) {
       // Include inherited methods, with normal JavaScript overriding within a handler.
       const methodNames = new Set();
@@ -23,9 +23,10 @@ export default class HandlerDispatcher {
       }
 
       for (const name of methodNames) {
-        const match = /^(enter|exit|visit)([A-Z]\w*)$/.exec(name);
+        const match = /^(enter|exit|translate)([A-Z]\w*)$/.exec(name);
         if (!match || typeof handler[name] !== 'function') continue;
-        const [, phase, suffix] = match;
+        const [, prefix, suffix] = match;
+        const phase = prefix === 'translate' ? 'expression' : prefix;
         const rule = suffix[0].toLowerCase() + suffix.slice(1);
         const phaseHandlers = this.handlers[phase];
         if (phaseHandlers.has(rule)) {
@@ -38,5 +39,9 @@ export default class HandlerDispatcher {
 
   get(phase, node) {
     return this.handlers[phase].get(getRuleName(node));
+  }
+
+  getExpressionHandler(node) {
+    return this.get('expression', node);
   }
 }

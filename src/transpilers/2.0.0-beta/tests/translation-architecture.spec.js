@@ -31,11 +31,15 @@ function services() {
   const dispatcher = new HandlerDispatcher();
   const expressions = new ExpressionTranslator(dispatcher);
   const context = new TranslationContext(expressions);
-  dispatcher.register([new Instructions(context), new Structures(context), new Functions(context)]);
+  dispatcher.registerHandlers([
+    new Instructions(context),
+    new Structures(context),
+    new Functions(context),
+  ]);
   return { dispatcher, expressions, context };
 }
 
-test('binds handlers to their instances and keeps enter, exit, and visit independent', () => {
+test('binds handlers to their instances and keeps listener events and expressions independent', () => {
   class Commands {
     constructor(context) {
       this.context = context;
@@ -53,7 +57,7 @@ test('binds handlers to their instances and keeps enter, exit, and visit indepen
       this.context.emit('exit;');
     }
 
-    visitPlot() {
+    translatePlot() {
       return this.calls;
     }
   }
@@ -66,7 +70,7 @@ test('binds handlers to their instances and keeps enter, exit, and visit indepen
   enter(node);
   enter(node);
   dispatcher.get('exit', node)(node);
-  expect(dispatcher.get('visit', node)(node)).toBe(2);
+  expect(dispatcher.getExpressionHandler(node)(node)).toBe(2);
   expect(context.output).toBe('enter 1;enter 2;exit;');
 });
 
@@ -90,15 +94,19 @@ test('discovers inherited methods while respecting overrides on the same handler
   expect(dispatcher.get('exit', node)(node)).toBe('exit');
 });
 
-test('rejects duplicate phase/rule handlers inside one dispatcher', () => {
+test.each([
+  ['enter', 'enterPlot'],
+  ['exit', 'exitPlot'],
+  ['expression', 'translatePlot'],
+])('rejects duplicate %s handlers for the same rule', (phase, method) => {
   class First {
-    enterPlot() {}
+    [method]() {}
   }
   class Second {
-    enterPlot() {}
+    [method]() {}
   }
   expect(() => new HandlerDispatcher([new First(), new Second()])).toThrow(
-    'Duplicate enter handler for rule "plot"',
+    `Duplicate ${phase} handler for rule "plot"`,
   );
 });
 

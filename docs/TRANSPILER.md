@@ -34,7 +34,7 @@ src/transpilers/2.0.0-beta/
 │   ├── AMOS.g4
 │   ├── normalize-identifiers.js
 │   ├── generate-grammars.mjs
-│   └── generated/            Generated lexer, parser, listener, and visitor
+│   └── generated/            Generated lexer, parser, and listener
 ├── extensions/               Integration helpers and mini-transpiler folders
 └── tests/
 ```
@@ -56,6 +56,10 @@ which uses the bundled ANTLR JAR to:
 2. Discover `.g4` files in immediate extension subdirectories and generate their parsers.
 3. Supply the core grammar import path through ANTLR's `-lib` option.
 4. Format the generated JavaScript with the project's Prettier configuration.
+
+Generation uses `-no-visitor`: expression translation is implemented by the shared
+`ExpressionTranslator`, and no generated visitor classes are needed. The command also
+removes stale visitor files from earlier generations.
 
 Java is required for generation. Regenerate after changing or adding a grammar and include
 its generated artifacts with the change. Handler-only edits need no regeneration.
@@ -127,11 +131,17 @@ Never uppercase the entire source: strings and diagnostic positions must survive
 | [TranslationContext](../src/transpilers/2.0.0-beta/core/translation-context.js) | Own program state, declarations, output, runtime inclusion, and assembly |
 | `Instructions`, `Structures`, `Functions` | Implement individual commands |
 
-`Functions` below illustrates the direct references used by all three handler categories.
-Handlers are standalone classes, with no shared handler superclass.
+The diagram focuses on the core translation services. `Functions` represents the shared
+service references used by all three handler categories; `Instructions` and `Structures`
+are omitted for readability. All three are standalone classes, with no shared handler
+superclass. The generated `AMOSListener` is included to show the listener's inheritance;
+lexer, parser, walker, and extension integration classes are covered by the pipeline above.
 
 ```mermaid
 classDiagram
+    class AMOSListener {
+        <<generated>>
+    }
     class AMOSTranspiler {
         +transpile(amosCode)
     }
@@ -141,33 +151,46 @@ classDiagram
         +enterExtensionStatement(ctx)
     }
     class HandlerDispatcher {
-        +register(handlers)
+        +handlers
+        +registerHandlers(handlers)
         +get(phase, node)
+        +getExpressionHandler(node)
     }
     class ExpressionTranslator {
         +translate(node)
     }
     class TranslationContext {
-        +expressions
+        +scopes
+        +output
         +emit(code)
         +declareVariable(name)
+        +includeExtensionRuntime(extension)
         +getJavaScript()
     }
     class Functions {
-        +context
-        +expressions
-        +visitAbsFunction(ctx)
+        +translateAbsFunction(ctx)
     }
+    AMOSListener <|-- AMOSTranslator
     AMOSTranspiler ..> AMOSTranslator : creates
+    AMOSTranspiler ..> HandlerDispatcher : creates
+    AMOSTranspiler ..> ExpressionTranslator : creates
     AMOSTranspiler ..> TranslationContext : creates
-    AMOSTranslator --> HandlerDispatcher : enter and exit lookup
-    AMOSTranslator --> TranslationContext : passes to extensions
-    HandlerDispatcher --> Functions : bound methods
-    ExpressionTranslator --> HandlerDispatcher : visit lookup
-    TranslationContext --> ExpressionTranslator : exposes
-    Functions --> ExpressionTranslator : translates arguments
-    Functions --> TranslationContext : shared state
+    AMOSTranspiler ..> Functions : creates and registers
+    AMOSTranslator --> HandlerDispatcher : dispatcher
+    AMOSTranslator --> TranslationContext : context
+    HandlerDispatcher ..> Functions : binds methods
+    ExpressionTranslator --> HandlerDispatcher : dispatcher
+    TranslationContext --> ExpressionTranslator : expressions
+    Functions --> ExpressionTranslator : expressions
+    Functions --> TranslationContext : context
 ```
+
+The hollow triangle denotes inheritance. Solid arrows show stored references, labeled with
+their attribute names; dashed arrows show creation or registration dependencies.
+The services are created as local variables in `transpile()` and injected into their
+consumers, so these relationships do not imply composition or exclusive ownership.
+The dispatcher stores bound callbacks in its `enter`, `exit`, and `expression` maps, retaining
+their handler instances through those callbacks.
 
 After successful parsing and normalization, the entry point constructs the dependencies:
 
@@ -176,7 +199,7 @@ const dispatcher = new HandlerDispatcher();
 const expressions = new ExpressionTranslator(dispatcher);
 const context = new TranslationContext(expressions);
 
-dispatcher.register([
+dispatcher.registerHandlers([
   new Instructions(context),
   new Structures(context),
   new Functions(context),
@@ -194,16 +217,20 @@ between programs.
 
 ### 3.2. Handler dispatch and traversal
 
-The dispatcher builds lookup maps once, following the existing method-name convention:
+The dispatcher builds lookup maps once, following the handler method-name convention:
 
 | Method | Called by | Purpose |
 | --- | --- | --- |
 | `enterX(ctx)` | Statement listener | Emit a statement or open a block |
 | `exitX(ctx)` | Statement listener | Close a block or restore state |
-| `visitX(ctx)` | Expression translator | Return a JavaScript expression fragment |
+| `translateX(ctx)` | Expression translator | Return a JavaScript expression fragment |
 
 Methods are bound to their handler instances, preserving `this` when called later.
-Duplicate handlers for the same phase and rule within a dispatcher raise an error.
+`enterX` and `exitX` map to listener-event handlers; `translateX` maps to the expression
+handler category. `ExpressionTranslator` retrieves those callbacks through
+`dispatcher.getExpressionHandler(node)`. These methods return JavaScript source text;
+they do not use ANTLR visitor dispatch. Duplicate handlers for the same category and rule
+within a dispatcher raise an error.
 
 Rule lookup uses `node.parser.ruleNames[node.ruleIndex]`. An independently generated AMCAF
 node therefore works even though its rule index and context class differ from AMOS.
@@ -219,7 +246,7 @@ enterEveryRule(ctx) {
 ```
 
 Unhandled enter/exit events are harmless: many grammar nodes merely group other nodes.
-The walker does not call `visitX` methods. Descending through an assignment's expression
+The walker does not call `translateX` methods. Descending through an assignment's expression
 therefore does not repeat the function translation already requested by its handler.
 
 ### 3.3. Expression translation
@@ -232,7 +259,7 @@ therefore does not repeat the function translation already requested by its hand
 | Array of nodes | Array of translated results |
 | Terminal token | Token text |
 | Expression, term, factor, parentheses, array access | Recursively translated syntax |
-| Function or other value-producing rule | Result of its registered `visitX` handler |
+| Function or other value-producing rule | Result of its registered `translateX` handler |
 
 The expression layers preserve precedence and unary minus. For example,
 `A(I)+Abs(-X)*2` becomes `A[Math.trunc(I)] + Math.abs(-X) * 2`.
@@ -300,9 +327,9 @@ sequenceDiagram
     D-->>L: bound enterVariableAssignment
     L->>S: enterVariableAssignment(ctx)
     S->>E: translate Abs(-3) + 2
-    E->>D: visit handler for absFunction
-    D-->>E: bound visitAbsFunction
-    E->>F: visitAbsFunction(ctx)
+    E->>D: getExpressionHandler(absFunction node)
+    D-->>E: bound translateAbsFunction
+    E->>F: translateAbsFunction(ctx)
     F->>E: translate argument -3
     E-->>F: text -3
     F-->>E: text Math.abs(-3)

@@ -30,7 +30,7 @@ Run these commands from the backend root:
 | Command | Purpose |
 | --- | --- |
 | `npm test -- --runInBand` | Run the backend test suite |
-| `npm run antlr` | Generate and format the beta AMOS and extension parsers; requires Java |
+| `npm run antlr` | Generate and format the beta AMOS and extension lexers, parsers, and listeners without visitors; requires Java |
 | `npm run format` | Format all JavaScript files with Prettier |
 
 Regenerate parsers after changing a grammar, then include the generated files with that

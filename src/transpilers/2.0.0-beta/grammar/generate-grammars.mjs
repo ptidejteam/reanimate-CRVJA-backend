@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,7 +11,7 @@ const jar = fileURLToPath(new URL('../../../../antlr-4.13.2-complete.jar', impor
 async function generate(folder, grammar) {
   execFileSync(
     'java',
-    ['-jar', jar, '-Dlanguage=JavaScript', '-visitor', '-lib', core, '-o', 'generated', grammar],
+    ['-jar', jar, '-Dlanguage=JavaScript', '-no-visitor', '-lib', core, '-o', 'generated', grammar],
     {
       cwd: folder,
       stdio: 'inherit',
@@ -19,6 +19,8 @@ async function generate(folder, grammar) {
   );
   const output = path.join(folder, 'generated');
   const name = path.basename(grammar, '.g4');
+  // ANTLR leaves old visitor files behind when visitor generation is disabled.
+  rmSync(path.join(output, `${name}Visitor.js`), { force: true });
   for (const file of readdirSync(output).filter(
     (file) => file.startsWith(name) && file.endsWith('.js'),
   )) {

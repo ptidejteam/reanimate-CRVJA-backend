@@ -79,8 +79,8 @@ export default class Structures {
 
   // FN
   // FN is a Structure, but it returns a value inside an expression (Print Fn X(1,10,100)),
-  // so it is translated by a visitX method.
-  visitFnCall(ctx) {
+  // so it is translated by a translateX method.
+  translateFnCall(ctx) {
     const name = ctx.IDENTIFIER().getText();
     const args = ctx
       .expression()
@@ -173,8 +173,8 @@ export default class Structures {
 
   // NOT
   // NOT is a Structure, but it returns a value inside an expression (X = Not Y),
-  // so it is translated by a visitX method.
-  visitNotOperator(ctx) {
+  // so it is translated by a translateX method.
+  translateNotOperator(ctx) {
     const minus = ctx.SUBTRACT() ? '-' : '';
     const value = this.expressions.translate(ctx.factor());
     return `~(${minus}${value})`;

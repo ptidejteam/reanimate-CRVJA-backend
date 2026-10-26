@@ -33,7 +33,7 @@ translation services for this program:
 const dispatcher = new HandlerDispatcher();
 const expressions = new ExpressionTranslator(dispatcher);
 const context = new TranslationContext(expressions);
-dispatcher.register([
+dispatcher.registerHandlers([
   new Instructions(context),
   new Structures(context),
   new Functions(context),
@@ -64,6 +64,9 @@ flowchart TD
 Nested functions recurse through `ExpressionTranslator` and their handlers. They do not
 call the statement listener. Imported grammars use the same expression translator because
 rule lookup uses each node's owning parser, rather than generated context classes.
+Expression handlers are named `translateX`, return JavaScript source text, and are resolved
+through `dispatcher.getExpressionHandler(node)`. They use the shared expression service
+for recursion; no generated ANTLR visitor is involved.
 
 | Path | Responsibility |
 | --- | --- |
@@ -71,7 +74,7 @@ rule lookup uses each node's owning parser, rather than generated context classe
 | `core/amos-translator.js` | Forward tree events and invoke accepted extensions in their active scope |
 | `core/translation-context.js` | Own program state, declarations, output sections, runtime inclusion, and assembly |
 | `core/expression-translator.js` | Translate expression syntax and call function handlers directly |
-| `core/handler-dispatcher.js` | Discover and bind `enterX`, `exitX`, and `visitX` methods once per handler set |
+| `core/handler-dispatcher.js` | Discover and bind `enterX`, `exitX`, and `translateX` methods once per handler set |
 | `commands/` | Command semantics, one file per category |
 | `grammar/AMOS.g4`, `grammar/generated/` | Grammar and generated ANTLR code; generate rather than edit the latter |
 | `grammar/generate-grammars.mjs` | Development tool invoked by `npm run antlr` to generate and format core and extension parsers |
@@ -104,14 +107,15 @@ The spreadsheet also has the documentation link of each command.
 To find a command, search for its name in capitals, e.g. `// PALETTE`: you get both its grammar
 rule and its translation.
 
-**Method names.** A method is named after the grammar rule it translates, and the translator
-calls it automatically. There is nothing to register:
+**Method names.** A method is named after the grammar rule it translates.
+`HandlerDispatcher.registerHandlers()` discovers these methods on registered handler
+instances; adding a method needs no separate registration:
 
-| Method        | What it does                                                                         | Example                                 |
-| ------------- | ------------------------------------------------------------------------------------ | --------------------------------------- |
-| `enterX(ctx)` | Instructions and structures: emits JavaScript when the parser enters rule `x`        | rule `cls` → `enterCls`                 |
-| `exitX(ctx)`  | End of a block (`Loop`, `Next`, `End If`…): emits JavaScript when it leaves rule `x` | rule `doLoop` → `exitDoLoop`            |
-| `visitX(ctx)` | Functions: **returns** the JavaScript that replaces the call inside an expression    | rule `absFunction` → `visitAbsFunction` |
+| Method | What it does | Example |
+| --- | --- | --- |
+| `enterX(ctx)` | Instructions and structures: emits JavaScript when the walker enters rule `x` | rule `cls` → `enterCls` |
+| `exitX(ctx)` | End of a block (`Loop`, `Next`, `End If`…): emits JavaScript when the walker leaves rule `x` | rule `doLoop` → `exitDoLoop` |
+| `translateX(ctx)` | Functions: **returns** the JavaScript that replaces the call inside an expression | rule `absFunction` → `translateAbsFunction` |
 
 The rule name is not always the AMOS name (`DIM` → rule `arrayDeclaration` →
 `enterArrayDeclaration`): that is why each method has the `// DIM` comment above it.
@@ -149,7 +153,7 @@ naming rule, when the first command is implemented
   so it is translated in `structures.js` under `IF KEY STATE` and `WHILE`.
 - `NOT` and `FN` are Structures, but they return a value inside an expression (`X = Not Y`,
   `Print Fn X(1,10,100)`), so their rules are listed in `factor:` and they are translated by
-  `visitX` methods in `structures.js`.
+  `translateX` methods in `structures.js`.
 - Variable and array assignments (`X = 1`, `A(1) = 2`) and labels have no category. They are at
   the end of `structures.js` and of the Structures part of `AMOS.g4`, under _Not in the command
   index_.
@@ -225,6 +229,8 @@ discovers `.g4` files in immediate extension subdirectories, provides the core g
 path, and formats the generated JavaScript with Prettier. Regenerate after changing any
 grammar; changing only a handler requires no regeneration. Include the generated files
 alongside the grammar changes when preparing a commit.
+Generation uses `-no-visitor` and removes stale visitor files: expression translation lives
+in `ExpressionTranslator` and the `translateX` handlers.
 The parser now has a rule `plot` and a `PlotContext` class for its nodes
 ([section 5](#5-reading-a-commands-parameters)).
 
@@ -306,7 +312,7 @@ instruction, there are two differences:
 
 - its grammar rule is also listed in `factor:`, the part of an expression a function call can
   appear in;
-- its method is `visitX`, and it **returns** JavaScript instead of emitting it, because the
+- its method is `translateX`, and it **returns** JavaScript instead of emitting it, because the
   expression around the call needs the value.
 
 The spreadsheet says: `ABS`, category Function, documented at
@@ -335,7 +341,7 @@ It is also listed next to the other functions in `factor:`:
 
 ```js
   // ABS
-  visitAbsFunction(ctx) {
+  translateAbsFunction(ctx) {
     const value = this.expressions.translate(ctx.expression());
     return `Math.abs(${value})`;
   }
@@ -504,7 +510,7 @@ Example: the first Interface Instruction.
 2. In `amos-transpiler.js`, import the class and add an instance to the core registration:
 
    ```js
-   dispatcher.register([
+   dispatcher.registerHandlers([
      new Instructions(context),
      new Structures(context),
      new Functions(context),
