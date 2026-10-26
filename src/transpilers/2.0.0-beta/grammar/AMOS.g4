@@ -105,6 +105,12 @@ statement:
     | ellipse
     | sort
     | extensionStatement
+    | polygon
+    | polyline
+    | radian
+    | randomize
+    | xMouseAssignment
+    | yMouseAssignment
     ;
 
 extensionStatement:
@@ -306,6 +312,16 @@ plot:
     PLOT expression COMMA expression
     ;
 
+// POLYGON
+polygon:
+    POLYGON (expression COMMA expression)? TO expression COMMA expression (TO expression COMMA expression)*
+    ;
+
+// POLYLINE
+polyline:
+    POLYLINE (expression COMMA expression)? TO expression COMMA expression (TO expression COMMA expression)*
+    ;
+
 // PRINT (and PRINT #)
 printStatement:
     PRINT printItem ((COMMA | SEMICOLON) printItem)*?
@@ -316,9 +332,19 @@ printItem:
     | HASH NUMBER
     ;
 
+// RADIAN
+radian:
+    RADIAN
+    ;
+
 // RAINBOW
 rainbow:
     RAINBOW expression COMMA expression COMMA expression COMMA expression
+    ;
+
+// RANDOMIZE
+randomize:
+    RANDOMIZE expression
     ;
 
 // SAM BANK
@@ -683,6 +709,11 @@ falseFunction:
     FALSE
     ;
 
+// FLIP$
+flipFunction:
+    FLIP ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
 // HCOS
 hcosFunction:
     HCOS ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
@@ -718,6 +749,11 @@ logFunction:
     LOG ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
+// LOWER$
+lowerFunction:
+    LOWER ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
 // MAX
 maxFunction:
     MAX ROUND_BRACKET_OPEN expression COMMA expression ROUND_BRACKET_CLOSE
@@ -743,6 +779,11 @@ sinFunction:
     SIN ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
     ;
 
+// SPRITE COL
+spriteColFunction:
+    SPRITE_COL ROUND_BRACKET_OPEN expression (COMMA expression TO expression)? ROUND_BRACKET_CLOSE
+    ;
+
 // SQR
 sqrFunction:
     SQR ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
@@ -751,6 +792,41 @@ sqrFunction:
 // TRUE
 trueFunction:
     TRUE
+    ;
+
+// UPPER$
+upperFunction:
+    UPPER ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
+// X SPRITE
+xSpriteFunction:
+    X_SPRITE ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
+// Y SPRITE
+ySpriteFunction:
+    Y_SPRITE ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE
+    ;
+
+// ---- Reserved Variables ----------------------------------------------------
+
+// X MOUSE
+xMouse:
+    X_MOUSE
+    ;
+
+xMouseAssignment:
+    X_MOUSE EQUAL expression
+    ;
+
+// Y MOUSE
+yMouse:
+    Y_MOUSE
+    ;
+
+yMouseAssignment:
+    Y_MOUSE EQUAL expression
     ;
 
 // ---- Expressions -----------------------------------------------------------
@@ -775,6 +851,7 @@ factor:
     | cosFunction
     | expFunction
     | falseFunction
+    | flipFunction
     | fnCall
     | hcosFunction
     | hsinFunction
@@ -782,14 +859,21 @@ factor:
     | intFunction
     | lnFunction
     | logFunction
+    | lowerFunction
     | maxFunction
     | minFunction
     | notOperator
     | piFunction
     | rndFunction
     | sinFunction
+    | spriteColFunction
     | sqrFunction
     | trueFunction
+    | upperFunction
+    | xMouse
+    | xSpriteFunction
+    | yMouse
+    | ySpriteFunction
     | IDENTIFIER                                            // A variable
     | ROUND_BRACKET_OPEN expression ROUND_BRACKET_CLOSE     // Parentheses for grouping
     | HEX_NUMBER
@@ -853,6 +937,7 @@ EXP: 'Exp';
 FALSE: 'False';
 FLASH_OFF: 'Flash' HSPACE 'Off' KEYWORD_BOUNDARY;
 FLASH_ON: 'Flash' HSPACE 'On' KEYWORD_BOUNDARY;
+FLIP: 'Flip$';
 FN: 'Fn';
 FOR: 'For';
 GLOBAL: 'Global';
@@ -878,6 +963,7 @@ LOAD_IFF: 'Load' HSPACE 'Iff' KEYWORD_BOUNDARY;
 LOCATE: 'Locate';
 LOG: 'Log';
 LOOP: 'Loop';
+LOWER: 'Lower$';
 LOWRES: 'Lowres';
 MAX: 'Max';
 MIN: 'Min';
@@ -898,11 +984,15 @@ PEN: 'Pen';
 PI: 'Pi#';
 PLAY: 'Play';
 PLOT: 'Plot';
+POLYGON: 'Polygon';
+POLYLINE: 'Polyline';
 POP_PROC: 'Pop' HSPACE 'Proc' KEYWORD_BOUNDARY;
 PRINT: 'Print';
 PROC: 'Proc';
 PROCEDURE: 'Procedure';
+RADIAN: 'Radian';
 RAINBOW: 'Rainbow';
+RANDOMIZE: 'Randomize';
 READ: 'Read';
 REPEAT: 'Repeat';
 RESTORE: 'Restore';
@@ -921,6 +1011,7 @@ SHARED: 'Shared';
 SIN: 'Sin';
 SORT: 'Sort';
 SPRITE: 'Sprite';
+SPRITE_COL: 'Sprite' HSPACE 'Col' KEYWORD_BOUNDARY;
 SQR: 'Sqr';
 STEP: 'Step';
 SWAP: 'Swap';
@@ -929,11 +1020,16 @@ THEN: 'Then';
 TO: 'To';
 TRUE: 'True';
 UNTIL: 'Until';
+UPPER: 'Upper$';
 WAIT: 'Wait';
 WAIT_KEY: 'Wait' HSPACE 'Key' KEYWORD_BOUNDARY;
 WAIT_VBL: 'Wait' HSPACE 'Vbl' KEYWORD_BOUNDARY;
 WEND: 'Wend';
 WHILE: 'While';
+X_MOUSE: 'X' HSPACE 'Mouse' KEYWORD_BOUNDARY;
+X_SPRITE: 'X' HSPACE 'Sprite' KEYWORD_BOUNDARY;
+Y_MOUSE: 'Y' HSPACE 'Mouse' KEYWORD_BOUNDARY;
+Y_SPRITE: 'Y' HSPACE 'Sprite' KEYWORD_BOUNDARY;
 
 // Fragments are reusable grammar pieces, not tokens. These inspect the next
 // character without consuming it; each boundary check is defined only once.

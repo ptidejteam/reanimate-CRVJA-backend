@@ -256,6 +256,18 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMOSParser#plot.
   exitPlot(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#polygon.
+  enterPolygon(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#polygon.
+  exitPolygon(ctx) {}
+
+  // Enter a parse tree produced by AMOSParser#polyline.
+  enterPolyline(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#polyline.
+  exitPolyline(ctx) {}
+
   // Enter a parse tree produced by AMOSParser#printStatement.
   enterPrintStatement(ctx) {}
 
@@ -268,11 +280,23 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMOSParser#printItem.
   exitPrintItem(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#radian.
+  enterRadian(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#radian.
+  exitRadian(ctx) {}
+
   // Enter a parse tree produced by AMOSParser#rainbow.
   enterRainbow(ctx) {}
 
   // Exit a parse tree produced by AMOSParser#rainbow.
   exitRainbow(ctx) {}
+
+  // Enter a parse tree produced by AMOSParser#randomize.
+  enterRandomize(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#randomize.
+  exitRandomize(ctx) {}
 
   // Enter a parse tree produced by AMOSParser#samBank.
   enterSamBank(ctx) {}
@@ -670,6 +694,12 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMOSParser#falseFunction.
   exitFalseFunction(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#flipFunction.
+  enterFlipFunction(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#flipFunction.
+  exitFlipFunction(ctx) {}
+
   // Enter a parse tree produced by AMOSParser#hcosFunction.
   enterHcosFunction(ctx) {}
 
@@ -712,6 +742,12 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMOSParser#logFunction.
   exitLogFunction(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#lowerFunction.
+  enterLowerFunction(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#lowerFunction.
+  exitLowerFunction(ctx) {}
+
   // Enter a parse tree produced by AMOSParser#maxFunction.
   enterMaxFunction(ctx) {}
 
@@ -742,6 +778,12 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMOSParser#sinFunction.
   exitSinFunction(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#spriteColFunction.
+  enterSpriteColFunction(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#spriteColFunction.
+  exitSpriteColFunction(ctx) {}
+
   // Enter a parse tree produced by AMOSParser#sqrFunction.
   enterSqrFunction(ctx) {}
 
@@ -753,6 +795,48 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
 
   // Exit a parse tree produced by AMOSParser#trueFunction.
   exitTrueFunction(ctx) {}
+
+  // Enter a parse tree produced by AMOSParser#upperFunction.
+  enterUpperFunction(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#upperFunction.
+  exitUpperFunction(ctx) {}
+
+  // Enter a parse tree produced by AMOSParser#xSpriteFunction.
+  enterXSpriteFunction(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#xSpriteFunction.
+  exitXSpriteFunction(ctx) {}
+
+  // Enter a parse tree produced by AMOSParser#ySpriteFunction.
+  enterYSpriteFunction(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#ySpriteFunction.
+  exitYSpriteFunction(ctx) {}
+
+  // Enter a parse tree produced by AMOSParser#xMouse.
+  enterXMouse(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#xMouse.
+  exitXMouse(ctx) {}
+
+  // Enter a parse tree produced by AMOSParser#xMouseAssignment.
+  enterXMouseAssignment(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#xMouseAssignment.
+  exitXMouseAssignment(ctx) {}
+
+  // Enter a parse tree produced by AMOSParser#yMouse.
+  enterYMouse(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#yMouse.
+  exitYMouse(ctx) {}
+
+  // Enter a parse tree produced by AMOSParser#yMouseAssignment.
+  enterYMouseAssignment(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#yMouseAssignment.
+  exitYMouseAssignment(ctx) {}
 
   // Enter a parse tree produced by AMOSParser#expression.
   enterExpression(ctx) {}

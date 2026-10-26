@@ -1,6 +1,6 @@
 /**
  * AMOS commands of the category "Function", sorted A-Z by AMOS name.
- * Each method returns the JavaScript expression that replaces the function call.
+ * Implemented methods return the JavaScript expression that replaces the function call.
  */
 export default class Functions {
   constructor(context) {
@@ -50,6 +50,11 @@ export default class Functions {
     return `Math.exp(${value})`;
   }
 
+  // FLIP$
+  translateFlipFunction(ctx) {
+    console.log('to be implemented');
+  }
+
   // HCOS
   translateHcosFunction(ctx) {
     const angle = this.expressions.translate(ctx.expression());
@@ -86,6 +91,11 @@ export default class Functions {
     return `Math.log10(${value})`;
   }
 
+  // LOWER$
+  translateLowerFunction(ctx) {
+    console.log('to be implemented');
+  }
+
   // MAX
   translateMaxFunction(ctx) {
     const value1 = this.expressions.translate(ctx.expression(0));
@@ -119,6 +129,11 @@ export default class Functions {
     return `Math.sin(${angle})`;
   }
 
+  // SPRITE COL
+  translateSpriteColFunction(ctx) {
+    console.log('to be implemented');
+  }
+
   // SQR
   translateSqrFunction(ctx) {
     const value = this.expressions.translate(ctx.expression());
@@ -133,5 +148,20 @@ export default class Functions {
   // FALSE
   translateFalseFunction(ctx) {
     return `(0)`;
+  }
+
+  // UPPER$
+  translateUpperFunction(ctx) {
+    console.log('to be implemented');
+  }
+
+  // X SPRITE
+  translateXSpriteFunction(ctx) {
+    console.log('to be implemented');
+  }
+
+  // Y SPRITE
+  translateYSpriteFunction(ctx) {
+    console.log('to be implemented');
   }
 }

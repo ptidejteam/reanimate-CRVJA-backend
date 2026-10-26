@@ -19,6 +19,14 @@ test.each([
   'dim values(9)\nscore=values(1)+2',
   'if score=1\nscore=2\nelse\tif score=3\nscore=4\nend  if',
   'Start:\nvalue=1\nFinish:',
+  'Polygon 0,0 To 10,0 To 10,10',
+  'Polyline To 10,20 To 30,40',
+  'Randomize Timer',
+  'X=X Sprite(1)+Y Sprite(2)',
+  'X Mouse=Y Mouse+1',
+  'S$=Upper$(Flip$(Lower$("Ab")))',
+  'C=Sprite Col(1,2 To 4)',
+  'Degree:Radian:Wait Key',
 ])('%j parses without full-context prediction', (code) => {
   const parser = new AMOSParser(
     new antlr4.CommonTokenStream(new AMOSLexer(new antlr4.InputStream(code))),

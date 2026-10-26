@@ -221,6 +221,11 @@ if (amosScreen) {
     //console.log('To be implemented...');
   }
 
+  // DEGREE
+  enterDegree(ctx) {
+    console.log('to be implemented');
+  }
+
   // DIM
   enterArrayDeclaration(ctx) {
     for (let i = 0; i < ctx.arrayStructure().length; i++) {
@@ -434,6 +439,16 @@ document.getElementById('amos-screen').appendChild(plotDiv);
 }`);
   }
 
+  // POLYGON
+  enterPolygon(ctx) {
+    console.log('to be implemented');
+  }
+
+  // POLYLINE
+  enterPolyline(ctx) {
+    console.log('to be implemented');
+  }
+
   // PRINT (and PRINT #)
   // PRINT # is a Structure, but it shares the printStatement rule with PRINT,
   // so it is translated here.
@@ -456,6 +471,16 @@ document.getElementById('amos-screen').appendChild(plotDiv);
         );
       }
     }
+  }
+
+  // RADIAN
+  enterRadian(ctx) {
+    console.log('to be implemented');
+  }
+
+  // RANDOMIZE
+  enterRandomize(ctx) {
+    console.log('to be implemented');
   }
 
   // SCREEN OPEN
@@ -561,5 +586,10 @@ textEl.style.backgroundColor = getColour(Paper);
     const ms = parseInt(waitTicks) * 20; // AMOS = ~50fps
 
     this.context.emit(`await new Promise(r => setTimeout(r, ${ms}));`);
+  }
+
+  // WAIT KEY
+  enterWaitKey(ctx) {
+    console.log('to be implemented');
   }
 }

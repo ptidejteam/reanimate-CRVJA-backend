@@ -5,10 +5,16 @@ import ExpressionTranslator from '../core/expression-translator.js';
 import Instructions from '../commands/instructions.js';
 import Structures from '../commands/structures.js';
 import Functions from '../commands/functions.js';
+import ReservedVariables from '../commands/reserved-variables.js';
 
 const dispatcher = new HandlerDispatcher();
 const context = new TranslationContext(new ExpressionTranslator(dispatcher));
-const handlers = [new Instructions(context), new Structures(context), new Functions(context)];
+const handlers = [
+  new Instructions(context),
+  new Structures(context),
+  new Functions(context),
+  new ReservedVariables(context),
+];
 
 // The translator calls the methods of commands/ by name (rule `cls` -> enterCls), so a
 // method whose name matches no grammar rule, e.g. a typo, would never be called.

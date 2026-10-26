@@ -304,6 +304,18 @@ export default class AMCAFListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMCAFParser#plot.
   exitPlot(ctx) {}
 
+  // Enter a parse tree produced by AMCAFParser#polygon.
+  enterPolygon(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#polygon.
+  exitPolygon(ctx) {}
+
+  // Enter a parse tree produced by AMCAFParser#polyline.
+  enterPolyline(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#polyline.
+  exitPolyline(ctx) {}
+
   // Enter a parse tree produced by AMCAFParser#printStatement.
   enterPrintStatement(ctx) {}
 
@@ -316,11 +328,23 @@ export default class AMCAFListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMCAFParser#printItem.
   exitPrintItem(ctx) {}
 
+  // Enter a parse tree produced by AMCAFParser#radian.
+  enterRadian(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#radian.
+  exitRadian(ctx) {}
+
   // Enter a parse tree produced by AMCAFParser#rainbow.
   enterRainbow(ctx) {}
 
   // Exit a parse tree produced by AMCAFParser#rainbow.
   exitRainbow(ctx) {}
+
+  // Enter a parse tree produced by AMCAFParser#randomize.
+  enterRandomize(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#randomize.
+  exitRandomize(ctx) {}
 
   // Enter a parse tree produced by AMCAFParser#samBank.
   enterSamBank(ctx) {}
@@ -718,6 +742,12 @@ export default class AMCAFListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMCAFParser#falseFunction.
   exitFalseFunction(ctx) {}
 
+  // Enter a parse tree produced by AMCAFParser#flipFunction.
+  enterFlipFunction(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#flipFunction.
+  exitFlipFunction(ctx) {}
+
   // Enter a parse tree produced by AMCAFParser#hcosFunction.
   enterHcosFunction(ctx) {}
 
@@ -760,6 +790,12 @@ export default class AMCAFListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMCAFParser#logFunction.
   exitLogFunction(ctx) {}
 
+  // Enter a parse tree produced by AMCAFParser#lowerFunction.
+  enterLowerFunction(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#lowerFunction.
+  exitLowerFunction(ctx) {}
+
   // Enter a parse tree produced by AMCAFParser#maxFunction.
   enterMaxFunction(ctx) {}
 
@@ -790,6 +826,12 @@ export default class AMCAFListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMCAFParser#sinFunction.
   exitSinFunction(ctx) {}
 
+  // Enter a parse tree produced by AMCAFParser#spriteColFunction.
+  enterSpriteColFunction(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#spriteColFunction.
+  exitSpriteColFunction(ctx) {}
+
   // Enter a parse tree produced by AMCAFParser#sqrFunction.
   enterSqrFunction(ctx) {}
 
@@ -801,6 +843,48 @@ export default class AMCAFListener extends antlr4.tree.ParseTreeListener {
 
   // Exit a parse tree produced by AMCAFParser#trueFunction.
   exitTrueFunction(ctx) {}
+
+  // Enter a parse tree produced by AMCAFParser#upperFunction.
+  enterUpperFunction(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#upperFunction.
+  exitUpperFunction(ctx) {}
+
+  // Enter a parse tree produced by AMCAFParser#xSpriteFunction.
+  enterXSpriteFunction(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#xSpriteFunction.
+  exitXSpriteFunction(ctx) {}
+
+  // Enter a parse tree produced by AMCAFParser#ySpriteFunction.
+  enterYSpriteFunction(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#ySpriteFunction.
+  exitYSpriteFunction(ctx) {}
+
+  // Enter a parse tree produced by AMCAFParser#xMouse.
+  enterXMouse(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#xMouse.
+  exitXMouse(ctx) {}
+
+  // Enter a parse tree produced by AMCAFParser#xMouseAssignment.
+  enterXMouseAssignment(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#xMouseAssignment.
+  exitXMouseAssignment(ctx) {}
+
+  // Enter a parse tree produced by AMCAFParser#yMouse.
+  enterYMouse(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#yMouse.
+  exitYMouse(ctx) {}
+
+  // Enter a parse tree produced by AMCAFParser#yMouseAssignment.
+  enterYMouseAssignment(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#yMouseAssignment.
+  exitYMouseAssignment(ctx) {}
 
   // Enter a parse tree produced by AMCAFParser#expression.
   enterExpression(ctx) {}

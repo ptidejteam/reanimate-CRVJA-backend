@@ -6,6 +6,7 @@ import AMOSTranslator from '../core/amos-translator.js';
 import Functions from '../commands/functions.js';
 import Instructions from '../commands/instructions.js';
 import Structures from '../commands/structures.js';
+import ReservedVariables from '../commands/reserved-variables.js';
 import AMOSLexer from '../grammar/generated/AMOSLexer.js';
 import AMOSParser from '../grammar/generated/AMOSParser.js';
 import AMOSErrorListener from '../core/amos-error-listener.js';
@@ -35,6 +36,7 @@ function services() {
     new Instructions(context),
     new Structures(context),
     new Functions(context),
+    new ReservedVariables(context),
   ]);
   return { dispatcher, expressions, context };
 }

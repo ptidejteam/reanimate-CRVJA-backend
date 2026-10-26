@@ -56,7 +56,8 @@ describe('AMCAF keyword convention', () => {
   // Imported keywords follow the same convention as extension keywords.
   const keywords = AMCAFLexer.ruleNames.slice(0, AMCAFLexer.ruleNames.indexOf('KEYWORD_BOUNDARY'));
   test.each(keywords)('%s accepts any case and horizontal spacing', (name) => {
-    const spelling = name === 'PI' ? 'Pi#' : name.replaceAll('_', ' ');
+    const suffixed = { PI: 'Pi#', FLIP: 'Flip$', LOWER: 'Lower$', UPPER: 'Upper$' };
+    const spelling = suffixed[name] ?? name.replaceAll('_', ' ');
     for (const variant of [spelling, spelling.toLowerCase(), mixedCase(spelling)]) {
       for (const separator of [' ', '  ', '\t', ' \t ']) {
         const source = variant.replaceAll(' ', separator);
@@ -78,6 +79,14 @@ test('normalizes expressions using the imported parser token vocabulary', () => 
   expect(
     tokens.filter((token) => token.type === AMCAFLexer.IDENTIFIER).map((token) => token.text),
   ).toEqual(['VALUE_f', 'VALUE_f']);
+});
+
+test.each([
+  ['Turbo Draw X Sprite(1),Y Sprite(1) To X Mouse,Y Mouse,Colour(1),-1', 'amcafStatement'],
+  ['Sprite Col(A(I),FIRST+1 To LAST-1)', 'expression'],
+  ['Upper$(Flip$(Lower$("MiXeD")))', 'expression'],
+])('imports the new core command syntax in %s', (source, rule) => {
+  parse(source, rule);
 });
 
 test('dispatches the same rule from independently generated parsers', () => {

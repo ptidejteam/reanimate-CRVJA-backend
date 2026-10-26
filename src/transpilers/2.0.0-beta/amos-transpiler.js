@@ -6,6 +6,7 @@ import HandlerDispatcher from './core/handler-dispatcher.js';
 import Instructions from './commands/instructions.js';
 import Structures from './commands/structures.js';
 import Functions from './commands/functions.js';
+import ReservedVariables from './commands/reserved-variables.js';
 import AMOSParser from './grammar/generated/AMOSParser.js';
 import AMOSLexer from './grammar/generated/AMOSLexer.js';
 import AMOSErrorListener from './core/amos-error-listener.js';
@@ -59,6 +60,7 @@ export default class AMOSTranspiler {
       new Instructions(context),
       new Structures(context),
       new Functions(context),
+      new ReservedVariables(context),
     ]);
     const translator = new AMOSTranslator(context, dispatcher);
     const walker = new antlr4.tree.ParseTreeWalker();

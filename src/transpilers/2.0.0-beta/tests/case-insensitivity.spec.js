@@ -59,10 +59,11 @@ describe('AMOS keyword convention', () => {
     expect(AMOSLexer.ruleNames.filter((name) => name.startsWith('T__'))).toEqual([]);
   });
 
-  // Keyword names encode their words; PI is the one spelling with a type suffix.
+  // Keyword names encode their words; some spellings also have a type suffix.
   const keywords = AMOSLexer.ruleNames.slice(0, AMOSLexer.ruleNames.indexOf('KEYWORD_BOUNDARY'));
   test.each(keywords)('%s accepts any case and horizontal spacing', (name) => {
-    const spelling = name === 'PI' ? 'Pi#' : name.replaceAll('_', ' ');
+    const suffixed = { PI: 'Pi#', FLIP: 'Flip$', LOWER: 'Lower$', UPPER: 'Upper$' };
+    const spelling = suffixed[name] ?? name.replaceAll('_', ' ');
     for (const variant of [spelling, spelling.toLowerCase(), mixedCase(spelling)]) {
       for (const separator of [' ', '  ', '\t', ' \t ']) {
         const source = variant.replaceAll(' ', separator);
