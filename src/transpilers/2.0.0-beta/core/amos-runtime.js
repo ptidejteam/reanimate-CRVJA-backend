@@ -727,6 +727,50 @@ function renderSprite(spriteNumber, x, y, bankImgIndex) {
   }
 }
 
+// ELLIPSE leaves its center as the graphics cursor, even when clipped off-screen.
+function drawEllipse(x, y, radiusX, radiusY) {
+  const centerX = x === null ? graphicCursorX : x;
+  const centerY = y === null ? graphicCursorY : y;
+  if (![centerX, centerY, radiusX, radiusY].every(Number.isFinite)) {
+    throw new Error('ELLIPSE: coordinates and radii must be finite numbers');
+  }
+  if (radiusX <= 0 || radiusY <= 0) {
+    throw new Error('ELLIPSE: radii must be greater than zero');
+  }
+
+  const screen = document.getElementById('amos-screen');
+  if (!screen) throw new Error('ELLIPSE: screen is not open');
+
+  // Leave room for the one-pixel stroke, without allocating outside the screen.
+  const left = Math.max(0, Math.floor(centerX - radiusX - 1));
+  const top = Math.max(0, Math.floor(centerY - radiusY - 1));
+  const right = Math.min(screen.clientWidth, Math.ceil(centerX + radiusX + 1));
+  const bottom = Math.min(screen.clientHeight, Math.ceil(centerY + radiusY + 1));
+
+  graphicCursorX = centerX;
+  graphicCursorY = centerY;
+  if (right <= left || bottom <= top) return;
+
+  // Each execution adds an outline; earlier drawing remains underneath it.
+  const canvas = document.createElement('canvas');
+  canvas.width = right - left;
+  canvas.height = bottom - top;
+  canvas.style.position = 'absolute';
+  canvas.style.left = left + 'px';
+  canvas.style.top = top + 'px';
+  canvas.style.zIndex = 10;
+  canvas.style.pointerEvents = 'none';
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('ELLIPSE: Canvas 2D context is unavailable');
+  ctx.strokeStyle = getColour(Ink);
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.ellipse(centerX - left, centerY - top, radiusX, radiusY, 0, 0, 2 * Math.PI);
+  ctx.stroke();
+  screen.appendChild(canvas);
+}
+
 function getColour(expression) {
   return colorMapping[expression];
 }

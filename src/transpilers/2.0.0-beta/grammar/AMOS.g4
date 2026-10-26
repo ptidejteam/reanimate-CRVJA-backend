@@ -216,7 +216,7 @@ drawTo:
 
 // ELLIPSE
 ellipse:
-    ELLIPSE expression COMMA expression COMMA expression COMMA expression
+    ELLIPSE centerX=expression? COMMA centerY=expression? COMMA radiusX=expression COMMA radiusY=expression
     ;
 
 // FLASH OFF

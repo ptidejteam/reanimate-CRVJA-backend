@@ -309,15 +309,12 @@ graphicCursorY = drawY2;
 
   // ELLIPSE
   enterEllipse(ctx) {
-    const x = this.expressions.translate(ctx.expression(0));
-    const y = this.expressions.translate(ctx.expression(1));
-    const radiusX = this.expressions.translate(ctx.expression(2));
-    const radiusY = this.expressions.translate(ctx.expression(3));
+    const x = ctx.centerX ? this.expressions.translate(ctx.centerX) : 'null';
+    const y = ctx.centerY ? this.expressions.translate(ctx.centerY) : 'null';
+    const radiusX = this.expressions.translate(ctx.radiusX);
+    const radiusY = this.expressions.translate(ctx.radiusY);
 
-    this.context.emit(`
-document.getElementById("amos-screen").appendChild(a=document.createElement("canvas"));
-a.ellipse(${x},${y},${radiusX},${radiusY})
-`);
+    this.context.emit(`drawEllipse(${x}, ${y}, ${radiusX}, ${radiusY});`);
   }
 
   // INC
