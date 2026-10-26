@@ -2,45 +2,45 @@ import { amiga12BitToCssRgb } from '../../../utils/amiga-color.js';
 
 /** AMOS commands of the category "Instruction", sorted A-Z by AMOS name. */
 export default class Instructions {
-  constructor(context) {
-    this.context = context;
-    this.expressions = context.expressions;
-  }
+    constructor(context) {
+        this.context = context;
+        this.expressions = context.expressions;
+    }
 
-  // ADD
-  enterAdd(ctx) {
-    let variable = ctx.IDENTIFIER().getText();
-    let valueExpression = this.expressions.translate(ctx.expression(0));
+    // ADD
+    enterAdd(ctx) {
+        let variable = ctx.IDENTIFIER().getText();
+        let valueExpression = this.expressions.translate(ctx.expression(0));
 
-    this.context.declareVariable(variable);
+        this.context.declareVariable(variable);
 
-    let valueStarter;
-    let valueEndIteration;
+        let valueStarter;
+        let valueEndIteration;
 
-    if (ctx.expression().length > 1) {
-      valueStarter = this.expressions.translate(ctx.expression(1));
-      valueEndIteration = this.expressions.translate(ctx.expression(2));
+        if (ctx.expression().length > 1) {
+            valueStarter = this.expressions.translate(ctx.expression(1));
+            valueEndIteration = this.expressions.translate(ctx.expression(2));
 
-      this.context.emit(`
+            this.context.emit(`
 ${variable} = (${variable} + ${valueExpression}) % ${valueEndIteration};
 if (${variable} < ${valueStarter}) {
     ${variable} += ${valueEndIteration};
 }`);
-    } else {
-      this.context.emit(`${variable} = ${variable} + ${valueExpression};`);
+        } else {
+            this.context.emit(`${variable} = ${variable} + ${valueExpression};`);
+        }
     }
-  }
 
-  // BAR
-  enterBar(ctx) {
-    const x1 = this.expressions.translate(ctx.expression(0));
-    const y1 = this.expressions.translate(ctx.expression(1));
-    const x2 = this.expressions.translate(ctx.expression(2));
-    const y2 = this.expressions.translate(ctx.expression(3));
+    // BAR
+    enterBar(ctx) {
+        const x1 = this.expressions.translate(ctx.expression(0));
+        const y1 = this.expressions.translate(ctx.expression(1));
+        const x2 = this.expressions.translate(ctx.expression(2));
+        const y2 = this.expressions.translate(ctx.expression(3));
 
-    const idBar = `"Bar_" + (${x1}) + "_" + (${y1})`;
+        const idBar = `"Bar_" + (${x1}) + "_" + (${y1})`;
 
-    this.context.emit(`
+        this.context.emit(`
 {
 const idBar = ${idBar};
 const x1 = ${x1};
@@ -66,18 +66,18 @@ screenBarDiv.style.width = width + 'px';
 screenBarDiv.style.height = height + 'px';
 screenBarDiv.style.zIndex = 10;
 }`);
-  }
+    }
 
-  // BOX
-  enterBox(ctx) {
-    const x1 = this.expressions.translate(ctx.expression(0));
-    const y1 = this.expressions.translate(ctx.expression(1));
-    const x2 = this.expressions.translate(ctx.expression(2));
-    const y2 = this.expressions.translate(ctx.expression(3));
+    // BOX
+    enterBox(ctx) {
+        const x1 = this.expressions.translate(ctx.expression(0));
+        const y1 = this.expressions.translate(ctx.expression(1));
+        const x2 = this.expressions.translate(ctx.expression(2));
+        const y2 = this.expressions.translate(ctx.expression(3));
 
-    const boxID = `"Box_" + ${x1} + "_" + ${y1} + "_" + ${x2} + "_" + ${y2}`;
+        const boxID = `"Box_" + ${x1} + "_" + ${y1} + "_" + ${x2} + "_" + ${y2}`;
 
-    this.context.emit(`
+        this.context.emit(`
 {
 const idBox = ${boxID};
 let boxDiv = document.getElementById(idBox);
@@ -95,16 +95,16 @@ boxDiv.style.width = (${x2} - ${x1}) + 'px';
 boxDiv.style.height = (${y2} - ${y1}) + 'px';
 boxDiv.style.zIndex = 10;
 }`);
-  }
+    }
 
-  // CIRCLE
-  enterCircle(ctx) {
-    const x = this.expressions.translate(ctx.expression(0));
-    const y = this.expressions.translate(ctx.expression(1));
-    const r = this.expressions.translate(ctx.expression(2));
-    const circleID = `"Circle_" + (${x}) + "_" + (${y}) + "_" + (${r})`;
+    // CIRCLE
+    enterCircle(ctx) {
+        const x = this.expressions.translate(ctx.expression(0));
+        const y = this.expressions.translate(ctx.expression(1));
+        const r = this.expressions.translate(ctx.expression(2));
+        const circleID = `"Circle_" + (${x}) + "_" + (${y}) + "_" + (${r})`;
 
-    this.context.emit(`
+        this.context.emit(`
 {
 const circleId = ${circleID};
 let circleDiv = document.getElementById(circleId);
@@ -124,45 +124,45 @@ circleDiv.style.height = (${r} * 2) + 'px';
 circleDiv.style.zIndex = 10;
 circleDiv.style.backgroundColor = getColour(Ink);
 }`);
-  }
+    }
 
-  // CLOSE
-  enterCloseFile(ctx) {
-    const channel = ctx.children[1]?.getText();
+    // CLOSE
+    enterCloseFile(ctx) {
+        const channel = ctx.children[1]?.getText();
 
-    this.context.emit(`closeChannel(${channel});`);
-  }
+        this.context.emit(`closeChannel(${channel});`);
+    }
 
-  // CLS
-  enterCls(ctx) {
-    const exprs = ctx.expression();
+    // CLS
+    enterCls(ctx) {
+        const exprs = ctx.expression();
 
-    if (exprs.length === 0) {
-      // Cls: clear the screen with the Paper colour
-      this.context.emit(`
+        if (exprs.length === 0) {
+            // Cls: clear the screen with the Paper colour
+            this.context.emit(`
 const amosScreen = document.getElementById('amos-screen');
 if (amosScreen) {
     amosScreen.innerHTML = '';
     amosScreen.style.backgroundColor = colorMapping[Paper];
 }`);
-    } else if (exprs.length === 1) {
-      // Cls colour: clear the screen with that colour
-      const color = this.expressions.translate(exprs[0]);
-      this.context.emit(`
+        } else if (exprs.length === 1) {
+            // Cls colour: clear the screen with that colour
+            const color = this.expressions.translate(exprs[0]);
+            this.context.emit(`
 const amosScreen = document.getElementById('amos-screen');
 if (amosScreen) {
     amosScreen.innerHTML = '';
     amosScreen.style.backgroundColor = colorMapping[${color}];
 }`);
-    } else if (exprs.length >= 5) {
-      // Cls colour, x1, y1 To x2, y2: clear that rectangle and fill it with the colour
-      const color = this.expressions.translate(exprs[0]);
-      const x1 = this.expressions.translate(exprs[1]);
-      const y1 = this.expressions.translate(exprs[2]);
-      const x2 = this.expressions.translate(exprs[3]);
-      const y2 = this.expressions.translate(exprs[4]);
+        } else if (exprs.length >= 5) {
+            // Cls colour, x1, y1 To x2, y2: clear that rectangle and fill it with the colour
+            const color = this.expressions.translate(exprs[0]);
+            const x1 = this.expressions.translate(exprs[1]);
+            const y1 = this.expressions.translate(exprs[2]);
+            const x2 = this.expressions.translate(exprs[3]);
+            const y2 = this.expressions.translate(exprs[4]);
 
-      this.context.emit(`
+            this.context.emit(`
 {
     const clearColor = colorMapping[${color}];
     const clearX1 = ${x1};
@@ -190,82 +190,86 @@ if (amosScreen) {
         screen.appendChild(fillDiv);
     }
 }`);
+        }
     }
-  }
 
-  // COLOUR
-  enterColour(ctx) {
-    console.log('To be implemented...');
-  }
-
-  // COLOUR BACK
-  enterColourBack(ctx) {
-    console.log('To be implemented...');
-  }
-
-  // CURS OFF
-  enterCursOff(ctx) {
-    this.context.emit("document.getElementById('amos-screen').style.cursor = 'none';");
-  }
-
-  // CURS ON
-  enterCursOn(ctx) {
-    this.context.emit("document.getElementById('amos-screen').style.cursor = 'auto';");
-  }
-
-  // DEC
-  enterDec(ctx) {
-    const variable = ctx.IDENTIFIER().getText();
-    const expression = `${variable} = ${variable} - 1`;
-    this.context.emit(expression);
-    //console.log('To be implemented...');
-  }
-
-  // DEGREE
-  enterDegree(ctx) {
-    console.log('to be implemented');
-  }
-
-  // DIM
-  enterArrayDeclaration(ctx) {
-    for (let i = 0; i < ctx.arrayStructure().length; i++) {
-      const struct = ctx.arrayStructure(i);
-      const name = struct.IDENTIFIER(0)?.getText();
-
-      const fill = name.endsWith('$') ? '""' : '0';
-      const sizes = struct.expression().map((e) => this.expressions.translate(e));
-
-      const init = sizes.reduceRight(
-        (inner, size) => `Array.from({ length: (${size}) + 1 }, () => ${inner})`,
-        fill,
-      );
-
-      this.context.emit(`const ${name} = ${init};`);
-
-      /*const numberOfDimensions = struct.expression().length;
-      let dimension = this.expressions.translate(struct.expression(0));
-      this.context.emit(`const ${name} = Array(${dimension}).fill(0)`);
-
-      for (let i = 1; i < numberOfDimensions; i++) {
-        let dimension = this.expressions.translate(struct.expression(i));
-        this.context.emit(`.map(x => Array(${dimension}).fill(0)`);
-      }
-      for (let i = 1; i < numberOfDimensions; i++) {
-        this.context.emit(')');
-      }
-
-      this.context.emit(';');*/
+    // COLOUR
+    enterColour(ctx) {
+		const index    = this.expressions.translate(ctx.expression(0));
+		const hexText  = this.expressions.translate(ctx.expression(1));
+		const hexValue = parseInt(hexText.slice(1), 16); // without the '$'
+        this.context.colorMapping[index] = amiga12BitToCssRgb(hexValue);
+        this.context.emit(`colorMapping[${index}] = ${JSON.stringify(this.context.colorMapping[index], null, 2)};`);
     }
-  }
 
-  // DRAW
-  enterDraw(ctx) {
-    const x1 = this.expressions.translate(ctx.expression(0));
-    const y1 = this.expressions.translate(ctx.expression(1));
-    const x2 = this.expressions.translate(ctx.expression(2));
-    const y2 = this.expressions.translate(ctx.expression(3));
+    // COLOUR BACK
+    enterColourBack(ctx) {
+        console.log('To be implemented...');
+    }
 
-    this.context.emit(`
+    // CURS OFF
+    enterCursOff(ctx) {
+        this.context.emit("document.getElementById('amos-screen').style.cursor = 'none';");
+    }
+
+    // CURS ON
+    enterCursOn(ctx) {
+        this.context.emit("document.getElementById('amos-screen').style.cursor = 'auto';");
+    }
+
+    // DEC
+    enterDec(ctx) {
+        const variable = ctx.IDENTIFIER().getText();
+        const expression = `${variable} = ${variable} - 1`;
+        this.context.emit(expression);
+        //console.log('To be implemented...');
+    }
+
+    // DEGREE
+    enterDegree(ctx) {
+        console.log('to be implemented');
+    }
+
+    // DIM
+    enterArrayDeclaration(ctx) {
+        for (let i = 0;i < ctx.arrayStructure().length;i++) {
+            const struct = ctx.arrayStructure(i);
+            const name = struct.IDENTIFIER(0)?.getText();
+
+            const fill = name.endsWith('$') ? '""' : '0';
+            const sizes = struct.expression().map((e) => this.expressions.translate(e));
+
+            const init = sizes.reduceRight(
+                (inner, size) => `Array.from({ length: (${size}) + 1 }, () => ${inner})`,
+                fill,
+            );
+
+            this.context.emit(`const ${name} = ${init};`);
+
+            /*const numberOfDimensions = struct.expression().length;
+            let dimension = this.expressions.translate(struct.expression(0));
+            this.context.emit(`const ${name} = Array(${dimension}).fill(0)`);
+      
+            for (let i = 1; i < numberOfDimensions; i++) {
+              let dimension = this.expressions.translate(struct.expression(i));
+              this.context.emit(`.map(x => Array(${dimension}).fill(0)`);
+            }
+            for (let i = 1; i < numberOfDimensions; i++) {
+              this.context.emit(')');
+            }
+      
+            this.context.emit(';');*/
+        }
+    }
+
+    // DRAW
+    enterDraw(ctx) {
+        const x1 = this.expressions.translate(ctx.expression(0));
+        const y1 = this.expressions.translate(ctx.expression(1));
+        const x2 = this.expressions.translate(ctx.expression(2));
+        const y2 = this.expressions.translate(ctx.expression(3));
+
+        this.context.emit(`
 {
 const drawX1 = ${x1};
 const drawY1 = ${y1};
@@ -284,14 +288,14 @@ document.getElementById('amos-screen').appendChild(lineDiv);
 graphicCursorX = drawX2;
 graphicCursorY = drawY2;
 }`);
-  }
+    }
 
-  // DRAW TO
-  enterDrawTo(ctx) {
-    const x = this.expressions.translate(ctx.expression(0));
-    const y = this.expressions.translate(ctx.expression(1));
+    // DRAW TO
+    enterDrawTo(ctx) {
+        const x = this.expressions.translate(ctx.expression(0));
+        const y = this.expressions.translate(ctx.expression(1));
 
-    this.context.emit(`
+        this.context.emit(`
 {
 const drawX1 = graphicCursorX;
 const drawY1 = graphicCursorY;
@@ -310,123 +314,123 @@ document.getElementById('amos-screen').appendChild(lineDiv);
 graphicCursorX = drawX2;
 graphicCursorY = drawY2;
 }`);
-  }
-
-  // ELLIPSE
-  enterEllipse(ctx) {
-    const x = ctx.centerX ? this.expressions.translate(ctx.centerX) : 'null';
-    const y = ctx.centerY ? this.expressions.translate(ctx.centerY) : 'null';
-    const radiusX = this.expressions.translate(ctx.radiusX);
-    const radiusY = this.expressions.translate(ctx.radiusY);
-
-    this.context.emit(`drawEllipse(${x}, ${y}, ${radiusX}, ${radiusY});`);
-  }
-
-  // INC
-  enterInc(ctx) {
-    const variable = ctx.IDENTIFIER().getText();
-    const expression = `${variable} = ${variable} + 1`;
-    this.context.emit(expression);
-    //console.log('To be implemented...');
-  }
-
-  // INK
-  enterInk(ctx) {
-    const colorIndexExp = this.expressions.translate(ctx.children[1]);
-
-    this.context.emit(`Ink = ${colorIndexExp};`);
-  }
-
-  // LOAD
-  enterLoadBank(ctx) {
-    const fileName = ctx.children[1]?.getText();
-    const bankId = ctx.children[3]?.getText();
-    if (!bankId) {
-      this.context.emit(`loadBank('${fileName}', 1);`);
-    } else {
-      this.context.emit(`loadBank('${fileName}', ${bankId});`);
     }
-  }
 
-  // OPEN IN
-  enterOpenIn(ctx) {
-    const channel = ctx.NUMBER().getText();
-    const fileName = ctx.IDENTIFIER().getText();
+    // ELLIPSE
+    enterEllipse(ctx) {
+        const x = ctx.centerX ? this.expressions.translate(ctx.centerX) : 'null';
+        const y = ctx.centerY ? this.expressions.translate(ctx.centerY) : 'null';
+        const radiusX = this.expressions.translate(ctx.radiusX);
+        const radiusY = this.expressions.translate(ctx.radiusY);
 
-    this.context.emit(`openFile('${fileName}', ${channel}, 'w');`);
-  }
+        this.context.emit(`drawEllipse(${x}, ${y}, ${radiusX}, ${radiusY});`);
+    }
 
-  // OPEN OUT
-  enterOpenOut(ctx) {
-    const channel = ctx.NUMBER().getText();
-    const fileName = ctx.IDENTIFIER().getText();
+    // INC
+    enterInc(ctx) {
+        const variable = ctx.IDENTIFIER().getText();
+        const expression = `${variable} = ${variable} + 1`;
+        this.context.emit(expression);
+        //console.log('To be implemented...');
+    }
 
-    this.context.emit(`openFile('${fileName}', ${channel}, 'r');`);
-  }
+    // INK
+    enterInk(ctx) {
+        const colorIndexExp = this.expressions.translate(ctx.children[1]);
 
-  // PALETTE
-  enterPalette(ctx) {
-    // Collect the hex colours ($RGB) of the Palette, separated by commas
-    const hexColors = [];
-    let currentHex = '';
+        this.context.emit(`Ink = ${colorIndexExp};`);
+    }
 
-    for (const child of ctx.children) {
-      const text = child.getText().trim();
-
-      if (text.toLowerCase() === 'palette') continue;
-      if (text === '$') {
-        currentHex = '$';
-      } else if (text === ',') {
-        if (currentHex.length > 1) {
-          hexColors.push(currentHex);
-          currentHex = '';
+    // LOAD
+    enterLoadBank(ctx) {
+        const fileName = ctx.children[1]?.getText();
+        const bankId = ctx.children[3]?.getText();
+        if (!bankId) {
+            this.context.emit(`loadBank('${fileName}', 1);`);
+        } else {
+            this.context.emit(`loadBank('${fileName}', ${bankId});`);
         }
-      } else {
-        currentHex += text;
-      }
     }
 
-    // The last colour has no trailing comma
-    if (currentHex.length > 1) {
-      hexColors.push(currentHex);
+    // OPEN IN
+    enterOpenIn(ctx) {
+        const channel = ctx.NUMBER().getText();
+        const fileName = ctx.IDENTIFIER().getText();
+
+        this.context.emit(`openFile('${fileName}', ${channel}, 'w');`);
     }
 
-    this.context.colorMapping = {};
-    hexColors.forEach((hex, index) => {
-      const hexValue = parseInt(hex.slice(1), 16); // without the '$'
+    // OPEN OUT
+    enterOpenOut(ctx) {
+        const channel = ctx.NUMBER().getText();
+        const fileName = ctx.IDENTIFIER().getText();
 
-      this.context.colorMapping[index] = amiga12BitToCssRgb(hexValue);
-    });
-    this.context.palette = `const colorMapping = ${JSON.stringify(this.context.colorMapping, null, 2)};`;
-  }
+        this.context.emit(`openFile('${fileName}', ${channel}, 'r');`);
+    }
 
-  // PAPER
-  enterPaper(ctx) {
-    const color = this.expressions.translate(ctx.children[1]);
-    this.context.emit(`Paper = ${color};`);
-  }
+    // PALETTE
+    enterPalette(ctx) {
+        // Collect the hex colours ($RGB) of the Palette, separated by commas
+        const hexColors = [];
+        let currentHex = '';
 
-  // PEN
-  enterPen(ctx) {
-    const colorIndexExp = this.expressions.translate(ctx.children[1]);
+        for (const child of ctx.children) {
+            const text = child.getText().trim();
 
-    this.context.emit(`Ink = ${colorIndexExp};`);
-  }
+            if (text.toLowerCase() === 'palette') continue;
+            if (text === '$') {
+                currentHex = '$';
+            } else if (text === ',') {
+                if (currentHex.length > 1) {
+                    hexColors.push(currentHex);
+                    currentHex = '';
+                }
+            } else {
+                currentHex += text;
+            }
+        }
 
-  // PLAY
-  enterPlaySound(ctx) {
-    const soundIndex = this.expressions.translate(ctx.expression());
-    const duration = ctx.NUMBER().getText();
+        // The last colour has no trailing comma
+        if (currentHex.length > 1) {
+            hexColors.push(currentHex);
+        }
 
-    this.context.emit(`soundPlayer(${soundIndex}, ${duration} * 1000);`);
-  }
+        this.context.colorMapping = {};
+        hexColors.forEach((hex, index) => {
+            const hexValue = parseInt(hex.slice(1), 16); // without the '$'
 
-  // PLOT
-  enterPlot(ctx) {
-    const x = this.expressions.translate(ctx.expression(0));
-    const y = this.expressions.translate(ctx.expression(1));
+            this.context.colorMapping[index] = amiga12BitToCssRgb(hexValue);
+        });
+        this.context.palette = `const colorMapping = ${JSON.stringify(this.context.colorMapping, null, 2)};`;
+    }
 
-    this.context.emit(`
+    // PAPER
+    enterPaper(ctx) {
+        const color = this.expressions.translate(ctx.children[1]);
+        this.context.emit(`Paper = ${color};`);
+    }
+
+    // PEN
+    enterPen(ctx) {
+        const colorIndexExp = this.expressions.translate(ctx.children[1]);
+
+        this.context.emit(`Ink = ${colorIndexExp};`);
+    }
+
+    // PLAY
+    enterPlaySound(ctx) {
+        const soundIndex = this.expressions.translate(ctx.expression());
+        const duration = ctx.NUMBER().getText();
+
+        this.context.emit(`soundPlayer(${soundIndex}, ${duration} * 1000);`);
+    }
+
+    // PLOT
+    enterPlot(ctx) {
+        const x = this.expressions.translate(ctx.expression(0));
+        const y = this.expressions.translate(ctx.expression(1));
+
+        this.context.emit(`
 {
 const plotDiv = document.createElement('div');
 plotDiv.style.position = 'absolute';
@@ -437,59 +441,59 @@ plotDiv.style.height = '1px';
 plotDiv.style.backgroundColor = getColour(Ink);
 document.getElementById('amos-screen').appendChild(plotDiv);
 }`);
-  }
-
-  // POLYGON
-  enterPolygon(ctx) {
-    console.log('to be implemented');
-  }
-
-  // POLYLINE
-  enterPolyline(ctx) {
-    console.log('to be implemented');
-  }
-
-  // PRINT (and PRINT #)
-  // PRINT # is a Structure, but it shares the printStatement rule with PRINT,
-  // so it is translated here.
-  enterPrintStatement(ctx) {
-    const firstOption = ctx.printItem(0);
-    if (firstOption.HASH()) {
-      // PRINT #: write to a file
-      const channel = firstOption.NUMBER().getText();
-      const content = this.expressions.translate(ctx.printItem(1)?.expression());
-      this.context.emit(`writeToChannel(${channel}, ${content});`);
-      return;
     }
-    for (let i = 0; i < ctx.printItem().length; i++) {
-      const expression = ctx.printItem(i)?.expression();
 
-      if (expression) {
-        const text = this.expressions.translate(expression);
-        this.context.emit(
-          `\n{\nlet printId='printDiv${i}_'+String(${text});\nlet printEl=document.getElementById(printId);\nwhile(printEl)printEl=document.getElementById(printId=printId+'_');\nprintEl=document.createElement('div');\nprintEl.id=printId;\nprintEl.style.position='relative';\nprintEl.style.left=printEl.style.top='50%';\nprintEl.style.fontSize='14px';\nprintEl.style.zIndex='999';\ndocument.getElementById('amos-screen').appendChild(printEl);\nprintEl.innerText=${text};\nprintEl.style.color=getColour(Ink);\n}`,
-        );
-      }
+    // POLYGON
+    enterPolygon(ctx) {
+        console.log('to be implemented');
     }
-  }
 
-  // RADIAN
-  enterRadian(ctx) {
-    console.log('to be implemented');
-  }
+    // POLYLINE
+    enterPolyline(ctx) {
+        console.log('to be implemented');
+    }
 
-  // RANDOMIZE
-  enterRandomize(ctx) {
-    console.log('to be implemented');
-  }
+    // PRINT (and PRINT #)
+    // PRINT # is a Structure, but it shares the printStatement rule with PRINT,
+    // so it is translated here.
+    enterPrintStatement(ctx) {
+        const firstOption = ctx.printItem(0);
+        if (firstOption.HASH()) {
+            // PRINT #: write to a file
+            const channel = firstOption.NUMBER().getText();
+            const content = this.expressions.translate(ctx.printItem(1)?.expression());
+            this.context.emit(`writeToChannel(${channel}, ${content});`);
+            return;
+        }
+        for (let i = 0;i < ctx.printItem().length;i++) {
+            const expression = ctx.printItem(i)?.expression();
 
-  // SCREEN OPEN
-  enterScreenOpen(ctx) {
-    const width = ctx.children[3]?.getText();
-    const height = ctx.children[5]?.getText();
-    const color = ctx.children[7]?.getText();
+            if (expression) {
+                const text = this.expressions.translate(expression);
+                this.context.emit(
+                    `\n{\nlet printId='printDiv${i}_'+String(${text});\nlet printEl=document.getElementById(printId);\nwhile(printEl)printEl=document.getElementById(printId=printId+'_');\nprintEl=document.createElement('div');\nprintEl.id=printId;\nprintEl.style.position='relative';\nprintEl.style.left=printEl.style.top='50%';\nprintEl.style.fontSize='14px';\nprintEl.style.zIndex='999';\ndocument.getElementById('amos-screen').appendChild(printEl);\nprintEl.innerText=${text};\nprintEl.style.color=getColour(Ink);\n}`,
+                );
+            }
+        }
+    }
 
-    this.context.emit(`
+    // RADIAN
+    enterRadian(ctx) {
+        console.log('to be implemented');
+    }
+
+    // RANDOMIZE
+    enterRandomize(ctx) {
+        console.log('to be implemented');
+    }
+
+    // SCREEN OPEN
+    enterScreenOpen(ctx) {
+        const width = ctx.children[3]?.getText();
+        const height = ctx.children[5]?.getText();
+        const color = ctx.children[7]?.getText();
+
+        this.context.emit(`
 const screenDiv = document.createElement('div');
 screenDiv.style.width = '${width}px';
 screenDiv.style.height = '${height}px';
@@ -501,35 +505,35 @@ screenDiv.id = 'amos-screen';
 screenDiv.style.zIndex = 1;
 document.getElementById('game-container').appendChild(screenDiv);
 document.getElementById('amos-screen').style.backgroundColor = 'black';`);
-  }
-
-  // SORT a(0) / a#(0) / a$(0)
-  enterSort(ctx) {
-    const struct = ctx.arrayStructure();
-    const name = struct.IDENTIFIER(0)?.getText();
-    const indexes = struct.expression();
-
-    if (indexes.length !== 1) {
-      throw new Error(`Line ${ctx.start.line}: SORT only supports one-dimensional arrays`);
     }
 
-    // AMOS requires the first element: index 0
-    if (Number(indexes[0].getText()) !== 0) {
-      throw new Error(`Line ${ctx.start.line}: SORT must start at index 0, e.g., Sort ${name}(0)`);
+    // SORT a(0) / a#(0) / a$(0)
+    enterSort(ctx) {
+        const struct = ctx.arrayStructure();
+        const name = struct.IDENTIFIER(0)?.getText();
+        const indexes = struct.expression();
+
+        if (indexes.length !== 1) {
+            throw new Error(`Line ${ctx.start.line}: SORT only supports one-dimensional arrays`);
+        }
+
+        // AMOS requires the first element: index 0
+        if (Number(indexes[0].getText()) !== 0) {
+            throw new Error(`Line ${ctx.start.line}: SORT must start at index 0, e.g., Sort ${name}(0)`);
+        }
+
+        const comparator = name.endsWith('$')
+            ? '(a, b) => (a < b ? -1: a > b ? 1 : 0)'
+            : '(a, b) => a - b';
+
+        this.context.emit(`${name}.sort(${comparator});`);
     }
 
-    const comparator = name.endsWith('$')
-      ? '(a, b) => (a < b ? -1: a > b ? 1 : 0)'
-      : '(a, b) => a - b';
-
-    this.context.emit(`${name}.sort(${comparator});`);
-  }
-
-  // SPRITE
-  enterSprite(ctx) {
-    const spriteExpression = ctx.expression();
-    if (!spriteExpression) {
-      this.context.emit(`
+    // SPRITE
+    enterSprite(ctx) {
+        const spriteExpression = ctx.expression();
+        if (!spriteExpression) {
+            this.context.emit(`
 {
     const screen = document.getElementById('amos-screen');
     if (screen) {
@@ -537,30 +541,30 @@ document.getElementById('amos-screen').style.backgroundColor = 'black';`);
         sprites.forEach(sprite => sprite.remove());
     }
 }`);
-      return;
+            return;
+        }
+
+        const spriteNumber = this.expressions.translate(spriteExpression);
+        const x = ctx.children[3]?.getText();
+        const y = ctx.children[5]?.getText();
+        const bankImgIndex = ctx.children[7]?.getText();
+        this.context.emit(`renderSprite(${spriteNumber}, ${x}, ${y}, ${bankImgIndex});`);
     }
 
-    const spriteNumber = this.expressions.translate(spriteExpression);
-    const x = ctx.children[3]?.getText();
-    const y = ctx.children[5]?.getText();
-    const bankImgIndex = ctx.children[7]?.getText();
-    this.context.emit(`renderSprite(${spriteNumber}, ${x}, ${y}, ${bankImgIndex});`);
-  }
+    // TEXT
+    enterText(ctx) {
+        const text = (ctx.STRING() || ctx.IDENTIFIER())?.getText();
 
-  // TEXT
-  enterText(ctx) {
-    const text = (ctx.STRING() || ctx.IDENTIFIER())?.getText();
+        const x = this.expressions.translate(ctx.expression(0));
+        const y = this.expressions.translate(ctx.expression(1));
 
-    const x = this.expressions.translate(ctx.expression(0));
-    const y = this.expressions.translate(ctx.expression(1));
+        const isNumeric = (str) => /^\d+$/.test(str);
+        const xValue = isNumeric(x) ? `'${x}px'` : `(${x}) + 'px'`;
+        const yValue = isNumeric(y) ? `'${y}px'` : `(${y}) + 'px'`;
 
-    const isNumeric = (str) => /^\d+$/.test(str);
-    const xValue = isNumeric(x) ? `'${x}px'` : `(${x}) + 'px'`;
-    const yValue = isNumeric(y) ? `'${y}px'` : `(${y}) + 'px'`;
+        const textId = `"textDiv_" + (${x}) + "_" + (${y})`;
 
-    const textId = `"textDiv_" + (${x}) + "_" + (${y})`;
-
-    this.context.emit(`
+        this.context.emit(`
 {
 const textId = ${textId};
 let textEl = document.getElementById(textId);
@@ -578,18 +582,18 @@ textEl.innerText = ${text};
 textEl.style.color = getColour(Ink);
 textEl.style.backgroundColor = getColour(Paper);
 }`);
-  }
+    }
 
-  // WAIT
-  enterWait(ctx) {
-    const waitTicks = ctx.NUMBER().getText();
-    const ms = parseInt(waitTicks) * 20; // AMOS = ~50fps
+    // WAIT
+    enterWait(ctx) {
+        const waitTicks = ctx.NUMBER().getText();
+        const ms = parseInt(waitTicks) * 20; // AMOS = ~50fps
 
-    this.context.emit(`await new Promise(r => setTimeout(r, ${ms}));`);
-  }
+        this.context.emit(`await new Promise(r => setTimeout(r, ${ms}));`);
+    }
 
-  // WAIT KEY
-  enterWaitKey(ctx) {
-    console.log('to be implemented');
-  }
+    // WAIT KEY
+    enterWaitKey(ctx) {
+        console.log('to be implemented');
+    }
 }

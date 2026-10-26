@@ -1,3 +1,5 @@
+import { cssRgbToHex } from '../../../utils/amiga-color.js';
+
 /**
  * AMOS commands of the category "Function", sorted A-Z by AMOS name.
  * Implemented methods return the JavaScript expression that replaces the function call.
@@ -34,8 +36,9 @@ export default class Functions {
 
   // COLOUR
   translateColourFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+	const index = this.expressions.translate(ctx.expression());
+	return `cssRgbToHex(getColour(${index}))`;
+	// return `getColour(${index})`;
   }
 
   // COS
