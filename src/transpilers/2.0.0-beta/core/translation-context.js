@@ -50,7 +50,6 @@ export default class TranslationContext {
     // Translation state
     this.scopes = [{}]; // [main program, Procedure being translated]
     this.currentLoop = 0;
-    this.spritesPositions = new Map();
     this.globalVariablesSet = new Set(); // names listed in a `Global` statement
     this.hasDataMatrix = false;
     this.usedExtensions = new Set();
@@ -88,18 +87,6 @@ export default class TranslationContext {
 
   decrementCurrentLoop() {
     this.currentLoop--;
-  }
-
-  getXSpritePosition(spriteNumber) {
-    return this.spritesPositions.get(spriteNumber)?.[0] ?? 0;
-  }
-
-  getYSpritePosition(spriteNumber) {
-    return this.spritesPositions.get(spriteNumber)?.[1] ?? 0;
-  }
-
-  updateSpritePosition(spriteNumber, x, y) {
-    this.spritesPositions.set(spriteNumber, [x,y]);
   }
 
   isVariableDeclared(name) {

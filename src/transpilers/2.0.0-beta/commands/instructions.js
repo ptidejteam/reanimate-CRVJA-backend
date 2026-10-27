@@ -544,7 +544,6 @@ document.getElementById('amos-screen').style.backgroundColor = 'black';`);
     const x = ctx.children[3]?.getText();
     const y = ctx.children[5]?.getText();
     const bankImgIndex = ctx.children[7]?.getText();
-    this.context.updateSpritePosition(spriteNumber, x, y);
     this.context.emit(`renderSprite(${spriteNumber}, ${x}, ${y}, ${bankImgIndex});`);
   }
 

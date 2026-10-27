@@ -158,12 +158,12 @@ export default class Functions {
   // X SPRITE
   translateXSpriteFunction(ctx) {
     const spriteNumber = this.expressions.translate(ctx.expression());
-    return this.context.getXSpritePosition(spriteNumber);
+    return `getXSpritePosition(${spriteNumber})`;
   }
 
   // Y SPRITE
   translateYSpriteFunction(ctx) {
     const spriteNumber = this.expressions.translate(ctx.expression());
-    return this.context.getYSpritePosition(spriteNumber);
+    return `getYSpritePosition(${spriteNumber})`;
   }
 }

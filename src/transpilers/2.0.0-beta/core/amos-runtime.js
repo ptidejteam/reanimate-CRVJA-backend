@@ -646,8 +646,18 @@ function loadBank(bankName, bank) {
 }
 
 let tries = 0;
+const spritePositions = new Map();
 
-function renderSprite(spriteNumber, x, y, bankImgIndex) {
+function getXSpritePosition(spriteNumber) {
+  return spritePositions.get(spriteNumber)?.[0] ?? 0;
+}
+
+function getYSpritePosition(spriteNumber) {
+  return spritePositions.get(spriteNumber)?.[1] ?? 0;
+}
+
+function renderSprite(spriteNumber, x, y, bankImgIndex, position = [x, y]) {
+  spritePositions.set(spriteNumber, position);
   if (tries > 40) {
     console.error('Bank not found or could not be loaded');
     // TODO: force reload
@@ -657,7 +667,10 @@ function renderSprite(spriteNumber, x, y, bankImgIndex) {
   if (!bankData[1].sprites[bankImgIndex]) {
     tries++;
     setTimeout(() => {
-      renderSprite(spriteNumber, x, y, bankImgIndex);
+      // A newer SPRITE command supersedes this pending bank-load retry.
+      if (spritePositions.get(spriteNumber) === position) {
+        renderSprite(spriteNumber, x, y, bankImgIndex, position);
+      }
     }, 200);
 
     return;
