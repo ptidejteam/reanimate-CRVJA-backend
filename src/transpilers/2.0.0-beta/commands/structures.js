@@ -196,7 +196,18 @@ export default class Structures {
   }
 
   // ON ... PROC
-  enterOnProc = (ctx) => this.context.emit(`switch(${ctx.IDENTIFIER(0)}){${ctx.IDENTIFIER().slice(1).map((elt, idx) => `case ${idx+1}:${elt}();break;`).join('')}}`);
+  enterOnProc(ctx) {
+    const selector = ctx.IDENTIFIER(0).getText();
+    const procedures = ctx.IDENTIFIER().slice(1);
+
+    this.context.declareVariable(selector);
+    this.context.emit(`switch (${selector}) {`);
+    for (let index = 0; index < procedures.length; index++) {
+      const procedure = procedures[index].getText();
+      this.context.emit(`case ${index + 1}: ${procedure}(); break;`);
+    }
+    this.context.emit('}');
+  }
 
   // POP PROC
   enterPopProc(ctx) {
