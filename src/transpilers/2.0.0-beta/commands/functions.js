@@ -52,7 +52,8 @@ export default class Functions {
 
   // FLIP$
   translateFlipFunction(ctx) {
-    console.log('to be implemented');
+    const value = this.expressions.translate(ctx.expression());
+    return `(${value}).split('').reverse().join('')`;
   }
 
   // HCOS
@@ -93,7 +94,8 @@ export default class Functions {
 
   // LOWER$
   translateLowerFunction(ctx) {
-    console.log('to be implemented');
+    const value = this.expressions.translate(ctx.expression());
+    return `(${value}).toLowerCase()`;
   }
 
   // MAX
@@ -152,7 +154,8 @@ export default class Functions {
 
   // UPPER$
   translateUpperFunction(ctx) {
-    console.log('to be implemented');
+    const value = this.expressions.translate(ctx.expression());
+    return `(${value}).toUpperCase()`;
   }
 
   // X SPRITE
