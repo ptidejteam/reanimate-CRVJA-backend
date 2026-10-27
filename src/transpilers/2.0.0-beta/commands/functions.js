@@ -34,8 +34,8 @@ export default class Functions {
 
   // COLOUR
   translateColourFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const index = this.expressions.translate(ctx.expression());
+    return `cssRgbToAmiga12Bit(getColour(${index}))`;
   }
 
   // COS

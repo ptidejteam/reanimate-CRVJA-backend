@@ -15,8 +15,9 @@ async function translate(code) {
 }
 
 async function runAmos(code, ...names) {
-  const { lexicalErrors, syntaxErrors, translatedCode } =
-    await new AMOSTranspiler().transpile(code);
+  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
+    code,
+  );
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
@@ -24,7 +25,9 @@ async function runAmos(code, ...names) {
   // Minimal stand-in for the browser APIs
   const fakeDocument = {
     addEventListener() {},
-    getElementById() { return null; },
+    getElementById() {
+      return null;
+    },
   };
 
   return new Function('document', `${translatedCode}\nreturn { ${names.join(', ')} };`)(
@@ -59,7 +62,7 @@ test('2D arrays creation, update and global reference', async () => {
   const normalizedJS = await translate(amosBasicCode);
 
   expect(normalizedJS).toContain(
-    'const S = Array.from({ length: 2 + 1 }, () => Array.from({ length: 2 + 1 }, () => 0), );'
+    'const S = Array.from({ length: 2 + 1 }, () => Array.from({ length: 2 + 1 }, () => 0), );',
   );
   expect(normalizedJS).toContain('S[Math.trunc(1)][Math.trunc(0)] = 20;');
 });
@@ -76,5 +79,9 @@ test('DIM fills string arrays with empty strings', async () => {
 
 test('DIM creates independent rows in 2D arrays', async () => {
   const { A } = await runAmos(`Dim A(2,1)\nA(0,1) = 5`, 'A');
-  expect(A).toEqual([[0, 5], [0, 0], [0, 0]]);
+  expect(A).toEqual([
+    [0, 5],
+    [0, 0],
+    [0, 0],
+  ]);
 });

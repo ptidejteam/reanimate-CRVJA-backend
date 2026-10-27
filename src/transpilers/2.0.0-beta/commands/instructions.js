@@ -195,7 +195,9 @@ if (amosScreen) {
 
   // COLOUR
   enterColour(ctx) {
-    console.log('To be implemented...');
+    const index = this.expressions.translate(ctx.expression(0));
+    const value = this.expressions.translate(ctx.expression(1));
+    this.context.emit(`colorMapping[${index}] = amiga12BitToCssRgb(${value});`);
   }
 
   // COLOUR BACK
