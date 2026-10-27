@@ -1,36 +1,19 @@
 import AMOSTranspiler from '../amos-transpiler.js';
 
 async function translate(code) {
-  const {
-    lexicalErrors: lexicalErrors,
-    syntaxErrors: syntaxErrors,
-    translatedCode: translatedCode,
-  } = await new AMOSTranspiler().transpile(code);
+  const { lexicalErrors, syntaxErrors, translatedCode } =
+    await new AMOSTranspiler().transpile(code);
 
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
 
-  const normalizedJS = translatedCode.replace(/\s+/g, ' ').trim();
-  return normalizedJS;
+  return translatedCode.replace(/\s+/g, ' ').trim();
 }
 
-test('Text', async () => {
-  const amosBasicCode = `
-        Wait Key
-    `;
+test('Wait Key adds a one-time keydown listener', async () => {
+  const normalizedJS = await translate('Wait Key');
 
-  const normalizedJS = await translate(amosBasicCode);
-
-  const expectedJsCode = `await new Promise((r) =>
-  (s = document).addEventListener(
-    (t = 'keydown'),
-    (u = () => {
-      s.removeEventListener(t, u);
-      r();
-    }),
-  ),
-);`;
-
-  const normalizedExpectedJsCode = expectedJsCode.replace(/\s+/g, ' ').trim();
-  expect(normalizedJS).toContain(normalizedExpectedJsCode);
+  expect(normalizedJS).toContain(
+    "await new Promise((resolve) => { document.addEventListener('keydown', resolve, { once: true }); });",
+  );
 });

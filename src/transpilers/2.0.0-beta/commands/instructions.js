@@ -589,5 +589,11 @@ textEl.style.backgroundColor = getColour(Paper);
   }
 
   // WAIT KEY
-  enterWaitKey(_) {this.context.emit(`await new Promise(r=>(s=document).addEventListener(t='keydown',u=()=>{s.removeEventListener(t,u);r()}))`);}
+  enterWaitKey() {
+    this.context.emit(`
+await new Promise((resolve) => {
+  document.addEventListener('keydown', resolve, { once: true });
+});
+`);
+  }
 }
