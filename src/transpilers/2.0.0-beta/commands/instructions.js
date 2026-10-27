@@ -480,7 +480,8 @@ document.getElementById('amos-screen').appendChild(plotDiv);
 
   // RANDOMIZE
   enterRandomize(ctx) {
-    console.log('to be implemented');
+    const seed = this.expressions.translate(ctx.expression());
+    this.context.emit(`Randomize(${seed});`);
   }
 
   // SCREEN OPEN
@@ -589,7 +590,11 @@ textEl.style.backgroundColor = getColour(Paper);
   }
 
   // WAIT KEY
-  enterWaitKey(ctx) {
-    console.log('to be implemented');
+  enterWaitKey() {
+    this.context.emit(`
+await new Promise((resolve) => {
+  document.addEventListener('keydown', resolve, { once: true });
+});
+`);
   }
 }
