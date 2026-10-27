@@ -51,7 +51,10 @@ export default class Functions {
   }
 
   // FLIP$
-  translateFlipFunction = (ctx) => `${ctx.expression()}.split('').reverse().join('')`;
+  translateFlipFunction(ctx) {
+    const value = this.expressions.translate(ctx.expression());
+    return `(${value}).split('').reverse().join('')`;
+  }
 
   // HCOS
   translateHcosFunction(ctx) {
@@ -90,7 +93,10 @@ export default class Functions {
   }
 
   // LOWER$
-  translateLowerFunction = (ctx) => `${ctx.expression()}.toLowerCase()`;
+  translateLowerFunction(ctx) {
+    const value = this.expressions.translate(ctx.expression());
+    return `(${value}).toLowerCase()`;
+  }
 
   // MAX
   translateMaxFunction(ctx) {
@@ -147,7 +153,10 @@ export default class Functions {
   }
 
   // UPPER$
-  translateUpperFunction = (ctx) => `${ctx.expression()}.toUpperCase()`;
+  translateUpperFunction(ctx) {
+    const value = this.expressions.translate(ctx.expression());
+    return `(${value}).toUpperCase()`;
+  }
 
   // X SPRITE
   translateXSpriteFunction(ctx) {
