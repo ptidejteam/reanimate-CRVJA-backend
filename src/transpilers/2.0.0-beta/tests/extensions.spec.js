@@ -350,7 +350,10 @@ test.each(['\n', '\r\n', '\r'])(
     expect(result.lexicalErrors.errors[0]).toMatchObject({ line: 2, column: 6 });
     expect(result.translatedCode).toBe('');
     const failed = await new AMOSTranspiler().transpile(`score=1${newline}  ${command} @`);
-    expect(failed.lexicalErrors.errors[0]).toMatchObject({ line: 2, column: command.length + 3 });
+    expect(failed.lexicalErrors.errors[0]).toMatchObject({
+      line: 2,
+      column: command.length + 3,
+    });
     expect(failed.translatedCode).toBe('');
   },
 );

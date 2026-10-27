@@ -197,7 +197,16 @@ export default class Structures {
 
   // ON ... PROC
   enterOnProc(ctx) {
-    console.log('To be implemented');
+    const selector = ctx.IDENTIFIER(0).getText();
+    const procedures = ctx.IDENTIFIER().slice(1);
+
+    this.context.declareVariable(selector);
+    this.context.emit(`switch (${selector}) {`);
+    for (let index = 0; index < procedures.length; index++) {
+      const procedure = procedures[index].getText();
+      this.context.emit(`case ${index + 1}: ${procedure}(); break;`);
+    }
+    this.context.emit('}');
   }
 
   // POP PROC

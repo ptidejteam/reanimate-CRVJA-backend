@@ -1,5 +1,3 @@
-import { cssRgbToHex } from '../../../utils/amiga-color.js';
-
 /**
  * AMOS commands of the category "Function", sorted A-Z by AMOS name.
  * Implemented methods return the JavaScript expression that replaces the function call.
@@ -36,9 +34,8 @@ export default class Functions {
 
   // COLOUR
   translateColourFunction(ctx) {
-	const index = this.expressions.translate(ctx.expression());
-	return `cssRgbToHex(getColour(${index}))`;
-	// return `getColour(${index})`;
+    const index = this.expressions.translate(ctx.expression());
+    return `cssRgbToAmiga12Bit(getColour(${index}))`;
   }
 
   // COS
@@ -55,7 +52,8 @@ export default class Functions {
 
   // FLIP$
   translateFlipFunction(ctx) {
-    console.log('to be implemented');
+    const value = this.expressions.translate(ctx.expression());
+    return `(${value}).split('').reverse().join('')`;
   }
 
   // HCOS
@@ -96,7 +94,8 @@ export default class Functions {
 
   // LOWER$
   translateLowerFunction(ctx) {
-    console.log('to be implemented');
+    const value = this.expressions.translate(ctx.expression());
+    return `(${value}).toLowerCase()`;
   }
 
   // MAX
@@ -155,16 +154,19 @@ export default class Functions {
 
   // UPPER$
   translateUpperFunction(ctx) {
-    console.log('to be implemented');
+    const value = this.expressions.translate(ctx.expression());
+    return `(${value}).toUpperCase()`;
   }
 
   // X SPRITE
   translateXSpriteFunction(ctx) {
-    console.log('to be implemented');
+    const spriteNumber = this.expressions.translate(ctx.expression());
+    return `getXSpritePosition(${spriteNumber})`;
   }
 
   // Y SPRITE
   translateYSpriteFunction(ctx) {
-    console.log('to be implemented');
+    const spriteNumber = this.expressions.translate(ctx.expression());
+    return `getYSpritePosition(${spriteNumber})`;
   }
 }

@@ -2,9 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import {
+  amiga12BitToCssRgb,
   amiga12BitToHex,
   amiga12BitToRgb,
-  cssRgbToHex,
+  cssRgbToAmiga12Bit,
   validateAmigaColor,
 } from '../../../utils/amiga-color.js';
 
@@ -42,7 +43,13 @@ export default class TranslationContext {
     this.palette = `const colorMapping = ${JSON.stringify(this.colorMapping, null, 2)};\n`;
     this.globalVariables = '';
     this.functionDeclarationSupport = '';
-    const colorRuntime = [validateAmigaColor, cssRgbToHex, amiga12BitToRgb, amiga12BitToHex]
+    const colorRuntime = [
+      validateAmigaColor,
+      cssRgbToAmiga12Bit,
+      amiga12BitToRgb,
+      amiga12BitToCssRgb,
+      amiga12BitToHex,
+    ]
       .map((helper) => helper.toString())
       .join('\n');
     this.preamble = `\n${colorRuntime}\n${runtimeScript}\n`;
