@@ -65,6 +65,9 @@ export default class ExpressionTranslator {
     const expression = ctx.expression();
     if (expression) return `(${this.translate(expression)})`;
 
+    const hex = ctx.HEX_NUMBER();
+    if (hex) return String(parseInt(hex.getText().slice(1), 16));
+
     // Arrays, function calls and literal terminals all use the same entry point.
     return this.translate(ctx.getChild(0));
   }

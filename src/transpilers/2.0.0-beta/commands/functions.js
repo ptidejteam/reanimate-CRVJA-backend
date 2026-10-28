@@ -37,8 +37,8 @@ export default class Functions {
 
   // COLOUR
   translateColourFunction(ctx) {
-    console.log('To be implemented...');
-    return `0`;
+    const index = this.expressions.translate(ctx.expression());
+    return `cssRgbToAmiga12Bit(getColour(${index}))`;
   }
 
   // COS
@@ -56,7 +56,8 @@ export default class Functions {
 
   // FLIP$
   translateFlipFunction(ctx) {
-    console.log('to be implemented');
+    const value = this.expressions.translate(ctx.expression());
+    return `(${value}).split('').reverse().join('')`;
   }
 
   // HCOS
@@ -97,7 +98,8 @@ export default class Functions {
 
   // LOWER$
   translateLowerFunction(ctx) {
-    console.log('to be implemented');
+    const value = this.expressions.translate(ctx.expression());
+    return `(${value}).toLowerCase()`;
   }
 
   // MAX
@@ -157,17 +159,20 @@ export default class Functions {
 
   // UPPER$
   translateUpperFunction(ctx) {
-    console.log('to be implemented');
+    const value = this.expressions.translate(ctx.expression());
+    return `(${value}).toUpperCase()`;
   }
 
   // X SPRITE
   translateXSpriteFunction(ctx) {
-    console.log('to be implemented');
+    const spriteNumber = this.expressions.translate(ctx.expression());
+    return `getXSpritePosition(${spriteNumber})`;
   }
 
   // Y SPRITE
   translateYSpriteFunction(ctx) {
-    console.log('to be implemented');
+    const spriteNumber = this.expressions.translate(ctx.expression());
+    return `getYSpritePosition(${spriteNumber})`;
   }
   toRadians(angle) {
     return this.context.degreeMode ? `(${angle}) * Math.PI / 180` : angle;

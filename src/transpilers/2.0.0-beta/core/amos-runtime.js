@@ -493,6 +493,19 @@ function Rnd(maxValue) {
   return Math.floor(Math.random() * maxValue);
 }
 
+// Author: Ali Maher
+// since javascript's Math.random() is not seedable,
+// we implement our own deterministic random number generator
+// this is the Mulberry32 algorithm.
+function Randomize(seed) {
+  Math.random = () => {
+    var t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 let bankData = {
   1: {
     sprites: [],
@@ -646,8 +659,18 @@ function loadBank(bankName, bank) {
 }
 
 let tries = 0;
+const spritePositions = new Map();
 
-function renderSprite(spriteNumber, x, y, bankImgIndex) {
+function getXSpritePosition(spriteNumber) {
+  return spritePositions.get(spriteNumber)?.[0] ?? 0;
+}
+
+function getYSpritePosition(spriteNumber) {
+  return spritePositions.get(spriteNumber)?.[1] ?? 0;
+}
+
+function renderSprite(spriteNumber, x, y, bankImgIndex, position = [x, y]) {
+  spritePositions.set(spriteNumber, position);
   if (tries > 40) {
     console.error('Bank not found or could not be loaded');
     // TODO: force reload
@@ -657,7 +680,10 @@ function renderSprite(spriteNumber, x, y, bankImgIndex) {
   if (!bankData[1].sprites[bankImgIndex]) {
     tries++;
     setTimeout(() => {
-      renderSprite(spriteNumber, x, y, bankImgIndex);
+      // A newer SPRITE command supersedes this pending bank-load retry.
+      if (spritePositions.get(spriteNumber) === position) {
+        renderSprite(spriteNumber, x, y, bankImgIndex, position);
+      }
     }, 200);
 
     return;

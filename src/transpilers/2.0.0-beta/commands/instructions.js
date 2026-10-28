@@ -195,7 +195,9 @@ if (amosScreen) {
 
   // COLOUR
   enterColour(ctx) {
-    console.log('To be implemented...');
+    const index = this.expressions.translate(ctx.expression(0));
+    const value = this.expressions.translate(ctx.expression(1));
+    this.context.emit(`colorMapping[${index}] = amiga12BitToCssRgb(${value});`);
   }
 
   // COLOUR BACK
@@ -480,7 +482,8 @@ document.getElementById('amos-screen').appendChild(plotDiv);
 
   // RANDOMIZE
   enterRandomize(ctx) {
-    console.log('to be implemented');
+    const seed = this.expressions.translate(ctx.expression());
+    this.context.emit(`Randomize(${seed});`);
   }
 
   // SCREEN OPEN
@@ -589,7 +592,11 @@ textEl.style.backgroundColor = getColour(Paper);
   }
 
   // WAIT KEY
-  enterWaitKey(ctx) {
-    console.log('to be implemented');
+  enterWaitKey() {
+    this.context.emit(`
+await new Promise((resolve) => {
+  document.addEventListener('keydown', resolve, { once: true });
+});
+`);
   }
 }

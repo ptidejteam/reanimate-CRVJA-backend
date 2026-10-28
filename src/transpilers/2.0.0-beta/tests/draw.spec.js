@@ -1,6 +1,5 @@
 import AMOSTranspiler from '../amos-transpiler.js';
 
-
 test('draw translation', async () => {
   const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
     'Draw 50,50 To 250,150',
