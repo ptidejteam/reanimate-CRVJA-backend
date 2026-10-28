@@ -225,7 +225,7 @@ if (amosScreen) {
 
   // DEGREE
   enterDegree(ctx) {
-    console.log('to be implemented');
+        this.context.degreeMode =true;
   }
 
   // DIM
@@ -477,7 +477,7 @@ document.getElementById('amos-screen').appendChild(plotDiv);
 
   // RADIAN
   enterRadian(ctx) {
-    console.log('to be implemented');
+    this.context.degreeMode =false;
   }
 
   // RANDOMIZE

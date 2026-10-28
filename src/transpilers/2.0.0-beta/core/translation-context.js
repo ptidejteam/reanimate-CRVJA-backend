@@ -60,6 +60,7 @@ export default class TranslationContext {
     this.currentLoop = 0;
     this.globalVariablesSet = new Set(); // names listed in a `Global` statement
     this.hasDataMatrix = false;
+    this.degreeMode = false; // set by Degree: angles are in degrees
     this.usedExtensions = new Set();
   }
 
