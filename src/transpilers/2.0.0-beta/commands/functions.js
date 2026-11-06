@@ -17,19 +17,22 @@ export default class Functions {
   // ACOS
   translateAcosFunction(ctx) {
     const value = this.expressions.translate(ctx.expression());
-    return `Math.acos(${value})`;
+    //return `Math.acos(${value})`;
+    return this.fromRadians(`Math.acos(${value})`);
   }
 
   // ASIN
   translateAsinFunction(ctx) {
     const value = this.expressions.translate(ctx.expression());
-    return `Math.asin(${value})`;
+    //return `Math.asin(${value})`;
+    return this.fromRadians(`Math.asin(${value})`);
   }
 
   // ATAN
   translateAtanFunction(ctx) {
     const value = this.expressions.translate(ctx.expression());
-    return `Math.atan(${value})`;
+    //return `Math.atan(${value})`;
+    return this.fromRadians(`Math.atan(${value})`);
   }
 
   // COLOUR
@@ -41,7 +44,8 @@ export default class Functions {
   // COS
   translateCosFunction(ctx) {
     const angle = this.expressions.translate(ctx.expression());
-    return `Math.cos(${angle})`;
+   // return `Math.cos(${angle})`;
+   return `Math.cos(${this.toRadians(angle)})`;
   }
 
   // EXP
@@ -128,7 +132,8 @@ export default class Functions {
   // SIN
   translateSinFunction(ctx) {
     const angle = this.expressions.translate(ctx.expression());
-    return `Math.sin(${angle})`;
+    //return `Math.sin(${angle})`;
+    return `Math.sin(${this.toRadians(angle)})`;
   }
 
   // SPRITE COL
@@ -168,5 +173,12 @@ export default class Functions {
   translateYSpriteFunction(ctx) {
     const spriteNumber = this.expressions.translate(ctx.expression());
     return `getYSpritePosition(${spriteNumber})`;
+  }
+  toRadians(angle) {
+    return this.context.degreeMode ? `(${angle}) * Math.PI / 180` : angle;
+  }
+
+  fromRadians(angle) {
+    return this.context.degreeMode ? `(${angle} * 180 / Math.PI)` : angle;
   }
 }
