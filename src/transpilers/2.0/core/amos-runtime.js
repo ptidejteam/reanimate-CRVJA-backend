@@ -716,12 +716,13 @@ function spriteCol(spriteNumber, first = 0, last = 63) {
 
 function renderSprite(spriteNumber, x, y, bankImgIndex, position = [x, y]) {
   spritePositions.set(spriteNumber, position);
-  if (tries > 40) {
-    console.error('Bank not found or could not be loaded');
-    // TODO: force reload
-    location.reload();
-    return;
-  }
+  // TODO: Investigate the TRIES
+  // if (tries > 40) {
+  //   console.error('Bank not found or could not be loaded');
+  //   // TODO: force reload
+  //   location.reload();
+  //   return;
+  // }
   if (!bankData[1].sprites[bankImgIndex]) {
     tries++;
     setTimeout(() => {
