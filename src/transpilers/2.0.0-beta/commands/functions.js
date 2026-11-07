@@ -138,7 +138,8 @@ export default class Functions {
 
   // SPRITE COL
   translateSpriteColFunction(ctx) {
-    console.log('to be implemented');
+    const args = ctx.expression().map((expression) => this.expressions.translate(expression));
+    return `spriteCol(${args.join(', ')})`;
   }
 
   // SQR

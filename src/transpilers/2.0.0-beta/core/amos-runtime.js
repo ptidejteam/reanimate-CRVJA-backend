@@ -669,6 +669,40 @@ function getYSpritePosition(spriteNumber) {
   return spritePositions.get(spriteNumber)?.[1] ?? 0;
 }
 
+// Canvas alpha supplies the collision mask without requiring MAKE MASK.
+function spriteCol(spriteNumber, first = 0, last = 63) {
+  const screen = document.getElementById('amos-screen');
+  const source = document.getElementById('sprite' + spriteNumber);
+  if (!screen || !source || source.parentElement !== screen || first > last) return 0;
+
+  // Use local pixel coordinates, independent of page offsets and browser scaling.
+  const sourceX = Math.trunc(parseFloat(source.style.left));
+  const sourceY = Math.trunc(parseFloat(source.style.top));
+  for (const target of screen.querySelectorAll('canvas[id^="sprite"]')) {
+    const targetNumber = Number(target.id.slice(6));
+    if (target === source || targetNumber < first || targetNumber > last) continue;
+
+    const targetX = Math.trunc(parseFloat(target.style.left));
+    const targetY = Math.trunc(parseFloat(target.style.top));
+    const left = Math.max(sourceX, targetX);
+    const top = Math.max(sourceY, targetY);
+    const width = Math.min(sourceX + source.width, targetX + target.width) - left;
+    const height = Math.min(sourceY + source.height, targetY + target.height) - top;
+    if (width <= 0 || height <= 0) continue;
+
+    const sourcePixels = source
+      .getContext('2d')
+      .getImageData(left - sourceX, top - sourceY, width, height).data;
+    const targetPixels = target
+      .getContext('2d')
+      .getImageData(left - targetX, top - targetY, width, height).data;
+    for (let alpha = 3; alpha < sourcePixels.length; alpha += 4) {
+      if (sourcePixels[alpha] !== 0 && targetPixels[alpha] !== 0) return -1;
+    }
+  }
+  return 0;
+}
+
 function renderSprite(spriteNumber, x, y, bankImgIndex, position = [x, y]) {
   spritePositions.set(spriteNumber, position);
   if (tries > 40) {
