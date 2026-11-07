@@ -299,11 +299,11 @@ ${localDeclarations}`);
 
   // REPEAT ... UNTIL
   enterRepeatUntil(ctx) {
-    this.context.emit('setInterval(() => { currentTimer = Date.now(); Timer++;');
+    this.context.emit('setInterval(() => {');
   }
 
   exitRepeatUntil(ctx) {
-    this.context.emit('Timer = 9; }, 16);');
+    this.context.emit('}, 16);');
   }
 
   // RESTORE
@@ -378,16 +378,18 @@ ${localDeclarations}`);
     let value = this.expressions.translate(ctx.children[2]);
 
     let lineNumber = ctx.start.line;
-    if (name !== 'Timer') {
-      if (value > 2147483647) {
-        throw new Error(
-          `ERROR: Amos code line ${lineNumber}: Value for variable "${name}" exceeds the allowed limit of 2,147,483,647.`,
-        );
-      }
-
-      this.context.declareVariable(name);
-      this.context.emit(`${name} = ${value};`);
+    if (name === 'Timer') {
+      this.context.emit(`setTimer(${value});`);
+      return;
     }
+    if (value > 2147483647) {
+      throw new Error(
+        `ERROR: Amos code line ${lineNumber}: Value for variable "${name}" exceeds the allowed limit of 2,147,483,647.`,
+      );
+    }
+
+    this.context.declareVariable(name);
+    this.context.emit(`${name} = ${value};`);
   }
 
   // Condition of IF ... END IF, or a `condition` node (ELSE IF, EXIT IF, THEN):

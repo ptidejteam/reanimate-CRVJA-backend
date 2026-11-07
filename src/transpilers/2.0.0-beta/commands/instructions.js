@@ -544,15 +544,15 @@ document.getElementById('amos-screen').style.backgroundColor = 'black';`);
     }
 
     const spriteNumber = this.expressions.translate(spriteExpression);
-    const x = ctx.children[3]?.getText();
-    const y = ctx.children[5]?.getText();
-    const bankImgIndex = ctx.children[7]?.getText();
+    const x = this.expressions.translate(ctx.children[3]);
+    const y = this.expressions.translate(ctx.children[5]);
+    const bankImgIndex = this.expressions.translate(ctx.children[7]);
     this.context.emit(`renderSprite(${spriteNumber}, ${x}, ${y}, ${bankImgIndex});`);
   }
 
   // TEXT
   enterText(ctx) {
-    const text = (ctx.STRING() || ctx.IDENTIFIER())?.getText();
+    const text = this.expressions.translate(ctx.STRING() || ctx.IDENTIFIER());
 
     const x = this.expressions.translate(ctx.expression(0));
     const y = this.expressions.translate(ctx.expression(1));

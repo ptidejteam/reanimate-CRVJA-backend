@@ -243,14 +243,25 @@ const keyMapping = {
 };
 
 let dataMatrixPointer = 0;
-let currentTimer = Date.now();
+let timerStartedAt = Date.now();
+let timerOffset = 0;
 let Ink = 1;
 let graphicCursorX = 0;
 let graphicCursorY = 0;
 let Paper = 0;
-let Timer = 0;
 let currentPressedKey = null;
 let isPressed = false;
+
+// TIMER counts elapsed time in 50ths of a second, independently of game frames.
+function getTimer() {
+  return timerOffset + Math.floor((Date.now() - timerStartedAt) / 20);
+}
+
+function setTimer(value) {
+  timerOffset = Math.trunc(value);
+  timerStartedAt = Date.now();
+}
+
 const keyCodes = () => {
   document.addEventListener('keydown', function (e) {
     isPressed = true;

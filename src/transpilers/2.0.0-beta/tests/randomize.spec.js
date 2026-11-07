@@ -2,7 +2,7 @@ import AMOSTranspiler from '../amos-transpiler.js';
 
 test.each([
   ['a number', 'Randomize 42', 'Randomize(42);'],
-  ['Timer', 'Randomize Timer', 'Randomize(Timer);'],
+  ['Timer', 'Randomize Timer', 'Randomize(getTimer());'],
   ['a variable', 'Randomize A', 'Randomize(A);'],
   ['an expression', 'Randomize A + 1', 'Randomize(A + 1);'],
 ])('randomize translation with %s', async (_name, source, expected) => {

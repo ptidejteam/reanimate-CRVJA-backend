@@ -154,11 +154,11 @@ test('unifies DEF FN names, parameters, and calls', async () => {
   expect(await run(`Def Fn Twice(arg)=ARG*2\nresult=Fn tWiCe(3)`, 'RESULT')).toBe(6);
 });
 
-test('keeps every capitalization of Timer bound to the existing runtime variable', async () => {
-  expect(await run('timer=5\nresult=TIMER+Timer+tImEr', 'RESULT')).toBe(0);
+test('keeps every capitalization of Timer bound to the same runtime clock', async () => {
+  expect(await run('timer=5\nresult=TIMER+Timer+tImEr', 'RESULT')).toBe(15);
   const code = await translate('result=timer');
-  expect(code).toContain('RESULT = Timer;');
-  expect(code.match(/let Timer = 0;/g)).toHaveLength(1);
+  expect(code).toContain('RESULT = getTimer();');
+  expect(code).not.toContain('let Timer');
 });
 
 test('preserves label definitions and jump targets separately from variable names', () => {

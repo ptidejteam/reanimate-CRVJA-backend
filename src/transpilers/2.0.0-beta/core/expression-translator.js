@@ -8,7 +8,10 @@ export default class ExpressionTranslator {
   translate(node) {
     if (!node) return '';
     if (Array.isArray(node)) return node.map((child) => this.translate(child));
-    if (node.symbol) return node.getText();
+    if (node.symbol) {
+      const text = node.getText();
+      return text === 'Timer' ? 'getTimer()' : text;
+    }
 
     const rule = getRuleName(node);
     switch (rule) {

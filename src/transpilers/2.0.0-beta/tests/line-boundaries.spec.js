@@ -124,7 +124,7 @@ describe('line boundaries in transpiler 2.0.0-beta', () => {
     [
       'REPEAT',
       ['Repeat', 'BODY_ONE=101', 'BODY_TWO=202', 'Until Mouse Key=1'],
-      'setInterval(() => { currentTimer = Date.now(); Timer++;',
+      'setInterval(() => {',
     ],
     [
       'WHILE',

@@ -102,6 +102,7 @@ async function run(source, { openScreen = true, deferBank = false } = {}) {
   math.random = random;
   const context = vm.createContext({
     Math: math,
+    Date: { now: () => 1000 },
     console: { log() {}, error() {} },
     document: {
       addEventListener() {},
@@ -239,6 +240,24 @@ describe('SPRITE COL pixel collisions', () => {
 });
 
 describe('SPRITE COL expressions', () => {
+  test('Timer values also work in sprite parameters and the text display', async () => {
+    const result = await run(`
+      Timer=2
+      Sprite Timer,Timer,Timer,Timer
+      Text 8,8,Timer
+      X=X Sprite(Timer)
+      Y=Y Sprite(Timer)
+    `);
+    expect(Array.from(result.evaluate('[X,Y]'))).toEqual([2, 2]);
+    expect(result.evaluate('document.getElementById("textDiv_8_8").innerText')).toBe(2);
+    // Image 2 is Normal Face, with 722 opaque pixels in the tutorial bank.
+    expect(
+      result.evaluate(`document.getElementById('sprite2').pixels.filter(
+      (value, index) => index % 4 === 3 && value !== 0
+    ).length`),
+    ).toBe(722);
+  });
+
   test('evaluates variables, arrays, and nested expressions once per argument at runtime', async () => {
     const result = await run(`
       Sprite 1,100,80,0
