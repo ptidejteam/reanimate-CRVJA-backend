@@ -71,6 +71,7 @@ statement:
     | inputVariable
     | loadBank
     | sprite
+    | spriteOff
     | ledOff
     | samBank
     | samLoopOff
@@ -396,6 +397,11 @@ sort:
 // SPRITE
 sprite:
     SPRITE expression COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER) COMMA (IDENTIFIER | NUMBER)
+    ;
+
+// SPRITE OFF
+spriteOff:
+    SPRITE OFF expression?
     | OFF
     ;
 

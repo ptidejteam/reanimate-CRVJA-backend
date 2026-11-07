@@ -97,6 +97,7 @@ async function run(source, { openScreen = true, deferBank = false } = {}) {
       : element.children.map((child) => find(child, id)).find(Boolean) || null;
   const bankLoads = [];
   const timers = [];
+  const canvases = [];
   const random = jest.fn(() => 0.5);
   const math = Object.create(Math);
   math.random = random;
@@ -107,7 +108,11 @@ async function run(source, { openScreen = true, deferBank = false } = {}) {
     document: {
       addEventListener() {},
       getElementById: (id) => find(host, id),
-      createElement: (tagName) => new Element(tagName),
+      createElement: (tagName) => {
+        const element = new Element(tagName);
+        if (tagName === 'canvas') canvases.push(element);
+        return element;
+      },
     },
     window: { __getBankFile: () => bankBytes },
     FileReader: class {
@@ -129,6 +134,7 @@ async function run(source, { openScreen = true, deferBank = false } = {}) {
     evaluate: (expression) => vm.runInContext(expression, context, { timeout: 1000 }),
     completeBankLoad: () => bankLoads.splice(0).forEach((load) => load()),
     retrySprites: () => timers.splice(0).forEach((callback) => callback()),
+    canvases,
     pixelReads,
     random,
   };
@@ -236,6 +242,79 @@ describe('SPRITE COL pixel collisions', () => {
     result.completeBankLoad();
     result.retrySprites();
     expect(result.evaluate('spriteCol(1)')).toBe(-1);
+  });
+});
+
+describe('SPRITE OFF', () => {
+  test('hides sprite zero using an expression while keeping its canvas and position', async () => {
+    const result = await run(`
+      Sprite 0,100,80,0
+      Sprite 2,116,80,1
+      BEFORE=Sprite Col(0)
+      sPrItE oFf Rnd(0)
+      HIDDENSOURCE=Sprite Col(0)
+      HIDDENTARGET=Sprite Col(2)
+      Sprite Off 0
+      Sprite Off 9
+      X=X Sprite(0)
+      Y=Y Sprite(0)
+    `);
+    const [hidden, visible] = result.canvases;
+    expect(result.evaluate('document.getElementById("sprite0")')).toBe(hidden);
+    expect(hidden.style.display).toBe('none');
+    expect(visible.style.display).toBe('');
+    expect(Array.from(result.evaluate('[BEFORE,HIDDENSOURCE,HIDDENTARGET,X,Y]'))).toEqual([
+      -1, 0, 0, 100, 80,
+    ]);
+    expect(result.random).toHaveBeenCalledTimes(1);
+  });
+
+  test.each(['Sprite Off', 'Off'])('%s hides all sprites without detaching them', async (off) => {
+    const result = await run(`
+      Sprite 0,100,80,0
+      Sprite 2,116,80,1
+      ${off}
+    `);
+    const screen = result.evaluate('document.getElementById("amos-screen")');
+    expect(screen.children).toEqual(result.canvases);
+    expect(result.canvases.map((canvas) => canvas.style.display)).toEqual(['none', 'none']);
+  });
+
+  test('redraws a hidden sprite on the same canvas and restores collisions', async () => {
+    const result = await run(`
+      Sprite 0,100,80,0
+      Sprite 2,116,80,1
+      Sprite Off 0 : HIDDEN=Sprite Col(2)
+      Sprite 0,116,80,1 : SHOWN=Sprite Col(2)
+    `);
+    const [redrawn, other] = result.canvases;
+    const screen = result.evaluate('document.getElementById("amos-screen")');
+    expect(result.canvases).toHaveLength(2);
+    expect(screen.children).toEqual([other, redrawn]);
+    expect(redrawn.style.display).toBe('');
+    expect(redrawn.style.left).toBe('116px');
+    expect(Array.from(result.evaluate('[HIDDEN,SHOWN]'))).toEqual([0, -1]);
+  });
+
+  test.each([
+    ['Sprite Off 1', ['sprite3', 'sprite2']],
+    ['Sprite Off', ['sprite2']],
+  ])('%s cancels pending draws and allows newer draws', async (off, renderedIds) => {
+    const result = await run(
+      `
+      Sprite 1,100,80,0
+      Sprite 2,116,80,1
+      Sprite 3,132,80,1
+      ${off}
+      Sprite 2,140,90,1
+    `,
+      { deferBank: true },
+    );
+    expect(result.canvases).toHaveLength(0);
+    result.completeBankLoad();
+    result.retrySprites();
+    expect(result.canvases.map((canvas) => canvas.id)).toEqual(renderedIds);
+    expect(result.evaluate('document.getElementById("sprite2").style.left')).toBe('140px');
   });
 });
 

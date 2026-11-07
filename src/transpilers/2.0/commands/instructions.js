@@ -530,24 +530,17 @@ document.getElementById('amos-screen').style.backgroundColor = 'black';`);
 
   // SPRITE
   enterSprite(ctx) {
-    const spriteExpression = ctx.expression();
-    if (!spriteExpression) {
-      this.context.emit(`
-{
-    const screen = document.getElementById('amos-screen');
-    if (screen) {
-        const sprites = screen.querySelectorAll('[id^="sprite"]');
-        sprites.forEach(sprite => sprite.remove());
-    }
-}`);
-      return;
-    }
-
-    const spriteNumber = this.expressions.translate(spriteExpression);
+    const spriteNumber = this.expressions.translate(ctx.expression());
     const x = this.expressions.translate(ctx.children[3]);
     const y = this.expressions.translate(ctx.children[5]);
     const bankImgIndex = this.expressions.translate(ctx.children[7]);
     this.context.emit(`renderSprite(${spriteNumber}, ${x}, ${y}, ${bankImgIndex});`);
+  }
+
+  // SPRITE OFF
+  enterSpriteOff(ctx) {
+    const spriteNumber = this.expressions.translate(ctx.expression());
+    this.context.emit(`spriteOff(${spriteNumber});`);
   }
 
   // TEXT

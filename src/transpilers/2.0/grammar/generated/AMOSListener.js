@@ -358,6 +358,12 @@ export default class AMOSListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMOSParser#sprite.
   exitSprite(ctx) {}
 
+  // Enter a parse tree produced by AMOSParser#spriteOff.
+  enterSpriteOff(ctx) {}
+
+  // Exit a parse tree produced by AMOSParser#spriteOff.
+  exitSpriteOff(ctx) {}
+
   // Enter a parse tree produced by AMOSParser#text.
   enterText(ctx) {}
 

@@ -406,6 +406,12 @@ export default class AMCAFListener extends antlr4.tree.ParseTreeListener {
   // Exit a parse tree produced by AMCAFParser#sprite.
   exitSprite(ctx) {}
 
+  // Enter a parse tree produced by AMCAFParser#spriteOff.
+  enterSpriteOff(ctx) {}
+
+  // Exit a parse tree produced by AMCAFParser#spriteOff.
+  exitSpriteOff(ctx) {}
+
   // Enter a parse tree produced by AMCAFParser#text.
   enterText(ctx) {}
 

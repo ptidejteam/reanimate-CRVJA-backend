@@ -670,28 +670,65 @@ function loadBank(bankName, bank) {
 }
 
 let tries = 0;
-const spritePositions = new Map();
+const spriteStates = new Map();
 
 function getXSpritePosition(spriteNumber) {
-  return spritePositions.get(spriteNumber)?.[0] ?? 0;
+  const spriteId = 'sprite' + spriteNumber;
+  const sprite = spriteStates.get(spriteId);
+  if (!sprite) {
+    return 0;
+  }
+  return sprite.x ?? 0;
 }
 
 function getYSpritePosition(spriteNumber) {
-  return spritePositions.get(spriteNumber)?.[1] ?? 0;
+  const spriteId = 'sprite' + spriteNumber;
+  const sprite = spriteStates.get(spriteId);
+  if (!sprite) {
+    return 0;
+  }
+  return sprite.y ?? 0;
+}
+
+function spriteOff(spriteNumber) {
+  const ids = arguments.length === 0 ? spriteStates.keys() : ['sprite' + spriteNumber];
+  for (const id of ids) {
+    const state = spriteStates.get(id);
+    if (!state?.active) continue;
+
+    state.active = false;
+    const canvas = document.getElementById(id);
+    if (canvas) canvas.style.display = 'none';
+  }
 }
 
 // Canvas alpha supplies the collision mask without requiring MAKE MASK.
 function spriteCol(spriteNumber, first = 0, last = 63) {
   const screen = document.getElementById('amos-screen');
   const source = document.getElementById('sprite' + spriteNumber);
-  if (!screen || !source || source.parentElement !== screen || first > last) return 0;
+  if (
+    !screen ||
+    !source ||
+    source.parentElement !== screen ||
+    source.style.display === 'none' ||
+    first > last
+  ) {
+    return 0;
+  }
 
   // Use local pixel coordinates, independent of page offsets and browser scaling.
   const sourceX = Math.trunc(parseFloat(source.style.left));
   const sourceY = Math.trunc(parseFloat(source.style.top));
   for (const target of screen.querySelectorAll('canvas[id^="sprite"]')) {
     const targetNumber = Number(target.id.slice(6));
-    if (target === source || targetNumber < first || targetNumber > last) continue;
+    if (
+      target === source ||
+      target.style.display === 'none' ||
+      targetNumber < first ||
+      targetNumber > last
+    ) {
+      continue;
+    }
 
     const targetX = Math.trunc(parseFloat(target.style.left));
     const targetY = Math.trunc(parseFloat(target.style.top));
@@ -714,8 +751,9 @@ function spriteCol(spriteNumber, first = 0, last = 63) {
   return 0;
 }
 
-function renderSprite(spriteNumber, x, y, bankImgIndex, position = [x, y]) {
-  spritePositions.set(spriteNumber, position);
+function renderSprite(spriteNumber, x, y, bankImgIndex, state = { x, y, active: true }) {
+  const id = 'sprite' + spriteNumber;
+  spriteStates.set(id, state);
   // TODO: Investigate the TRIES
   // if (tries > 40) {
   //   console.error('Bank not found or could not be loaded');
@@ -726,9 +764,9 @@ function renderSprite(spriteNumber, x, y, bankImgIndex, position = [x, y]) {
   if (!bankData[1].sprites[bankImgIndex]) {
     tries++;
     setTimeout(() => {
-      // A newer SPRITE command supersedes this pending bank-load retry.
-      if (spritePositions.get(spriteNumber) === position) {
-        renderSprite(spriteNumber, x, y, bankImgIndex, position);
+      // SPRITE OFF or a newer SPRITE command can supersede this retry.
+      if (state.active && spriteStates.get(id) === state) {
+        renderSprite(spriteNumber, x, y, bankImgIndex, state);
       }
     }, 200);
 
@@ -740,13 +778,8 @@ function renderSprite(spriteNumber, x, y, bankImgIndex, position = [x, y]) {
   const pixelWidth = width * 16; // Convert width in 16-bit words to pixels
   const bytesPerRow = pixelWidth / 8;
 
-  let existingCanvas = document.getElementById('sprite' + spriteNumber);
-  if (existingCanvas) {
-    existingCanvas.remove();
-  }
-
-  const canvas = document.createElement('canvas');
-  canvas.id = 'sprite' + spriteNumber;
+  const canvas = document.getElementById(id) ?? document.createElement('canvas');
+  canvas.id = id;
   canvas.width = pixelWidth;
   canvas.height = height;
   canvas.style.position = 'absolute';
@@ -792,6 +825,7 @@ function renderSprite(spriteNumber, x, y, bankImgIndex, position = [x, y]) {
   }
 
   ctx.putImageData(imgData, 0, 0);
+  canvas.style.display = '';
 
   const screen = document.getElementById('amos-screen');
   if (screen) {
