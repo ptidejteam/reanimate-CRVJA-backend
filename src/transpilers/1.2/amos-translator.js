@@ -1789,7 +1789,7 @@ document.getElementById('amos-screen').appendChild(${varName});`;
 
   getJavaScript() {
     let result =
-      '// Using Version 1.2.0 of the AMOS to JavaScript Transpiler\n' +
+      '// Using Version 1.2 of the AMOS to JavaScript Transpiler\n' +
       this.imports +
       this.palette +
       this.globalVariables +

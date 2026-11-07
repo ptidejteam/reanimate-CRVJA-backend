@@ -1837,7 +1837,7 @@ setInterval(() => {
 
   getJavaScript() {
     let result =
-      '// Using Version 1.1.0 of the AMOS to JavaScript Transpiler\n' +
+      '// Using Version 1.1 of the AMOS to JavaScript Transpiler\n' +
       this.imports +
       this.palette +
       this.globalVariables +

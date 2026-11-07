@@ -1,5 +1,5 @@
-import AMOSListener from '#root/src/transpilers/2.0.0-beta/grammar/generated/AMOSListener.js';
-import AMOSLexer from '#root/src/transpilers/2.0.0-beta/grammar/generated/AMOSLexer.js';
+import AMOSListener from '#root/src/transpilers/2.0/grammar/generated/AMOSListener.js';
+import AMOSLexer from '#root/src/transpilers/2.0/grammar/generated/AMOSLexer.js';
 
 // Counts catalogued instruction tokens as the parser's tree is walked.
 class AMOSAnalyser extends AMOSListener {

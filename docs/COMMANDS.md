@@ -1,15 +1,14 @@
 # COMMANDS
 
-This tutorial explains how the 2.0.0-beta transpiler (`src/transpilers/2.0.0-beta/`) is
-organized and how to add or change an AMOS command. All new work happens in this version
-(`2.0.0`), while `1.1.0` and `1.2.0` are kept unchanged for older programs.
+This tutorial explains how to add or change an AMOS command in transpiler `2.0`
+(`src/transpilers/2.0/`).
 
 Sections 3 and 4 walk through two commands that are already implemented: `PLOT`, an instruction,
 and `ABS`, a function. They follow each step of the implementation and explain the reasoning
 behind it, so you can apply the same logic to a new command and compare every step with the
 real code.
 
-Paths in this tutorial are relative to `src/transpilers/2.0.0-beta/`, and `npm` commands run
+Paths in this tutorial are relative to `src/transpilers/2.0/`, and `npm` commands run
 from the backend root.
 
 1. [How the transpiler works](#1-how-the-transpiler-works)

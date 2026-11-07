@@ -24,7 +24,7 @@ function expectOnceInOrder(code, fragments) {
   }
 }
 
-describe('line boundaries in transpiler 2.0.0-beta', () => {
+describe('line boundaries in transpiler 2.0', () => {
   test.each([
     ['zero', 'VALUE=0', 'VALUE = 0;'],
     ['number', 'VALUE=42', 'VALUE = 42;'],

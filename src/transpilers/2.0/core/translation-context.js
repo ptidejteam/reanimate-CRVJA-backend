@@ -121,7 +121,7 @@ export default class TranslationContext {
 
   getJavaScript() {
     return (
-      '// Using Version 2.0.0 of the AMOS to JavaScript Transpiler\n' +
+      '// Using Version 2.0 of the AMOS to JavaScript Transpiler\n' +
       this.palette +
       this.globalVariables +
       this.functionDeclarationSupport +

@@ -17,5 +17,5 @@ export async function getAvailableVersions() {
     console.error('Error reading path:', error);
   }
 
-  return directories.toReversed();
+  return directories.sort((a, b) => b.localeCompare(a, 'en', { numeric: true }));
 }

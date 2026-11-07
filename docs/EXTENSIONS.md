@@ -4,7 +4,7 @@ At each supported statement boundary, CRVJA tries extension parsers in alphabeti
 folder order. The first complete, error-free parse wins. If every extension rejects
 the fragment, its original text stays in the AMOS program.
 
-Paths below are relative to `src/transpilers/2.0.0-beta/`; npm commands run from the
+Paths below are relative to `src/transpilers/2.0/`; npm commands run from the
 backend root. `amos-transpiler.js` is the public entry point, `core/` holds shared
 translation services, and `extensions/` holds integration helpers and mini-transpilers.
 
@@ -185,7 +185,7 @@ From the backend directory:
 
 ```sh
 npm run antlr
-npm test -- --runInBand src/transpilers/2.0.0-beta/tests
+npm test -- --runInBand src/transpilers/2.0/tests
 ```
 
 `npm run antlr` invokes `grammar/generate-grammars.mjs`, using the existing ANTLR JAR
@@ -200,7 +200,7 @@ The generator is a development tool and does not run during transpilation.
 
 The statement-only PoC explicitly defers extension functions such as `Qsin` and
 `Qcos`. The 11 skipped cases in
-[amcaf.spec.js](src/transpilers/2.0.0-beta/tests/amcaf.spec.js) require those functions:
+[amcaf.spec.js](../src/transpilers/2.0/tests/amcaf.spec.js) require those functions:
 
 | Cases | Required functionality |
 | --- | --- |

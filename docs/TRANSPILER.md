@@ -1,11 +1,11 @@
 # Transpiler architecture
 
-The beta transpiler separates orchestration, command semantics, expression translation,
+The 2.0 transpiler separates orchestration, command semantics, expression translation,
 and shared program state. This guide explains how those parts work together.
 For implementation steps, see [COMMANDS.md](COMMANDS.md); for mini-transpilers, see
 [EXTENSIONS.md](EXTENSIONS.md).
 
-Paths below are relative to `src/transpilers/2.0.0-beta/` unless linked explicitly.
+Paths below are relative to `src/transpilers/2.0/` unless linked explicitly.
 Run npm commands from the backend root. New work targets this version; older versions
 keep their existing behavior.
 
@@ -20,7 +20,7 @@ keep their existing behavior.
 ### 1.1. Entry point and supporting files
 
 ```text
-src/transpilers/2.0.0-beta/
+src/transpilers/2.0/
 ├── amos-transpiler.js          Public entry point
 ├── core/
 │   ├── amos-translator.js     ANTLR listener
@@ -39,7 +39,7 @@ src/transpilers/2.0.0-beta/
 └── tests/
 ```
 
-[amos-transpiler.js](../src/transpilers/2.0.0-beta/amos-transpiler.js) is the entry point.
+[amos-transpiler.js](../src/transpilers/2.0/amos-transpiler.js) is the entry point.
 Shared translation services live in `core/`; command behavior lives in `commands/`.
 Grammar tooling stays beside the syntax definitions it processes.
 
@@ -49,7 +49,7 @@ Grammar tooling stays beside the syntax definitions it processes.
 npm run antlr
 ```
 
-This runs [generate-grammars.mjs](../src/transpilers/2.0.0-beta/grammar/generate-grammars.mjs),
+This runs [generate-grammars.mjs](../src/transpilers/2.0/grammar/generate-grammars.mjs),
 which uses the bundled ANTLR JAR to:
 
 1. Generate AMOS into `grammar/generated/`.
@@ -97,7 +97,7 @@ returned. This keeps failed parser attempts from leaving partial output or scope
 ### 2.2. Normalize names after parsing
 
 ANTLR's `caseInsensitive` option changes matching while preserving token text.
-[normalize-identifiers.js](../src/transpilers/2.0.0-beta/grammar/normalize-identifiers.js)
+[normalize-identifiers.js](../src/transpilers/2.0/grammar/normalize-identifiers.js)
 then normalizes identifier tokens in accepted trees:
 
 | AMOS name or content | Translation behavior |
@@ -124,11 +124,11 @@ Never uppercase the entire source: strings and diagnostic positions must survive
 
 | Class | Responsibility |
 | --- | --- |
-| [AMOSTranspiler](../src/transpilers/2.0.0-beta/amos-transpiler.js) | Parse, construct services, walk, format, and return the result |
-| [AMOSTranslator](../src/transpilers/2.0.0-beta/core/amos-translator.js) | Forward enter/exit events and invoke accepted extensions |
-| [HandlerDispatcher](../src/transpilers/2.0.0-beta/core/handler-dispatcher.js) | Register and resolve bound handler methods |
-| [ExpressionTranslator](../src/transpilers/2.0.0-beta/core/expression-translator.js) | Translate expression structure and invoke function handlers |
-| [TranslationContext](../src/transpilers/2.0.0-beta/core/translation-context.js) | Own program state, declarations, output, runtime inclusion, and assembly |
+| [AMOSTranspiler](../src/transpilers/2.0/amos-transpiler.js) | Parse, construct services, walk, format, and return the result |
+| [AMOSTranslator](../src/transpilers/2.0/core/amos-translator.js) | Forward enter/exit events and invoke accepted extensions |
+| [HandlerDispatcher](../src/transpilers/2.0/core/handler-dispatcher.js) | Register and resolve bound handler methods |
+| [ExpressionTranslator](../src/transpilers/2.0/core/expression-translator.js) | Translate expression structure and invoke function handlers |
+| [TranslationContext](../src/transpilers/2.0/core/translation-context.js) | Own program state, declarations, output, runtime inclusion, and assembly |
 | `Instructions`, `Structures`, `Functions` | Implement individual commands |
 
 The diagram focuses on the core translation services. `Functions` represents the shared
@@ -383,7 +383,7 @@ executes generated JavaScript in an asynchronous function inside an iframe conta
 `#game-container`. `Screen Open` creates `#amos-screen`; drawing commands use it.
 The asynchronous wrapper permits generated `await` operations such as `Wait`.
 
-[core/amos-runtime.js](../src/transpilers/2.0.0-beta/core/amos-runtime.js) supplies shared browser
+[core/amos-runtime.js](../src/transpilers/2.0/core/amos-runtime.js) supplies shared browser
 helpers. The context also includes the colour functions from
 [amiga-color.js](../src/utils/amiga-color.js). The backend returns source code rather than
 executing those browser operations. Runtime implementation guidance belongs in

@@ -1,5 +1,11 @@
-import { readFile } from 'fs/promises';
 import { getAvailableVersions } from './versions.service.js';
+
+const DEFAULT_VERSION = '2.0';
+const legacyVersions = new Map([
+  ['1.1.0', '1.1'],
+  ['1.2.0', '1.2'],
+  ['2.0.0-beta', '2.0'],
+]);
 
 /**
  * Transpile the AMOS code
@@ -8,20 +14,11 @@ import { getAvailableVersions } from './versions.service.js';
  * @returns {transpileResult} - The lexicalErrors, syntaxErrors, and translatedCode (JS).
  */
 export async function transpileCode(amosCode, version) {
-  // get the defaultVersion of the `transpiler` from "package.json"
-  const packageData = await readFile(new URL('../../package.json', import.meta.url), 'utf-8');
-  const { version: defaultVersion } = JSON.parse(packageData);
-
   const availableVersions = await getAvailableVersions();
-
-  let selectedVersion = version;
-  if (
-    !selectedVersion ||
-    typeof selectedVersion !== 'string' ||
-    !availableVersions.includes(selectedVersion)
-  ) {
-    selectedVersion = defaultVersion;
-  }
+  const requestedVersion = legacyVersions.get(version) ?? version;
+  const selectedVersion = availableVersions.includes(requestedVersion)
+    ? requestedVersion
+    : DEFAULT_VERSION;
 
   const { default: AMOSTranspiler } = await import(
     `../transpilers/${selectedVersion}/amos-transpiler.js`
