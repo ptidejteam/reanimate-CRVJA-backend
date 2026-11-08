@@ -351,14 +351,18 @@ ${localDeclarations}`);
   }
 
   // WHILE ... WEND
-  // KEY STATE is a Function, but the grammar only accepts it as the condition of If / While,
-  // so it is translated here.
+  // The condition is tested before each pass, and Exit / Exit If can break the labelled loop.
   enterWhileWend(ctx) {
-    this.context.emit(`\nif (${this.keyStateCondition(ctx.keyStateFunction())}) {`);
+    this.context.incrementCurrentLoop();
+    this.context.emit(
+      `loop${this.context.currentLoop}: while (${this.ifCondition(ctx.condition())}) {`,
+    );
   }
 
+  // Each pass waits one frame, as in Do ... Loop, so key events can change Key State.
   exitWhileWend(ctx) {
-    this.context.emit('}');
+    this.context.decrementCurrentLoop();
+    this.context.emit('await new Promise(r => setTimeout(r, 16));}');
   }
 
   // Not in the command index: language syntax without a category.

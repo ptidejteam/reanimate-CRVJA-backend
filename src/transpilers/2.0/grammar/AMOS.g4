@@ -511,7 +511,7 @@ logicalOperator:
     OR | AND
     ;
 
-// Condition of ELSE IF, EXIT IF and THEN: the conditions that IF ... END IF and IF KEY STATE accept.
+// Condition of ELSE IF, EXIT IF, THEN and WHILE: the conditions that IF ... END IF and IF KEY STATE accept.
 condition:
     expression comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
     | keyStateFunction
@@ -647,7 +647,7 @@ ifThenElse:
 
 // WHILE ... WEND
 whileWend:
-    WHILE keyStateFunction
+    WHILE condition
     statementList
     WEND
     ;

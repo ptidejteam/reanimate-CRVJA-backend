@@ -397,7 +397,7 @@ const serializedATN = [
   110, 0, 1137, 1136, 1, 0, 0, 0, 1137, 1138, 1, 0, 0, 0, 1138, 1139, 1, 0, 0, 0, 1139, 1140, 7, 7,
   0, 0, 1140, 219, 1, 0, 0, 0, 1141, 1143, 5, 39, 0, 0, 1142, 1144, 3, 20, 10, 0, 1143, 1142, 1, 0,
   0, 0, 1144, 1145, 1, 0, 0, 0, 1145, 1143, 1, 0, 0, 0, 1145, 1146, 1, 0, 0, 0, 1146, 221, 1, 0, 0,
-  0, 1147, 1148, 5, 138, 0, 0, 1148, 1149, 3, 258, 129, 0, 1149, 1150, 3, 18, 9, 0, 1150, 1151, 5,
+  0, 1147, 1148, 5, 138, 0, 0, 1148, 1149, 3, 174, 87, 0, 1149, 1150, 3, 18, 9, 0, 1150, 1151, 5,
   137, 0, 0, 1151, 223, 1, 0, 0, 0, 1152, 1153, 3, 302, 151, 0, 1153, 1154, 5, 149, 0, 0, 1154,
   1155, 3, 296, 148, 0, 1155, 225, 1, 0, 0, 0, 1156, 1157, 5, 148, 0, 0, 1157, 1158, 5, 160, 0, 0,
   1158, 227, 1, 0, 0, 0, 1159, 1160, 5, 148, 0, 0, 1160, 1163, 5, 149, 0, 0, 1161, 1164, 3, 296,
@@ -5332,7 +5332,7 @@ export default class AMCAFParser extends antlr4.Parser {
       this.state = 1147;
       this.match(AMCAFParser.WHILE);
       this.state = 1148;
-      this.keyStateFunction();
+      this.condition();
       this.state = 1149;
       this.statementList();
       this.state = 1150;
@@ -12397,8 +12397,8 @@ class WhileWendContext extends antlr4.ParserRuleContext {
     return this.getToken(AMCAFParser.WHILE, 0);
   }
 
-  keyStateFunction() {
-    return this.getTypedRuleContext(KeyStateFunctionContext, 0);
+  condition() {
+    return this.getTypedRuleContext(ConditionContext, 0);
   }
 
   statementList() {

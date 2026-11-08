@@ -364,7 +364,7 @@ const serializedATN = [
   102, 0, 1044, 1043, 1, 0, 0, 0, 1044, 1045, 1, 0, 0, 0, 1045, 1046, 1, 0, 0, 0, 1046, 1047, 7, 7,
   0, 0, 1047, 203, 1, 0, 0, 0, 1048, 1050, 5, 32, 0, 0, 1049, 1051, 3, 4, 2, 0, 1050, 1049, 1, 0, 0,
   0, 1051, 1052, 1, 0, 0, 0, 1052, 1050, 1, 0, 0, 0, 1052, 1053, 1, 0, 0, 0, 1053, 205, 1, 0, 0, 0,
-  1054, 1055, 5, 131, 0, 0, 1055, 1056, 3, 242, 121, 0, 1056, 1057, 3, 2, 1, 0, 1057, 1058, 5, 130,
+  1054, 1055, 5, 131, 0, 0, 1055, 1056, 3, 158, 79, 0, 1056, 1057, 3, 2, 1, 0, 1057, 1058, 5, 130,
   0, 0, 1058, 207, 1, 0, 0, 0, 1059, 1060, 3, 286, 143, 0, 1060, 1061, 5, 142, 0, 0, 1061, 1062, 3,
   280, 140, 0, 1062, 209, 1, 0, 0, 0, 1063, 1064, 5, 141, 0, 0, 1064, 1065, 5, 153, 0, 0, 1065, 211,
   1, 0, 0, 0, 1066, 1067, 5, 141, 0, 0, 1067, 1070, 5, 142, 0, 0, 1068, 1071, 3, 280, 140, 0, 1069,
@@ -4967,7 +4967,7 @@ export default class AMOSParser extends antlr4.Parser {
       this.state = 1054;
       this.match(AMOSParser.WHILE);
       this.state = 1055;
-      this.keyStateFunction();
+      this.condition();
       this.state = 1056;
       this.statementList();
       this.state = 1057;
@@ -11593,8 +11593,8 @@ class WhileWendContext extends antlr4.ParserRuleContext {
     return this.getToken(AMOSParser.WHILE, 0);
   }
 
-  keyStateFunction() {
-    return this.getTypedRuleContext(KeyStateFunctionContext, 0);
+  condition() {
+    return this.getTypedRuleContext(ConditionContext, 0);
   }
 
   statementList() {

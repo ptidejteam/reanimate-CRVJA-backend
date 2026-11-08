@@ -129,7 +129,7 @@ describe('line boundaries in transpiler 2.0', () => {
     [
       'WHILE',
       ['While Key State($10)', 'BODY_ONE=101', 'BODY_TWO=202', 'Wend'],
-      'if (currentPressedKey === keyMapping[16]) {',
+      'loop1: while (currentPressedKey === keyMapping[16]) {',
     ],
   ])('walks the %s body once and preserves order', async (_name, body, opening) => {
     const lines = ['BEFORE_VALUE=11', ...body, 'AFTER_VALUE=44'];

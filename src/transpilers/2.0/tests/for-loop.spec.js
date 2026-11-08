@@ -44,6 +44,7 @@ test('for_loop_with_code', async () => {
   expect(normalizedJS).toContain('for (I = 0; I <= 10; I++) {');
   expect(normalizedJS).toContain('if (currentPressedKey === keyMapping[16 + I]) {');
   expect(normalizedJS).toContain('P_DRAWKEYS(I);');
+  expect(normalizedJS).toContain('loop1: while (currentPressedKey === keyMapping[16 + I]) {');
   expect(normalizedJS).toContain('soundPlayer(37 + I, 1 * 1000);');
   expect(normalizedJS).toContain('P_DRAWKEYS(-1);');
 });
