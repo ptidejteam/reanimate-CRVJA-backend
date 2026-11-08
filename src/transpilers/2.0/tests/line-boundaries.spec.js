@@ -121,11 +121,7 @@ describe('line boundaries in transpiler 2.0', () => {
       ['Procedure PROC_BOUNDARY', 'BODY_ONE=101', 'BODY_TWO=202', 'End Proc'],
       'function PROC_BOUNDARY() {',
     ],
-    [
-      'REPEAT',
-      ['Repeat', 'BODY_ONE=101', 'BODY_TWO=202', 'Until Mouse Key=1'],
-      'setInterval(() => {',
-    ],
+    ['REPEAT', ['Repeat', 'BODY_ONE=101', 'BODY_TWO=202', 'Until BODY_ONE=101'], 'loop1: do {'],
     [
       'WHILE',
       ['While Key State($10)', 'BODY_ONE=101', 'BODY_TWO=202', 'Wend'],

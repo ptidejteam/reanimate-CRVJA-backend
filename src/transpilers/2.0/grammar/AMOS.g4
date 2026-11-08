@@ -511,7 +511,7 @@ logicalOperator:
     OR | AND
     ;
 
-// Condition of ELSE IF, EXIT IF, THEN and WHILE: the conditions that IF ... END IF and IF KEY STATE accept.
+// Condition of ELSE IF, EXIT IF, THEN, UNTIL and WHILE: the conditions that IF ... END IF and IF KEY STATE accept.
 condition:
     expression comparisonOperator expression (logicalOperator expression comparisonOperator expression)*
     | keyStateFunction
@@ -600,7 +600,7 @@ readTarget:
 repeatUntil:
     REPEAT
     statementList
-    UNTIL MOUSE_KEY EQUAL NUMBER
+    UNTIL condition
     ;
 
 // RESTORE

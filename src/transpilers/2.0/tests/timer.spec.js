@@ -124,20 +124,16 @@ test('Do...Loop can stop using elapsed Timer ticks without Repeat', async () => 
   expect(program.wait).toHaveBeenCalledTimes(7);
 });
 
-test('Repeat callbacks neither increment nor reset the elapsed clock', async () => {
+test('Repeat passes neither increment nor reset the elapsed clock', async () => {
+  // Each pass waits one 16 ms frame: Timer reaches 60 after 13 frames (208 ms).
   const program = await run(`
     Timer=50
     Repeat
       RESULT=Timer
-    Until Mouse Key=1
+    Until RESULT>=60
   `);
-  expect(program.intervals).toHaveLength(1);
-  program.advance(500);
-  program.intervals[0]();
-  expect(program.read()).toBe(75);
-  expect(program.timer()).toBe(75);
-  program.advance(500);
-  program.intervals[0]();
-  expect(program.read()).toBe(100);
-  expect(program.timer()).toBe(100);
+  expect(program.read()).toBe(60);
+  expect(program.wait).toHaveBeenCalledTimes(14);
+  expect(program.timer()).toBe(61);
+  expect(program.intervals).toEqual([]);
 });

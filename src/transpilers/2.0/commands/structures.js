@@ -307,12 +307,18 @@ ${localDeclarations}`);
   }
 
   // REPEAT ... UNTIL
+  // The condition is tested after each pass, so the body runs at least once.
   enterRepeatUntil(ctx) {
-    this.context.emit('setInterval(() => {');
+    this.context.incrementCurrentLoop();
+    this.context.emit(`loop${this.context.currentLoop}: do {`);
   }
 
+  // Each pass waits one frame, as in Do ... Loop, so events can change Key State.
   exitRepeatUntil(ctx) {
-    this.context.emit('}, 16);');
+    this.context.decrementCurrentLoop();
+    this.context.emit(
+      `await new Promise(r => setTimeout(r, 16));} while (!(${this.ifCondition(ctx.condition())}));`,
+    );
   }
 
   // RESTORE
