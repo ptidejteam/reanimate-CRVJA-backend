@@ -32,4 +32,13 @@ export default class AMOSErrorListener extends antlr4.error.ErrorListener {
     const diagnostics = recognizer instanceof antlr4.Lexer ? this.lexicalErrors : this.syntaxErrors;
     diagnostics.errors.push(error);
   }
+
+  /** An AMOS program error found while translating (e.g. "Not enough loops to exit"). */
+  translationError(token, msg) {
+    let { line, column } = token;
+    if (this.positionAt && token.start >= 0) ({ line, column } = this.positionAt(token.start));
+    const error = { line, column, msg };
+    this.errors.push(error);
+    this.syntaxErrors.errors.push(error);
+  }
 }

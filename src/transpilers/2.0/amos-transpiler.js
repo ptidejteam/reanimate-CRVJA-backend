@@ -66,6 +66,15 @@ export default class AMOSTranspiler {
     const walker = new antlr4.tree.ParseTreeWalker();
     walker.walk(translator, tree);
 
+    if (context.errors.length) {
+      for (const { token, msg } of context.errors) amosErrorListener.translationError(token, msg);
+      return {
+        lexicalErrors,
+        syntaxErrors,
+        translatedCode: '',
+      };
+    }
+
     const translatedCode = await prettier.format(context.getJavaScript(), {
       parser: 'babel',
       singleQuote: true,

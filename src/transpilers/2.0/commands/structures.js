@@ -8,6 +8,7 @@ export default class Structures {
   constructor(context) {
     this.context = context;
     this.expressions = context.expressions;
+    this.loopDepthsOutsideProcedures = []; // currentLoop where each open Procedure starts
   }
 
   // DATA
@@ -62,19 +63,14 @@ export default class Structures {
 
   // EXIT
   enterExitLoop(ctx) {
-    const count = ctx.NUMBER() ? parseInt(ctx.NUMBER().getText(), 10) : 1; // Exit without a number is the same as Exit 1
-    const depth = this.context.currentLoop;
-
-    this.context.emit('break loop' + (depth - count + 1) + ';');
+    const label = this.loopLabelToLeave(ctx);
+    if (label) this.context.emit(`break ${label};`);
   }
 
   // EXIT IF
   enterExitIf(ctx) {
-    const condition = this.ifCondition(ctx.condition());
-    const count = ctx.NUMBER() ? parseInt(ctx.NUMBER().getText(), 10) : 1; // Exit without a number is the same as Exit 1
-    const depth = this.context.currentLoop;
-
-    this.context.emit(`if (${condition}) { break loop${depth - count + 1}; }`);
+    const label = this.loopLabelToLeave(ctx);
+    if (label) this.context.emit(`if (${this.ifCondition(ctx.condition())}) { break ${label}; }`);
   }
 
   // FN
@@ -255,6 +251,9 @@ export default class Structures {
     let props = params.join(', ');
 
     this.context.scopes.push({});
+    // Exit inside a Procedure can only leave the Procedure's own loops.
+    this.loopDepthsOutsideProcedures.push(this.context.currentLoop);
+    this.context.currentLoop = 0;
     for (const param of params) {
       // A procedure parameter is already a binding in the generated function scope
       this.context.currentScope[param] = this.context.defaultValueFor(param);
@@ -289,6 +288,7 @@ ${localDeclarations}`);
   }
 
   exitProcedure(ctx) {
+    this.context.currentLoop = this.loopDepthsOutsideProcedures.pop();
     this.context.scopes.pop();
     this.context.emit('}');
   }
@@ -437,5 +437,18 @@ ${localDeclarations}`);
       .translate(ctx.expression())
       .replace(/\$[0-9A-Fa-f]+/g, (hex) => parseInt(hex.substring(1), 16));
     return `currentPressedKey === keyMapping[${scanCode}]`;
+  }
+
+  // Label of the loop that Exit / Exit If leaves: Exit n leaves the n innermost loops.
+  // A count above the open loops is the AMOS error "Not enough loops to exit".
+  loopLabelToLeave(ctx) {
+    const count = ctx.NUMBER() ? parseInt(ctx.NUMBER().getText(), 10) : 1; // Exit without a number is the same as Exit 1
+    const depth = this.context.currentLoop;
+
+    if (count > depth) {
+      this.context.reportError(ctx, 'Not enough loops to exit');
+      return null;
+    }
+    return `loop${depth - count + 1}`;
   }
 }

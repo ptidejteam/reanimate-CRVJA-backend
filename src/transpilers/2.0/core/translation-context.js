@@ -62,6 +62,12 @@ export default class TranslationContext {
     this.hasDataMatrix = false;
     this.degreeMode = false; // set by Degree: angles are in degrees
     this.usedExtensions = new Set();
+    this.errors = []; // AMOS program errors found while translating: { token, msg }
+  }
+
+  /** Records an AMOS program error at the first token of `ctx`. */
+  reportError(ctx, msg) {
+    this.errors.push({ token: ctx.start, msg });
   }
 
   /** Appends JavaScript to the program body. */
