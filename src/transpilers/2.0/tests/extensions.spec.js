@@ -32,7 +32,7 @@ async function runProbe(source) {
   const transpiler = new AMOSTranspiler({ extensionsDirectory: fixtures });
   const code = await translate(source, transpiler);
   const context = vm.createContext({ probeTrace: [], document: { addEventListener() {} }, Date });
-  vm.runInContext(code, context, { timeout: 1000 });
+  await vm.runInContext(`(async () => {\n${code}\n})()`, context, { timeout: 1000 });
   return context.probeTrace;
 }
 
@@ -165,7 +165,7 @@ test('lets an extension declare and emit through the shared active context', asy
   const transpiler = new AMOSTranspiler({ extensionsDirectory: directory });
   const code = await translate('VALUE=99\nProcedure P\n@Set\nEnd Proc\nP\n@Read', transpiler);
   const context = vm.createContext({ values: [], document: { addEventListener() {} }, Date });
-  vm.runInContext(code, context, { timeout: 1000 });
+  await vm.runInContext(`(async () => {\n${code}\n})()`, context, { timeout: 1000 });
   expect(context.values).toEqual([7, 99]);
   expect(await translate('VALUE=99\nProcedure P\n@Set\nEnd Proc\nP\n@Read', transpiler)).toBe(code);
 });

@@ -290,8 +290,8 @@ Extensions encountered there receive that same active context.
 an optional runtime once per used extension instance. `getJavaScript()` joins these sections:
 
 ```text
-Version comment → colour palette → global declarations → function support
-→ shared and optional extension runtimes → translated body
+Version comment → colour palette → global declarations → shared and optional extension
+runtimes → translated body
 ```
 
 Keeping declaration and runtime support before the body lets statements use them without
@@ -381,7 +381,9 @@ counter assigns an ID to the source statement; repeated execution reuses that li
 The frontend's [AMOS runner](../../reanimate-CRVJA-frontend/src/app/components/cina/amos-runner.js)
 executes generated JavaScript in an asynchronous function inside an iframe containing
 `#game-container`. `Screen Open` creates `#amos-screen`; drawing commands use it.
-The asynchronous wrapper permits generated `await` operations such as `Wait`.
+The asynchronous wrapper permits generated `await` operations such as `Wait`. Procedures are
+emitted as `async function`s and every call is awaited, so a caller continues only after
+`End Proc`, and loops and waits also work inside a Procedure.
 
 [core/amos-runtime.js](../src/transpilers/2.0/core/amos-runtime.js) supplies shared browser
 helpers. The context also includes the colour functions from

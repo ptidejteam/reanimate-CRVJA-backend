@@ -44,8 +44,9 @@ async function translate(source) {
 
 async function run(source, result) {
   const code = await translate(source);
+  // Inside an async function, as in the IDE, since Procedure calls are awaited.
   return vm.runInNewContext(
-    `${code}\n${result}`,
+    `(async () => {\n${code}\nreturn ${result};\n})()`,
     {
       document: { addEventListener() {} },
       Date: { now: () => 1000 },

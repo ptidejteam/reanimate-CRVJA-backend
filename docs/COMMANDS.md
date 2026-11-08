@@ -547,8 +547,7 @@ Inside a method of a command file:
 | `this.context` | Shared state for this program, also supplied to extension translation |
 
 Context state used by commands includes `colorMapping` and `palette` (`PALETTE`),
-`functionDeclarationSupport`, `scopes`, `currentScope` and `globalVariablesSet` (`PROCEDURE`,
-`GLOBAL`), and `hasDataMatrix` (`DATA`). The context also owns loop tracking and runtime
+`scopes`, `currentScope` and `globalVariablesSet` (`PROCEDURE`, `GLOBAL`), and `hasDataMatrix` (`DATA`). The context also owns loop tracking and runtime
 inclusion. Handlers are standalone classes that store `context` and `expressions` in their
 constructors and call the services directly.
 

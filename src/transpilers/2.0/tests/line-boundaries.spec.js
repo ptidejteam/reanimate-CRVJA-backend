@@ -1,5 +1,8 @@
 import AMOSTranspiler from '../amos-transpiler.js';
 
+// Programs run inside an async function, as in the IDE, since Procedure calls are awaited.
+const AsyncFunction = (async () => {}).constructor;
+
 async function translate(code) {
   const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
     code,
@@ -50,7 +53,7 @@ describe('line boundaries in transpiler 2.0', () => {
     const { normalizedJS, translatedCode } = await translate(source);
 
     expect(normalizedJS).toContain(expected);
-    expect(() => new Function(translatedCode)).not.toThrow();
+    expect(() => new AsyncFunction(translatedCode)).not.toThrow();
   });
 
   test.each([
@@ -119,7 +122,7 @@ describe('line boundaries in transpiler 2.0', () => {
     [
       'PROCEDURE',
       ['Procedure PROC_BOUNDARY', 'BODY_ONE=101', 'BODY_TWO=202', 'End Proc'],
-      'function PROC_BOUNDARY() {',
+      'async function PROC_BOUNDARY() {',
     ],
     ['REPEAT', ['Repeat', 'BODY_ONE=101', 'BODY_TWO=202', 'Until BODY_ONE=101'], 'loop1: do {'],
     [
@@ -171,10 +174,10 @@ describe('line boundaries in transpiler 2.0', () => {
     expect(normalizedJS.match(/let I = 0;/g)).toHaveLength(1);
     expect(normalizedJS).not.toContain('let X = 0;');
     expect(normalizedJS.indexOf('let AFTER_VALUE = 0;')).toBeLessThan(
-      normalizedJS.indexOf('function PROC_NESTED(X) {'),
+      normalizedJS.indexOf('async function PROC_NESTED(X) {'),
     );
     expect(normalizedJS).toContain(
-      'for (I = 1; I <= 2; I++) { if (X > 0) { let LOCAL_VALUE = 0; LOCAL_VALUE = X + 1; SHARED_VALUE = SHARED_VALUE + 1; } else { LOCAL_VALUE = X + 2; } } ROOT_VALUE = ROOT_VALUE + 1; } AFTER_VALUE = 7; PROC_NESTED(3);',
+      'for (I = 1; I <= 2; I++) { if (X > 0) { let LOCAL_VALUE = 0; LOCAL_VALUE = X + 1; SHARED_VALUE = SHARED_VALUE + 1; } else { LOCAL_VALUE = X + 2; } } ROOT_VALUE = ROOT_VALUE + 1; } AFTER_VALUE = 7; await PROC_NESTED(3);',
     );
     expectOnceInOrder(normalizedJS, [
       'ROOT_VALUE = 1;',
@@ -183,9 +186,9 @@ describe('line boundaries in transpiler 2.0', () => {
       'LOCAL_VALUE = X + 2;',
       'ROOT_VALUE = ROOT_VALUE + 1;',
       'AFTER_VALUE = 7;',
-      'PROC_NESTED(3);',
+      'await PROC_NESTED(3);',
     ]);
-    expect(() => new Function(translatedCode)).not.toThrow();
+    expect(() => new AsyncFunction(translatedCode)).not.toThrow();
   });
 
   test.each([

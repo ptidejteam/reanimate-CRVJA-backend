@@ -209,7 +209,7 @@ export default class Structures {
     this.context.emit(`switch (${selector}) {`);
     for (let index = 0; index < procedures.length; index++) {
       const procedure = procedures[index].getText();
-      this.context.emit(`case ${index + 1}: ${procedure}(); break;`);
+      this.context.emit(`case ${index + 1}: await ${procedure}(); break;`);
     }
     this.context.emit('}');
   }
@@ -220,6 +220,7 @@ export default class Structures {
   }
 
   // PROC (procedure call)
+  // The caller waits until End Proc, so loops and waits inside the Procedure run in order.
   enterProcedureCall(ctx) {
     const name = ctx.IDENTIFIER().getText();
     let callCode = '';
@@ -236,7 +237,7 @@ export default class Structures {
       callCode = `${name}(${args});`;
     }
 
-    this.context.emit(`${callCode}`);
+    this.context.emit(`await ${callCode}`);
   }
 
   // PROCEDURE ... END PROC
@@ -269,22 +270,9 @@ export default class Structures {
       }
     }
 
-    this.context.functionDeclarationSupport += `let lastTime${name} = 0; let timeoutId${name} = null;`;
-
+    // Async, so Do, While, Repeat, Wait and Wait Key can await inside the Procedure.
     this.context.emit(`
-function ${name}(${props}) {
-    const currentTime = Date.now();
-    const timeSinceLastCall = currentTime - lastTime${name};
-    if (timeSinceLastCall < 16) {
-        if (timeoutId${name}) {
-            clearTimeout(timeoutId${name});
-        }
-        timeoutId${name} = setTimeout(() => { ${name}(${props}); }, 100 - timeSinceLastCall);
-        return;
-    }
-    lastTime${name} = currentTime;
-    timeoutId${name} = null; // Clear the timeout ID after execution
-${localDeclarations}`);
+async function ${name}(${props}) {${localDeclarations}`);
   }
 
   exitProcedure(ctx) {

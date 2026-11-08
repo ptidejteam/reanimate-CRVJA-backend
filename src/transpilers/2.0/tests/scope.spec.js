@@ -1,5 +1,8 @@
 import AMOSTranspiler from '../amos-transpiler.js';
 
+// Programs run inside an async function, as in the IDE, since Procedure calls are awaited.
+const AsyncFunction = (async () => {}).constructor;
+
 async function translate(code) {
   const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
     code,
@@ -25,7 +28,7 @@ describe('scope handling', () => {
     expect(normalizedJS).toContain('function PROC_INCREMENT(X) {');
     expect(normalizedJS).toContain('X = X + 1;');
     expect(normalizedJS).not.toContain('let X = 0;');
-    expect(() => new Function(translatedCode)).not.toThrow();
+    expect(() => new AsyncFunction(translatedCode)).not.toThrow();
   });
 
   test('declares a procedure local only once', async () => {

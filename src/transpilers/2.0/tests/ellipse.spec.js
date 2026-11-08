@@ -102,7 +102,12 @@ async function run(source, { openScreen = true, random = jest.fn(() => 0.5) } = 
   const code = await translate((openScreen ? screenOpen : '') + source);
   let error;
   try {
-    vm.runInContext(`"use strict";\n${code}`, context, { timeout: 1000 });
+    // Inside an async function, as in the IDE; `cursor` reads the program's graphic cursor.
+    await vm.runInContext(
+      `(async () => {\n"use strict";\nglobalThis.cursor = () => [graphicCursorX, graphicCursorY];\n${code}\n})()`,
+      context,
+      { timeout: 1000 },
+    );
   } catch (caught) {
     error = caught;
   }
@@ -113,7 +118,7 @@ async function run(source, { openScreen = true, random = jest.fn(() => 0.5) } = 
     created,
     random,
     screen: find(host, 'amos-screen'),
-    cursor: Array.from(vm.runInContext('[graphicCursorX, graphicCursorY]', context)),
+    cursor: Array.from(context.cursor()),
     canvases: created.filter((element) => element.tagName === 'canvas'),
   };
 }

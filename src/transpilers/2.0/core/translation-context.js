@@ -42,7 +42,6 @@ export default class TranslationContext {
     this.colorMapping = { ...DEFAULT_COLOR_MAPPING };
     this.palette = `const colorMapping = ${JSON.stringify(this.colorMapping, null, 2)};\n`;
     this.globalVariables = '';
-    this.functionDeclarationSupport = '';
     const colorRuntime = [
       validateAmigaColor,
       cssRgbToAmiga12Bit,
@@ -130,7 +129,6 @@ export default class TranslationContext {
       '// Using Version 2.0 of the AMOS to JavaScript Transpiler\n' +
       this.palette +
       this.globalVariables +
-      this.functionDeclarationSupport +
       this.preamble +
       this.output
     );
