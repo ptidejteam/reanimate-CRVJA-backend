@@ -100,8 +100,14 @@ export default class Structures {
 
     this.context.declareVariable(variable);
 
+    // Labeled and counted as a loop level, so Exit / Exit If can leave it.
+    this.context.incrementCurrentLoop();
+    const label = `loop${this.context.currentLoop}: `;
+
     if (!ctx.STEP()) {
-      this.context.emit(`for (${variable} = ${start}; ${variable} <= ${end}; ${variable}++) {`);
+      this.context.emit(
+        `${label}for (${variable} = ${start}; ${variable} <= ${end}; ${variable}++) {`,
+      );
       return;
     }
 
@@ -116,10 +122,13 @@ export default class Structures {
       condition = `${variable} <= ${end}`;
     }
 
-    this.context.emit(`for (${variable} = ${start}; ${condition}; ${variable} += ${step}) {`);
+    this.context.emit(
+      `${label}for (${variable} = ${start}; ${condition}; ${variable} += ${step}) {`,
+    );
   }
 
   exitForLoop(ctx) {
+    this.context.decrementCurrentLoop();
     this.context.emit('}');
   }
 
