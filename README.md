@@ -30,7 +30,8 @@ Run these commands from the backend root:
 | Command | Purpose |
 | --- | --- |
 | `npm test -- --runInBand` | Run the backend test suite |
-| `npm run antlr` | Generate and format the 2.0 AMOS and extension lexers, parsers, and listeners. Requires Java. |
+| `npm run antlr` | Generate and format the 2.1-beta AMOS and extension lexers, parsers, and listeners. Requires Java. |
+| `npm run antlr:2.0` | Same as `npm run antlr`, for the 2.0 grammars |
 | `npm run format` | Format all JavaScript files with Prettier |
 
 Regenerate parsers after changing a grammar, then include the generated files with that
@@ -50,10 +51,11 @@ change. Handler-only changes do not require regeneration.
 | `antlr-4.13.2-complete.jar` | ANTLR generator invoked by `npm run antlr` |
 | `amos-code-analysis/` | Separate command-usage analysis project; see its [README](amos-code-analysis/README.md) |
 
-The API accepts transpiler versions `1.1`, `1.2`, and `2.0`. A missing, invalid, or unknown
-version uses `2.0`. Requests using the former version IDs resolve to their corresponding transpilers.
+The API accepts transpiler versions `1.1`, `1.2`, `2.0`, and `2.1-beta`, one per folder in
+`src/transpilers/`. A missing, invalid, or unknown version uses the newest one (currently
+`2.1-beta`), which is also the version the frontend selects by default.
 
-New transpiler work belongs in `2.0`. Older programs can select `1.1` or `1.2`.
+New transpiler work belongs in `2.1-beta`. Older programs can select `2.0`, `1.2`, or `1.1`.
 The architecture guide explains how parsing and translation work. [Architecture guide](docs/TRANSPILER.md)
 
 ## 3. API
@@ -98,7 +100,7 @@ frontend's browser runner, not execution by the backend.
 ```json
 {
   "message": "Available versions fetched.",
-  "versions": ["2.0", "1.2", "1.1"]
+  "versions": ["2.1-beta", "2.0", "1.2", "1.1"]
 }
 ```
 

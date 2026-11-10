@@ -4,7 +4,7 @@ import { getAvailableVersions } from '../src/services/versions.service.js';
 describe('Versions Service', () => {
   test('should return the canonical transpiler versions newest first', async () => {
     const versions = await getAvailableVersions();
-    expect(versions).toEqual(['2.0', '1.2', '1.1']);
+    expect(versions).toEqual(['2.1-beta', '2.0', '1.2', '1.1']);
   });
 });
 
@@ -48,24 +48,19 @@ describe('Transpiler Service', () => {
     }
   });
 
-  test.each(['1.1', '1.2'])('should transpile successfully with version %s', async (version) => {
-    const result = await transpileCode(amosCode, version);
-    expect(result).toBeDefined();
-    expect(result.lexicalErrors.errors).toEqual([]);
-    expect(result.syntaxErrors.errors).toEqual([]);
-    expect(result.translatedCode).toContain(
-      `Version ${version} of the AMOS to JavaScript Transpiler`,
-    );
-    expect(result.translatedCode).toContain('amos-screen');
-  });
-
-  test.each([
-    ['1.1.0', '1.1'],
-    ['1.2.0', '1.2'],
-    ['2.0.0-beta', '2.0'],
-  ])('should resolve legacy version %s to %s', async (legacy, canonical) => {
-    expect(await transpileCode(amosCode, legacy)).toEqual(await transpileCode(amosCode, canonical));
-  });
+  test.each(['1.1', '1.2', '2.1-beta'])(
+    'should transpile successfully with version %s',
+    async (version) => {
+      const result = await transpileCode(amosCode, version);
+      expect(result).toBeDefined();
+      expect(result.lexicalErrors.errors).toEqual([]);
+      expect(result.syntaxErrors.errors).toEqual([]);
+      expect(result.translatedCode).toContain(
+        `Version ${version} of the AMOS to JavaScript Transpiler`,
+      );
+      expect(result.translatedCode).toContain('amos-screen');
+    },
+  );
 
   test('should keep diagnostics separate between concurrent requests', async () => {
     const [failed, succeeded] = await Promise.all([
@@ -80,12 +75,14 @@ describe('Transpiler Service', () => {
   });
 
   test.each([undefined, '', 2, '9.9.9-nonexistent', '../../services'])(
-    'should fall back to 2.0 for version %p',
+    'should fall back to the newest version (2.1-beta) for version %p',
     async (version) => {
       const result = await transpileCode(amosCode, version);
       expect(result.lexicalErrors.errors).toEqual([]);
       expect(result.syntaxErrors.errors).toEqual([]);
-      expect(result.translatedCode).toContain('Version 2.0 of the AMOS to JavaScript Transpiler');
+      expect(result.translatedCode).toContain(
+        'Version 2.1-beta of the AMOS to JavaScript Transpiler',
+      );
       expect(result.translatedCode).toContain('amos-screen');
     },
   );
