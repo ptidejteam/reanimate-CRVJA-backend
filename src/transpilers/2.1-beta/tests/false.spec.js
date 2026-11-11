@@ -1,4 +1,5 @@
 import AMOSTranspiler from '../amos-transpiler';
+import { run } from './helpers/runtime.js';
 
 test.each([
   ['an assignment', 'X = False', 'X = 0'],
@@ -12,4 +13,16 @@ test.each([
   expect(lexicalErrors.errors).toEqual([]);
   expect(syntaxErrors.errors).toEqual([]);
   expect(translatedCode).toContain(expected);
+});
+
+// Runtime: the translated program gives the AMOS result.
+// False is 0 (https://amospromanual.dev/05-04-control-structures.html)
+test.each([
+  ['X = False', 'X', 0],
+  ['X = False + 1', 'X', 1],
+  ['X = 1 + Abs(False)', 'X', 1],
+])('false runtime: %s', async (source, name, expected) => {
+  const values = await run(source, [name]);
+
+  expect(values[name]).toBe(expected);
 });

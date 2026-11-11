@@ -1,4 +1,5 @@
 import AMOSTranspiler from '../amos-transpiler.js';
+import { run } from './helpers/runtime.js';
 
 test.each([
   ['two numbers', 'X = Max(99, 1)', 'X = Math.max(99, 1);'],
@@ -30,3 +31,16 @@ test.each(['X = Max(1)', 'X = Max(1, 2, 3)'])(
 // The manual also accepts two strings: Max("AMOS Professional","AMOS") is "AMOS Professional".
 // Math.max() only compares numbers (it returns NaN for strings), so this is not supported yet.
 // test.todo('max of two strings');
+
+// Runtime: the translated program gives the AMOS result.
+// Manual example: Print Max(99,1) (https://amospromanual.dev/05-03-maths.html)
+test.each([
+  ['X = Max(99, 1)', 'X', 99],
+  ['X = Max(-5, -10)', 'X', -5],
+  ['X# = Max(1.5, 2.5)', 'X_f', 2.5],
+  ['X = Max(1.5, 2.5)', 'X', 2],
+])('max runtime: %s', async (source, name, expected) => {
+  const values = await run(source, [name]);
+
+  expect(values[name]).toBe(expected);
+});

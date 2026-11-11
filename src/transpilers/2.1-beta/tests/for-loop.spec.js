@@ -152,3 +152,12 @@ describe('AMOS manual examples', () => {
     expect(await run(source)).toBe(10 * 1000);
   });
 });
+
+// An integer counter starts from the truncated value, as in AMOS. Checked on the AMOS
+// Professional Web Engine (https://creepycat.fr/amos/): For I=1.7 To 3.2 prints 1, 2, 3.
+test('an integer counter truncates a fractional start', async () => {
+  const source = 'L=0\nFor I=1.7 To 3.2\nL=L*10+I\nNext I\nRESULT=L';
+
+  expect(await translate(source)).toContain('loop1: for (I = Math.trunc(1.7); I <= 3.2; I++) {');
+  expect(await run(source)).toBe(123);
+});

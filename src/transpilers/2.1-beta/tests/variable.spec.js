@@ -1,4 +1,5 @@
 import AMOSTranspiler from '../amos-transpiler.js';
+import { run } from './helpers/runtime.js';
 
 async function translate(code) {
   const {
@@ -89,3 +90,45 @@ test('attribute a value to a variable (another variable + expression)', async ()
 //   expect(normalizedJS).toContain('let V$ = "";');
 //   expect(normalizedJS).toContain('V$ = "hello";');
 // });
+
+// An integer variable (no $ or #) stores a fraction truncated toward zero. Checked on the AMOS
+// Professional Web Engine (https://creepycat.fr/amos/) in direct mode.
+describe('integer variables truncate toward zero', () => {
+  test.each([
+    ['a decimal number', 'X=3.7', 'X = Math.trunc(3.7);'],
+    ['a division', 'A=7/2', 'A = Math.trunc(7 / 2);'],
+    ['a real function', 'D=Cos(1)', 'D = Math.trunc(Math.cos(1));'],
+    ['a float variable', 'X#=1.5\nY=X#+1', 'Y = Math.trunc(X_f + 1);'],
+  ])('translation of %s', async (_name, source, expected) => {
+    expect(await translate(source)).toContain(expected);
+  });
+
+  test.each([
+    ['a whole number', 'X=3', 'X = 3;'],
+    ['Rnd of a real value', 'X=Rnd(Sin(1))', 'X = Math.floor(Math.random() * (Math.sin(1) + 1));'],
+    ['a float variable', 'X#=3.7', 'X_f = 3.7;'],
+  ])('no truncation needed for %s', async (_name, source, expected) => {
+    expect(await translate(source)).toContain(expected);
+  });
+
+  test('runtime', async () => {
+    const values = await run(
+      'X=3.7\nY=-3.7\nZ=3.5\nW=-3.5\nA=7/2\nB=-7/2\nC#=7/2\nD=Cos(1)\nE=2.5\nF=-2.5\nG=0.99',
+      ['X', 'Y', 'Z', 'W', 'A', 'B', 'C_f', 'D', 'E', 'F', 'G'],
+    );
+
+    expect(values).toEqual({
+      X: 3,
+      Y: -3,
+      Z: 3,
+      W: -3,
+      A: 3,
+      B: -3,
+      C_f: 3.5,
+      D: 0,
+      E: 2,
+      F: -2,
+      G: 0,
+    });
+  });
+});

@@ -17,7 +17,7 @@ async function translate(code) {
 describe('float variables (A#) and decimal numbers (3.14)', () => {
   test.each([
     ['a decimal number', 'A#=3.14', 'A_f = 3.14;'],
-    ['a float variable in an expression', 'A#=1\nB=A#+0.5', 'B = A_f + 0.5;'],
+    ['a float variable in an expression', 'A#=1\nB=A#+0.5', 'B = Math.trunc(A_f + 0.5);'],
     ['a float array', 'Dim PRICE#(5)\nPRICE#(0)=12.99', 'PRICE_f[Math.trunc(0)] = 12.99;'],
     ['a function result', 'A#=Cos(45)', 'A_f = Math.cos(45);'],
     ['Print # with a float variable', 'A#=1\nPrint #1,A#', 'writeToChannel(1, A_f);'],

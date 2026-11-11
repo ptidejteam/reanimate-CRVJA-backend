@@ -77,13 +77,13 @@ describe('expression operands', () => {
       /const B = Array\.from\(\s*\{\s*length:\s*\(?A\[Math\.trunc\(\(1 \+ 2\) \* 3\)\]\)? \+ 1,?\s*\},\s*\(\) =>\s*Array\.from\(\s*\{\s*length:\s*\(?Math\.sin\(A\[Math\.trunc\(2 \+ 1\)\]\)\)? \+ 1,?\s*\},\s*\(\) => 0,?\s*\),?\s*\);/,
     );
     expect(normalizedJS).toMatch(
-      /B\[Math\.trunc\(A\[Math\.trunc\(1 \+ 2\)\]\)\]\[\s*Math\.trunc\(Math\.floor\(Math\.random\(\) \* \(A\[Math\.trunc\(2 \+ 1\)\] \+ 1\)\)\)\s*\] = Math\.sin\(A\[Math\.trunc\(3 \+ 1\)\]\);/,
+      /B\[Math\.trunc\(A\[Math\.trunc\(1 \+ 2\)\]\)\]\[\s*Math\.trunc\(Math\.floor\(Math\.random\(\) \* \(A\[Math\.trunc\(2 \+ 1\)\] \+ 1\)\)\)\s*\] = Math\.trunc\(Math\.sin\(A\[Math\.trunc\(3 \+ 1\)\]\)\);/,
     );
     expect(normalizedJS).toContain(
       'dataMatrix.push( A[Math.trunc(1 + 2)], Math.floor(Math.random() * (A[Math.trunc(2 + 1)] + 1)), );',
     );
     expect(normalizedJS).toContain(
-      'B[Math.trunc(A[Math.trunc(1 + 2)])][Math.trunc(A[Math.trunc(2 + 1)])] = dataMatrix[dataMatrixPointer++];',
+      'B[Math.trunc(A[Math.trunc(1 + 2)])][Math.trunc(A[Math.trunc(2 + 1)])] = Math.trunc(dataMatrix[dataMatrixPointer++]);',
     );
     expect(normalizedJS).toContain('printEl.innerText = A[Math.trunc(1 + 2)];');
     expect(normalizedJS).toContain('writeToChannel(1, A[Math.trunc(2 + 1)]);');

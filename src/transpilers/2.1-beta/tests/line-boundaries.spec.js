@@ -34,7 +34,7 @@ describe('line boundaries in transpiler 2.0', () => {
     ['string', 'MESSAGE$="Hello"', "MESSAGE$ = 'Hello';"],
     ['addition and subtraction', 'VALUE=10-3+2-1', 'VALUE = 10 - 3 + 2 - 1;'],
     ['unary minus', 'VALUE=-4+6', 'VALUE = -4 + 6;'],
-    ['multiplication and division', 'VALUE=12/3*2', 'VALUE = (12 / 3) * 2;'],
+    ['multiplication and division', 'VALUE=12/3*2', 'VALUE = Math.trunc((12 / 3) * 2);'],
     ['operator precedence', 'VALUE=2+3*4', 'VALUE = 2 + 3 * 4;'],
     ['parentheses', 'VALUE=(2+3)*4', 'VALUE = (2 + 3) * 4;'],
     ['negated parentheses', 'VALUE=-(2+3)*4', 'VALUE = -(2 + 3) * 4;'],
@@ -43,7 +43,11 @@ describe('line boundaries in transpiler 2.0', () => {
       'Dim ITEMS(8)\nVALUE=ITEMS((1+2)*2)',
       'VALUE = ITEMS[Math.trunc((1 + 2) * 2)];',
     ],
-    ['nested function arguments', 'VALUE=Sin(Cos(1+2))', 'VALUE = Math.sin(Math.cos(1 + 2));'],
+    [
+      'nested function arguments',
+      'VALUE=Sin(Cos(1+2))',
+      'VALUE = Math.trunc(Math.sin(Math.cos(1 + 2)));',
+    ],
     [
       'nested function and array arguments',
       'Dim ITEMS(8)\nVALUE=Rnd(Sin(ITEMS(2+1)))',

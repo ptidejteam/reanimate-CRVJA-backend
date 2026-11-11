@@ -1,4 +1,5 @@
 import AMOSTranspiler from '../amos-transpiler.js';
+import { run, seededMath } from './helpers/runtime.js';
 
 async function translate(code) {
   const {
@@ -29,4 +30,17 @@ test('generate a random number up to a variable', async () => {
   `;
   const normalizedJS = await translate(amosCode);
   expect(normalizedJS).toContain('RND_VAR = Math.floor(Math.random() * (MAX_VALUE + 1));');
+});
+
+// Runtime: Rnd(10) is a whole number from 0 to 10, chosen by Math.random.
+test.each([
+  [0, 0],
+  [0.5, 5],
+  [0.999, 10],
+])('rnd runtime: Rnd(10) with Math.random() = %p is %p', async (random, expected) => {
+  const math = seededMath(random);
+  const { X } = await run('X = Rnd(10)', ['X'], { Math: math });
+
+  expect(X).toBe(expected);
+  expect(math.random).toHaveBeenCalledTimes(1);
 });

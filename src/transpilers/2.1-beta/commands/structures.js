@@ -1,5 +1,8 @@
 import { getRuleName } from '../core/handler-dispatcher.js';
 
+// An integer variable or array has no $ (string) or # (float, renamed X_f) suffix.
+const isIntegerVariable = (name) => !name.endsWith('$') && !name.endsWith('_f');
+
 /**
  * AMOS commands of the category "Structure", sorted A-Z by AMOS name, followed by
  * the language syntax that has no category (assignments).
@@ -91,7 +94,7 @@ export default class Structures {
   // so it is translated here.
   enterForLoop(ctx) {
     let variable = ctx.IDENTIFIER(0).getText();
-    let start = this.expressions.translate(ctx.expression(0));
+    let start = this.toTargetType(variable, ctx.expression(0));
     let end = this.expressions.translate(ctx.expression(1));
 
     this.context.declareVariable(variable);
@@ -118,9 +121,13 @@ export default class Structures {
       condition = `${variable} <= ${end}`;
     }
 
-    this.context.emit(
-      `${label}for (${variable} = ${start}; ${condition}; ${variable} += ${step}) {`,
-    );
+    // An integer counter adds the Step, then truncates toward zero, as in AMOS:
+    // For I=-3 To 0 Step 1.5 gives -3, -1, 0, and Step 0.5 from 1 never moves.
+    const increment = this.truncatesTo(variable, ctx.expression(2))
+      ? `${variable} = Math.trunc(${variable} + ${step})`
+      : `${variable} += ${step}`;
+
+    this.context.emit(`${label}for (${variable} = ${start}; ${condition}; ${increment}) {`);
   }
 
   exitForLoop(ctx) {
@@ -289,8 +296,15 @@ async function ${name}(${props}) {${localDeclarations}`);
         ? this.expressions.translate(arrayTarget)
         : target.IDENTIFIER().getText();
 
+      // Data values are only known at runtime, so an integer target always truncates:
+      // Data 3.7,-3.7 : Read X,Y gives 3 and -3, as in AMOS.
+      const name = arrayTarget ? arrayTarget.IDENTIFIER().getText() : targetCode;
+      if (!arrayTarget) this.context.declareVariable(name);
+      const value = 'dataMatrix[dataMatrixPointer++]';
       // TODO: AMOS should report an error if dataMatrixPointer > dataMatrix.length
-      this.context.emit(`${targetCode} = dataMatrix[dataMatrixPointer++];`);
+      this.context.emit(
+        `${targetCode} = ${isIntegerVariable(name) ? `Math.trunc(${value})` : value};`,
+      );
     }
   }
 
@@ -375,8 +389,19 @@ async function ${name}(${props}) {${localDeclarations}`);
     const struct = ctx.arrayStructure();
 
     const arrayTarget = this.expressions.translate(struct);
-    const arrayValue = this.expressions.translate(ctx.expression());
+    const arrayValue = this.toTargetType(struct.IDENTIFIER().getText(), ctx.expression());
     this.context.emit(` ${arrayTarget} = ${arrayValue};`);
+  }
+
+  // Value stored in `name`: an integer variable (no $ or #) truncates a fraction toward zero,
+  // as in AMOS (X=3.7 → 3, X=-3.7 → -3). Values that are always whole are left as they are.
+  toTargetType(name, expression, value = this.expressions.translate(expression)) {
+    return this.truncatesTo(name, expression) ? `Math.trunc(${value})` : value;
+  }
+
+  // True when `name` is an integer variable (no $ or #) and `expression` can give a fraction.
+  truncatesTo(name, expression) {
+    return isIntegerVariable(name) && this.expressions.mayBeFractional(expression);
   }
 
   // Variable assignment: X = 1
@@ -396,7 +421,7 @@ async function ${name}(${props}) {${localDeclarations}`);
     }
 
     this.context.declareVariable(name);
-    this.context.emit(`${name} = ${value};`);
+    this.context.emit(`${name} = ${this.toTargetType(name, ctx.children[2], value)};`);
   }
 
   // Condition of IF ... END IF, or a `condition` node (ELSE IF, EXIT IF, THEN):

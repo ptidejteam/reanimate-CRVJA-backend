@@ -130,7 +130,8 @@ test('unifies array declarations and references across integer, string, and floa
   `,
       '[RESULT, WORDS$[0]]',
     ),
-  ).toEqual([4.25, 'MiXeD']);
+    // RESULT is an integer variable: 3 + 1.25 is truncated to 4, as in AMOS.
+  ).toEqual([4, 'MiXeD']);
 });
 
 test('unifies procedure names, parameters, and globals while preserving scope', async () => {

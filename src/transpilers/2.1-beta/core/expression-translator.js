@@ -1,5 +1,37 @@
 import { getRuleName } from './handler-dispatcher.js';
 
+// Functions whose result is a real number, even with integer arguments.
+const REAL_FUNCTIONS = new Set([
+  'acosFunction',
+  'asinFunction',
+  'atanFunction',
+  'cosFunction',
+  'expFunction',
+  'hcosFunction',
+  'hsinFunction',
+  'htanFunction',
+  'lnFunction',
+  'logFunction',
+  'piFunction',
+  'sinFunction',
+  'sqrFunction',
+]);
+
+// Functions whose result is always whole, whatever their arguments: Rnd(Sin(X)) is an integer.
+const INTEGER_FUNCTIONS = new Set([
+  'colourFunction',
+  'falseFunction',
+  'intFunction',
+  'notOperator',
+  'rndFunction',
+  'spriteColFunction',
+  'trueFunction',
+  'xMouse',
+  'xSpriteFunction',
+  'yMouse',
+  'ySpriteFunction',
+]);
+
 export default class ExpressionTranslator {
   constructor(dispatcher) {
     this.dispatcher = dispatcher;
@@ -29,6 +61,28 @@ export default class ExpressionTranslator {
         return handler(node);
       }
     }
+  }
+
+  // True when the expression can give a fraction: a decimal number (3.7), a division, a float
+  // variable or array (X#, A#(1)), a Fn call or a real function (Cos, Sqr, ...). An integer
+  // variable stores such a value truncated toward zero, as AMOS does (X=3.7 → 3, X=-3.7 → -3).
+  mayBeFractional(node) {
+    if (!node) return false;
+    if (node.symbol) {
+      const text = node.getText();
+      if (text === '/') return true;
+      if (/^[0-9]+\.[0-9]+$/.test(text)) return true;
+      return text.endsWith('_f');
+    }
+
+    const rule = getRuleName(node);
+    if (REAL_FUNCTIONS.has(rule)) return true;
+    if (INTEGER_FUNCTIONS.has(rule)) return false;
+    // Even an integer Fn returns its expression as is: Def Fn A(X)=X/2 gives Fn A(7) = 3.5.
+    if (rule === 'fnCall') return true;
+    // The type of an array element comes from its name, not its indices.
+    if (rule === 'arrayStructure') return node.IDENTIFIER().getText().endsWith('_f');
+    return (node.children ?? []).some((child) => this.mayBeFractional(child));
   }
 
   // Addition and subtraction: a + b - c.
