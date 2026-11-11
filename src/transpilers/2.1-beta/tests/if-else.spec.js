@@ -1,199 +1,66 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const {
-    lexicalErrors: lexicalErrors,
-    syntaxErrors: syntaxErrors,
-    translatedCode: translatedCode,
-  } = await new AMOSTranspiler().transpile(code);
-
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-
-  const normalizedJS = translatedCode.replace(/\s+/g, ' ').trim();
-  return normalizedJS;
-}
-
-test('simple "if 1 > 0" condition', async () => {
-  const amosBasicCode = `
-    If 1 > 0
-    End If
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('if (1 > 0) { }');
-});
-
-test('if condition on a variable "if X > 1"', async () => {
-  const amosBasicCode = `
-    If X > 1
-    End If
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('if (X > 1) { }');
-});
-
-test('if condition on an array element "if A(1) <> 2"', async () => {
-  const amosBasicCode = `
-    Dim A(3)
-    If A(1) <> 2
-    End If
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('if (A[Math.trunc(1)] != 2) { }');
-});
-
-test('if condition mixing variables and array elements "if X = 1 and A(2) <= Y"', async () => {
-  const amosBasicCode = `
-    Dim A(3)
-    If X = 1 and A(2) <= Y
-    End If
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('if (X == 1 && A[Math.trunc(2)] <= Y) { }');
-});
-
-test('if condition with math expressions "if 10 + 1 < 11 + 20"', async () => {
-  const amosBasicCode = `
-    If 10 + 1 < 11 + 20
-    End If
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('if (10 + 1 < 11 + 20) { }');
-});
-
-test('if condition with multiple expressions and operators "if 10 + 1 < 11 + 20 and 1 + 1 > 0 - 1"', async () => {
-  const amosBasicCode = `
-    If 10 + 1 < 11 + 20 and 1 + 1 > 0 - 1
-    End If
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('if (10 + 1 < 11 + 20 && 1 + 1 > 0 - 1) { }');
-});
-
-test('if condition with parenthesized expressions "if (2 * 5) > 1 and (3 + 3) > 5"', async () => {
-  const amosBasicCode = `
-    If (2 * 5) > 1 and (3 + 3) > 5
-    End If
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('if (2 * 5 > 1 && 3 + 3 > 5) { }');
-});
-
-test('if condition with all parenthesized expressions "if (10 + 1) < (11 + 20) and (1 + 1) > (0 - 1)"', async () => {
-  const amosBasicCode = `
-    If (10 + 1) < (11 + 20) and (1 + 1) > (0 - 1)
-    End If
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('if (10 + 1 < 11 + 20 && 1 + 1 > 0 - 1) { }');
-});
-
-test('if condition with "or" "if 1 > 0 or 2 < 1"', async () => {
-  const amosBasicCode = `
-    If 1 > 0 or 2 < 1
-    End If
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('if (1 > 0 || 2 < 1) { }');
-});
+// IF ... ELSE ... END IF: runs a block when a condition is true.
+// https://amospromanual.dev/05-04-control-structures.html
 
 test.each([
-  ['And', '&&'],
-  ['AND', '&&'],
-  ['Or', '||'],
-  ['OR', '||'],
-])('logical operator is case-insensitive "if 1 > 0 %s 2 > 1"', async (operator, jsOperator) => {
-  const amosBasicCode = `
-    If 1 > 0 ${operator} 2 > 1
-    End If
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain(`if (1 > 0 ${jsOperator} 2 > 1) { }`);
+  ['a comparison', 'If 1 > 0\nEnd If', 'if (1 > 0) { }'],
+  ['a variable', 'If X > 1\nEnd If', 'if (X > 1) { }'],
+  ['an array element', 'Dim A(3)\nIf A(1) <> 2\nEnd If', 'if (A[Math.trunc(1)] != 2) { }'],
+  [
+    'variables and array elements',
+    'Dim A(3)\nIf X = 1 and A(2) <= Y\nEnd If',
+    'if (X == 1 && A[Math.trunc(2)] <= Y) { }',
+  ],
+  ['math expressions', 'If 10 + 1 < 11 + 20\nEnd If', 'if (10 + 1 < 11 + 20) { }'],
+  [
+    'several expressions and operators',
+    'If 10 + 1 < 11 + 20 and 1 + 1 > 0 - 1\nEnd If',
+    'if (10 + 1 < 11 + 20 && 1 + 1 > 0 - 1) { }',
+  ],
+  [
+    'expressions in brackets',
+    'If (2 * 5) > 1 and (3 + 3) > 5\nEnd If',
+    'if (2 * 5 > 1 && 3 + 3 > 5) { }',
+  ],
+  [
+    'every side in brackets',
+    'If (10 + 1) < (11 + 20) and (1 + 1) > (0 - 1)\nEnd If',
+    'if (10 + 1 < 11 + 20 && 1 + 1 > 0 - 1) { }',
+  ],
+  ['Or', 'If 1 > 0 or 2 < 1\nEnd If', 'if (1 > 0 || 2 < 1) { }'],
+  ['And in any case', 'If 1 > 0 AND 2 > 1\nEnd If', 'if (1 > 0 && 2 > 1) { }'],
+  ['Or in any case', 'If 1 > 0 OR 2 > 1\nEnd If', 'if (1 > 0 || 2 > 1) { }'],
+  ['three comparisons', 'If 1 > 0 and 2 > 1 and 3 > 2\nEnd If', 'if (1 > 0 && 2 > 1 && 3 > 2) { }'],
+  ['And before Or', 'If 1 > 0 or 2 > 1 and 3 > 2\nEnd If', 'if (1 > 0 || (2 > 1 && 3 > 2)) { }'],
+])('If translates %s', async (name, amos, javascript) => {
+  expect(await translate(amos)).toContain(javascript);
 });
 
-test('if condition chaining three comparisons "if 1 > 0 and 2 > 1 and 3 > 2"', async () => {
-  const amosBasicCode = `
-    If 1 > 0 and 2 > 1 and 3 > 2
+test('If with Else', async () => {
+  const javascript = await translate(`
+    If 1 > 0
+      Curs Off
+    Else
+      Curs On
     End If
-  `;
+  `);
 
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('if (1 > 0 && 2 > 1 && 3 > 2) { }');
+  expect(javascript).toContain(
+    "if (1 > 0) { document.getElementById('amos-screen').style.cursor = 'none'; } else { document.getElementById('amos-screen').style.cursor = 'auto'; }",
+  );
 });
 
-test('"and" binds tighter than "or" "if 1 > 0 or 2 > 1 and 3 > 2"', async () => {
-  const amosBasicCode = `
-    If 1 > 0 or 2 > 1 and 3 > 2
-    End If
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('if (1 > 0 || (2 > 1 && 3 > 2)) { }');
-});
-
-test('if-else statement with "and" condition', async () => {
-  const amosBasicCode = `
+test('If with an And condition and Else', async () => {
+  const javascript = await translate(`
     If 1 > 0 and 2 > 1
       Curs Off
     Else
       Curs On
     End If
-  `;
+  `);
 
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain(
+  expect(javascript).toContain(
     "if (1 > 0 && 2 > 1) { document.getElementById('amos-screen').style.cursor = 'none'; } else { document.getElementById('amos-screen').style.cursor = 'auto'; }",
   );
-});
-
-test('if-else statement execution branches', async () => {
-  const amosBasicCode = `
-    If 1 > 0
-      Curs Off
-    Else
-      Curs On
-    End If
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain(
-    "if (1 > 0) { document.getElementById('amos-screen').style.cursor = 'none'; } else { document.getElementById('amos-screen').style.cursor = 'auto'; }",
-  );
-});
-
-// NOTE: "If _ Then" is parsed as a single-line If (rule ifThenStatement), but it is not
-// translated yet: enterIfThenStatement in commands/structures.js is a placeholder.
-test('if_then_not_implemented_yet', async () => {
-  const amosBasicCode = `
-    If 1 > 0 Then Curs Off
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  // "Then" is a keyword: it is no longer translated as a procedure call (Then())
-  expect(normalizedJS).not.toContain('Then();');
 });

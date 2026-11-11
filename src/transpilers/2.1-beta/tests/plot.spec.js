@@ -1,12 +1,10 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-test('plot translation', async () => {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    'Plot 10,20',
-  );
+// PLOT: draws a point. https://amospromanual.dev/06-04-graphics.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-  expect(translatedCode).toContain("plotDiv.style.left = 10 + 'px';");
-  expect(translatedCode).toContain("plotDiv.style.top = 20 + 'px';");
+test('Plot draws a point at x, y', async () => {
+  const javascript = await translate('Plot 10,20');
+
+  expect(javascript).toContain("plotDiv.style.left = 10 + 'px';");
+  expect(javascript).toContain("plotDiv.style.top = 20 + 'px';");
 });

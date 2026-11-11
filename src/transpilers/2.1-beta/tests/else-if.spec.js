@@ -1,18 +1,10 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    code,
-  );
+// ELSE IF: tests another condition when the ones before it are false.
+// https://amospromanual.dev/05-04-control-structures.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-
-  return translatedCode.replace(/\s+/g, ' ').trim();
-}
-
-test('if / else if / else / end if', async () => {
-  const amosBasicCode = `
+test('If, Else If, Else', async () => {
+  const javascript = await translate(`
     If A=1
       Curs Off
     Else If A=2
@@ -20,45 +12,39 @@ test('if / else if / else / end if', async () => {
     Else
       Curs Off
     End If
-  `;
+  `);
 
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain(
+  expect(javascript).toContain(
     "if (A == 1) { document.getElementById('amos-screen').style.cursor = 'none'; } else if (A == 2) { document.getElementById('amos-screen').style.cursor = 'auto'; } else { document.getElementById('amos-screen').style.cursor = 'none'; }",
   );
 });
 
-test('several else if without else', async () => {
-  const amosBasicCode = `
+test('several Else If without Else', async () => {
+  const javascript = await translate(`
     If A=1
     Else If A=2
     Else If A=3
     End If
-  `;
+  `);
 
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('else if (A == 2)');
-  expect(normalizedJS).toContain('else if (A == 3)');
+  expect(javascript).toContain('else if (A == 2)');
+  expect(javascript).toContain('else if (A == 3)');
 });
 
-test('else if with a key state condition', async () => {
-  const amosBasicCode = `
+test('Else If with a Key State condition', async () => {
+  const javascript = await translate(`
     If X=1
       Curs Off
     Else If Key State($45)
       Curs On
     End If
-  `;
+  `);
 
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('} else if (currentPressedKey === keyMapping[69]) {');
+  expect(javascript).toContain('} else if (currentPressedKey === keyMapping[69]) {');
 });
 
-test('else if inside an if key state', async () => {
-  const amosBasicCode = `
+test('Else If after an If Key State', async () => {
+  const javascript = await translate(`
     If Key State($45)
       Curs Off
     Else If X=1
@@ -66,11 +52,9 @@ test('else if inside an if key state', async () => {
     Else
       Curs Off
     End If
-  `;
+  `);
 
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain(
+  expect(javascript).toContain(
     "if (currentPressedKey === keyMapping[69]) { document.getElementById('amos-screen').style.cursor = 'none'; } else if (X == 1) { document.getElementById('amos-screen').style.cursor = 'auto'; } else { document.getElementById('amos-screen').style.cursor = 'none'; }",
   );
 });

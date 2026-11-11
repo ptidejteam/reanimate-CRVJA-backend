@@ -1,35 +1,10 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const {
-    lexicalErrors: lexicalErrors,
-    syntaxErrors: syntaxErrors,
-    translatedCode: translatedCode,
-  } = await new AMOSTranspiler().transpile(code);
+// CURS ON / CURS OFF: shows or hides the cursor. https://amospromanual.dev/05-06-text.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-
-  const normalizedJS = translatedCode.replace(/\s+/g, ' ').trim();
-  return normalizedJS;
-}
-
-test('curs_on', async () => {
-  const amosBasicCode = `
-    Curs On
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain(`document.getElementById('amos-screen').style.cursor = 'auto';`);
-});
-
-test('curs_off', async () => {
-  const amosBasicCode = `
-    Curs Off
-    `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain(`document.getElementById('amos-screen').style.cursor = 'none';`);
+test.each([
+  ['Curs On', 'Curs On', "document.getElementById('amos-screen').style.cursor = 'auto';"],
+  ['Curs Off', 'Curs Off', "document.getElementById('amos-screen').style.cursor = 'none';"],
+])('%s translates', async (name, amos, javascript) => {
+  expect(await translate(amos)).toContain(javascript);
 });

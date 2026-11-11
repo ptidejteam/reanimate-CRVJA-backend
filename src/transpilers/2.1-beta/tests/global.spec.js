@@ -1,22 +1,19 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    code,
-  );
+// GLOBAL: shares variables with every Procedure. https://amospromanual.dev/05-05-procedures.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
+test('a Global variable is the same inside a Procedure', async () => {
+  const javascript = await translate(`
+    SHARED_VALUE = 55
+    Global SHARED_VALUE
+    Procedure PROC_UPDATE
+      SHARED_VALUE = 56
+    End Proc
+  `);
 
-  return translatedCode.replace(/\s+/g, ' ').trim();
-}
-
-test('Global keeps a variable shared with the Procedures', async () => {
-  const normalizedJS = await translate(
-    'SHARED_VALUE = 55\nGlobal SHARED_VALUE\nProcedure PROC_UPDATE\nSHARED_VALUE = 56\nEnd Proc',
-  );
-
-  expect(normalizedJS.match(/let SHARED_VALUE = 0;/g)).toHaveLength(1);
-  expect(normalizedJS).toContain('SHARED_VALUE = 55;');
-  expect(normalizedJS).toContain('SHARED_VALUE = 56;');
+  // Declared once for the program, and not again as a local of the Procedure.
+  expect(javascript).toContain('let SHARED_VALUE = 0;');
+  expect(javascript).not.toContain('let SHARED_VALUE = 0; SHARED_VALUE = 56;');
+  expect(javascript).toContain('SHARED_VALUE = 55;');
+  expect(javascript).toContain('SHARED_VALUE = 56;');
 });

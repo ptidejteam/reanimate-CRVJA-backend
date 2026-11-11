@@ -1,20 +1,13 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    code,
-  );
+// END IF: the end of an If block. https://amospromanual.dev/05-04-control-structures.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-
-  return translatedCode.replace(/\s+/g, ' ').trim();
-}
-
-test('End If closes the If block', async () => {
-  const normalizedJS = await translate('If 1 > 0\nCurs Off\nEnd If');
-
-  expect(normalizedJS).toContain(
+test.each([
+  [
+    'the end of an If',
+    'If 1 > 0\nCurs Off\nEnd If',
     "if (1 > 0) { document.getElementById('amos-screen').style.cursor = 'none'; }",
-  );
+  ],
+])('End If translates %s', async (name, amos, javascript) => {
+  expect(await translate(amos)).toContain(javascript);
 });

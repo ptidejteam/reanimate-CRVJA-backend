@@ -1,20 +1,10 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    code,
-  );
+// SPRITE OFF: hides one sprite, or all sprites. https://amospromanual.dev/07-01-hardware-sprites.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-
-  return translatedCode.replace(/\s+/g, ' ').trim();
-}
-
-test('Sprite Off hides one sprite', async () => {
-  expect(await translate('Sprite Off 0')).toContain('spriteOff(0);');
-});
-
-test('Sprite Off without a number hides all sprites', async () => {
-  expect(await translate('Sprite Off')).toContain('spriteOff();');
+test.each([
+  ['one sprite', 'Sprite Off 0', 'spriteOff(0);'],
+  ['all sprites', 'Sprite Off', 'spriteOff();'],
+])('Sprite Off hides %s', async (name, amos, javascript) => {
+  expect(await translate(amos)).toContain(javascript);
 });

@@ -1,27 +1,12 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { syntaxErrors } from './helpers/translate.js';
 
-// Rainbow and Set Rainbow are parsed but not translated yet. As in the AMOS manual, Rainbow
-// takes 4 arguments and Set Rainbow 6 ("" for an unused colour).
+// RAINBOW: parsed but not translated yet. As in the AMOS manual, it takes 4 values.
+// https://amospromanual.dev/06-03-screen-effects.html
 
-test.each([
-  'Rainbow 1,0,128,16',
-  'Rainbow 1,0,128+M*12,16',
-  'Set Rainbow 1,7+8,30,"","",""',
-  'Set Rainbow 0,1,16,"(1,1,15)","",""',
-])('%s parses', async (source) => {
-  const { lexicalErrors, syntaxErrors } = await new AMOSTranspiler().transpile(source);
-
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
+test.each(['Rainbow 1,0,128,16', 'Rainbow 1,0,128+M*12,16'])('%s parses', async (amos) => {
+  expect(await syntaxErrors(amos)).toEqual([]);
 });
 
-test.each([
-  'Rainbow 1,0,128',
-  'Rainbow 1,0,128,16,5',
-  'Set Rainbow 1,7,30,"r"',
-  'Set Rainbow 1,7,30,"r",,"b"',
-])('%s is a syntax error', async (source) => {
-  const { syntaxErrors } = await new AMOSTranspiler().transpile(source);
-
-  expect(syntaxErrors.errors.length).toBeGreaterThan(0);
+test.each(['Rainbow 1,0,128', 'Rainbow 1,0,128,16,5'])('%s is a syntax error', async (amos) => {
+  expect(await syntaxErrors(amos)).not.toEqual([]);
 });

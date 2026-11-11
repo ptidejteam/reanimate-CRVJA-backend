@@ -1,24 +1,11 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    code,
-  );
+// LOAD: loads a file into a memory bank (bank 1 by default).
+// https://amospromanual.dev/05-09-memory-banks.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-
-  return translatedCode.replace(/\s+/g, ' ').trim();
-}
-
-test('Load without a bank number loads into bank 1', async () => {
-  const normalizedJS = await translate('Load "assets/icons.abk"');
-
-  expect(normalizedJS).toContain('loadBank(\'"assets/icons.abk"\', 1);');
-});
-
-test('Load with a bank number', async () => {
-  const normalizedJS = await translate('Load "assets/icons.abk", 2');
-
-  expect(normalizedJS).toContain('loadBank(\'"assets/icons.abk"\', 2);');
+test.each([
+  ['without a bank number', 'Load "assets/icons.abk"', 'loadBank(\'"assets/icons.abk"\', 1);'],
+  ['with a bank number', 'Load "assets/icons.abk", 2', 'loadBank(\'"assets/icons.abk"\', 2);'],
+])('Load translates %s', async (name, amos, javascript) => {
+  expect(await translate(amos)).toContain(javascript);
 });

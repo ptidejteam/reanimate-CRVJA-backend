@@ -1,5 +1,7 @@
-import AMOSTranspiler from '../amos-transpiler.js';
-import { run } from './helpers/runtime.js';
+import { translate } from './helpers/translate.js';
+import { evaluate } from './helpers/evaluate.js';
+
+// UPPER$: a string in capital letters. https://amospromanual.dev/05-02-string-functions.html
 
 test.each([
   ['a string', 'RESULT$=Upper$("AbC")', "RESULT$ = 'AbC'.toUpperCase();"],
@@ -8,23 +10,14 @@ test.each([
     'RESULT$=Upper$(Flip$(Lower$("AbC")))',
     "RESULT$ = 'AbC'.toLowerCase().split('').reverse().join('').toUpperCase();",
   ],
-])('Upper$ translates %s', async (_name, source, expected) => {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    source,
-  );
-
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-  expect(translatedCode).toContain(expected);
+])('Upper$ translates %s', async (name, amos, javascript) => {
+  expect(await translate(amos)).toContain(javascript);
 });
 
-// Runtime: the translated program gives the AMOS result.
-// Manual example: Print Upper$("aMoS pRoFeSsIoNaL") (https://amospromanual.dev/05-02-string-functions.html)
+// Manual example: Print Upper$("aMoS pRoFeSsIoNaL")
 test.each([
-  ['RESULT$=Upper$("aMoS pRoFeSsIoNaL")', 'RESULT$', 'AMOS PROFESSIONAL'],
-  ['RESULT$=Upper$(Flip$(Lower$("AbC")))', 'RESULT$', 'CBA'],
-])('upper runtime: %s', async (source, name, expected) => {
-  const values = await run(source, [name]);
-
-  expect(values[name]).toBe(expected);
+  ['Upper$("aMoS pRoFeSsIoNaL")', 'AMOS PROFESSIONAL'],
+  ['Upper$(Flip$(Lower$("AbC")))', 'CBA'],
+])('%s returns %p', async (amos, value) => {
+  expect(await evaluate(amos)).toBe(value);
 });

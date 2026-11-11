@@ -1,41 +1,22 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const {
-    lexicalErrors: lexicalErrors,
-    syntaxErrors: syntaxErrors,
-    translatedCode: translatedCode,
-  } = await new AMOSTranspiler().transpile(code);
+// SCREEN OPEN: opens a screen with a width, height, colours and resolution.
+// https://amospromanual.dev/06-01-setting-up-screens.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
+test('Screen Open creates the screen', async () => {
+  const javascript = await translate('Screen Open 1,600,400,8,Hires');
 
-  const normalizedJS = translatedCode.replace(/\s+/g, ' ').trim();
-  return normalizedJS;
-}
-
-test('screen_open', async () => {
-  const amosBasicCode = `
-        Screen Open 1,600,400,8,Hires
-    `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  const expectedJsCode = `
-  const screenDiv = document.createElement('div');
-  screenDiv.style.width = '600px';
-  screenDiv.style.height = '400px';
-  screenDiv.style.border = '1px solid black';
-  screenDiv.style.overflow = 'hidden'; 
-  screenDiv.style.padding = '0'; 
-  screenDiv.style.position = 'relative'; 
-  screenDiv.id = 'amos-screen'; 
-  screenDiv.style.zIndex = 1;
-  document.getElementById('game-container').appendChild(screenDiv);
-  document.getElementById('amos-screen').style.backgroundColor = 'black';
-`;
-
-  const normalizedExpectedJsCode = expectedJsCode.replace(/\s+/g, ' ').trim();
-
-  expect(normalizedJS).toContain(normalizedExpectedJsCode);
+  expect(javascript).toContain("const screenDiv = document.createElement('div');");
+  expect(javascript).toContain("screenDiv.style.width = '600px';");
+  expect(javascript).toContain("screenDiv.style.height = '400px';");
+  expect(javascript).toContain("screenDiv.style.border = '1px solid black';");
+  expect(javascript).toContain("screenDiv.style.overflow = 'hidden';");
+  expect(javascript).toContain("screenDiv.style.padding = '0';");
+  expect(javascript).toContain("screenDiv.style.position = 'relative';");
+  expect(javascript).toContain("screenDiv.id = 'amos-screen';");
+  expect(javascript).toContain('screenDiv.style.zIndex = 1;');
+  expect(javascript).toContain("document.getElementById('game-container').appendChild(screenDiv);");
+  expect(javascript).toContain(
+    "document.getElementById('amos-screen').style.backgroundColor = 'black';",
+  );
 });

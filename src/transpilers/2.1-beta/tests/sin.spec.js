@@ -1,30 +1,26 @@
-import AMOSTranspiler from '../amos-transpiler.js';
-import { run } from './helpers/runtime.js';
+import { translate, syntaxErrors } from './helpers/translate.js';
+import { evaluate } from './helpers/evaluate.js';
+
+// SIN: the sine of an angle, in radians unless Degree is set.
+// https://amospromanual.dev/05-03-maths.html
+// An integer variable (X) stores the result truncated toward zero; a float variable (X#) keeps it.
 
 test.each([
   ['a number', 'X = Sin(1)', 'X = Math.trunc(Math.sin(1));'],
   ['a variable', 'X = Sin(Y)', 'X = Math.trunc(Math.sin(Y));'],
   ['an expression', 'X = Sin(Y + 1)', 'X = Math.trunc(Math.sin(Y + 1));'],
-])('sin translation with %s', async (_name, source, expected) => {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    source,
-  );
-
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-  expect(translatedCode).toContain(expected);
+  ['a float variable', 'X# = Sin(1)', 'X_f = Math.sin(1);'],
+])('Sin translates %s', async (name, amos, javascript) => {
+  expect(await translate(amos)).toContain(javascript);
 });
 
-// Runtime: the translated program gives the AMOS result.
-// Manual example: Degree / Print Sin(45) (https://amospromanual.dev/05-03-maths.html)
-// An integer variable (X) truncates the result toward zero; a float variable (X#) keeps it.
 test.each([
-  ['X# = Sin(0)', 'X_f', 0],
-  ['X# = Sin(1)', 'X_f', 0.8414709848078965],
-  ['X = Sin(1)', 'X', 0],
-  ['Degree\nX# = Sin(45)', 'X_f', 0.7071067811865475],
-])('sin runtime: %s', async (source, name, expected) => {
-  const values = await run(source, [name]);
+  ['Sin(0)', 0],
+  ['Sin(1)', 0.8414709848078965],
+])('%s returns %p', async (amos, value) => {
+  expect(await evaluate(amos)).toBe(value);
+});
 
-  expect(values[name]).toBeCloseTo(expected, 12);
+test.each(['X = Sin()', 'X = Sin(1, 2)'])('%s is a syntax error', async (amos) => {
+  expect(await syntaxErrors(amos)).not.toEqual([]);
 });

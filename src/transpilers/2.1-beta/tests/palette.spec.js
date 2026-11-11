@@ -1,13 +1,12 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-test('palette converts AMOS 12-bit colors through the shared converter', async () => {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    'Palette $000,$F80,$FFF',
-  );
+// PALETTE: sets the colours of the screen, as $RGB values.
+// https://amospromanual.dev/06-04-graphics.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-  expect(translatedCode).toContain('rgb(0, 0, 0)');
-  expect(translatedCode).toContain('rgb(255, 136, 0)');
-  expect(translatedCode).toContain('rgb(255, 255, 255)');
+test('Palette converts each $RGB colour', async () => {
+  const javascript = await translate('Palette $000,$F80,$FFF');
+
+  expect(javascript).toContain('rgb(0, 0, 0)');
+  expect(javascript).toContain('rgb(255, 136, 0)');
+  expect(javascript).toContain('rgb(255, 255, 255)');
 });

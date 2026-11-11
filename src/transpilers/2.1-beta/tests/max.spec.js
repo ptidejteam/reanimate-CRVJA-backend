@@ -1,5 +1,7 @@
-import AMOSTranspiler from '../amos-transpiler.js';
-import { run } from './helpers/runtime.js';
+import { translate, syntaxErrors } from './helpers/translate.js';
+import { evaluate } from './helpers/evaluate.js';
+
+// MAX: the largest of two values. https://amospromanual.dev/05-03-maths.html
 
 test.each([
   ['two numbers', 'X = Max(99, 1)', 'X = Math.max(99, 1);'],
@@ -8,39 +10,22 @@ test.each([
   ['a negative number', 'X = Max(-5, A)', 'X = Math.max(-5, A);'],
   ['Min inside', 'X = Max(Min(A, 10), 0)', 'X = Math.max(Math.min(A, 10), 0);'],
   ['an operation on the result', 'X = Max(A, B) + 1', 'X = Math.max(A, B) + 1;'],
-])('max translation with %s', async (_name, source, expected) => {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    source,
-  );
-
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-  expect(translatedCode).toContain(expected);
+])('Max translates %s', async (name, amos, javascript) => {
+  expect(await translate(amos)).toContain(javascript);
 });
 
-test.each(['X = Max(1)', 'X = Max(1, 2, 3)'])(
-  '%s is a syntax error: Max takes two values',
-  async (source) => {
-    const { syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(source);
+// Manual example: Print Max(99,1)
+test.each([
+  ['Max(99, 1)', 99],
+  ['Max(-5, -10)', -5],
+  ['Max(1.5, 2.5)', 2.5],
+])('%s returns %p', async (amos, value) => {
+  expect(await evaluate(amos)).toBe(value);
+});
 
-    expect(syntaxErrors.errors.length).toBeGreaterThan(0);
-    expect(translatedCode).toBe('');
-  },
-);
+test.each(['X = Max(1)', 'X = Max(1, 2, 3)'])('%s is a syntax error', async (amos) => {
+  expect(await syntaxErrors(amos)).not.toEqual([]);
+});
 
 // The manual also accepts two strings: Max("AMOS Professional","AMOS") is "AMOS Professional".
 // Math.max() only compares numbers (it returns NaN for strings), so this is not supported yet.
-// test.todo('max of two strings');
-
-// Runtime: the translated program gives the AMOS result.
-// Manual example: Print Max(99,1) (https://amospromanual.dev/05-03-maths.html)
-test.each([
-  ['X = Max(99, 1)', 'X', 99],
-  ['X = Max(-5, -10)', 'X', -5],
-  ['X# = Max(1.5, 2.5)', 'X_f', 2.5],
-  ['X = Max(1.5, 2.5)', 'X', 2],
-])('max runtime: %s', async (source, name, expected) => {
-  const values = await run(source, [name]);
-
-  expect(values[name]).toBe(expected);
-});

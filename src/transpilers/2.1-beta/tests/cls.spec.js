@@ -1,57 +1,30 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const {
-    lexicalErrors: lexicalErrors,
-    syntaxErrors: syntaxErrors,
-    translatedCode: translatedCode,
-  } = await new AMOSTranspiler().transpile(code);
+// CLS: clears the screen, optionally with a colour or only inside a block.
+// https://amospromanual.dev/06-01-setting-up-screens.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
+test('Cls clears the screen', async () => {
+  const javascript = await translate('Cls');
 
-  const normalizedJS = translatedCode.replace(/\s+/g, ' ').trim();
-  return normalizedJS;
-}
-
-test('cls translation', async () => {
-  const amosBasicCode = `
-    Cls
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  // Check if the output contains the screen clearing commands
-  expect(normalizedJS).toContain("const amosScreen = document.getElementById('amos-screen');");
-  expect(normalizedJS).toContain("amosScreen.innerHTML = '';");
+  expect(javascript).toContain("const amosScreen = document.getElementById('amos-screen');");
+  expect(javascript).toContain("amosScreen.innerHTML = '';");
 });
 
-test('cls with color translation', async () => {
-  const amosBasicCode = `
-    Cls 2
-    `;
+test('Cls with a colour clears the screen to that colour', async () => {
+  const javascript = await translate('Cls 2');
 
-  const normalizedJS = await translate(amosBasicCode);
-
-  // Check if the output contains the screen clearing commands
-  expect(normalizedJS).toContain("const amosScreen = document.getElementById('amos-screen');");
-  expect(normalizedJS).toContain("amosScreen.innerHTML = '';");
-
-  // Check if it sets the background color using the colorMapping dictionary
-  expect(normalizedJS).toContain('amosScreen.style.backgroundColor = colorMapping[2];');
+  expect(javascript).toContain("const amosScreen = document.getElementById('amos-screen');");
+  expect(javascript).toContain("amosScreen.innerHTML = '';");
+  expect(javascript).toContain('amosScreen.style.backgroundColor = colorMapping[2];');
 });
 
-test('cls with block area translation', async () => {
-  const amosBasicCode = `
-        Cls 2,10,20 To 100,200
-    `;
+test('Cls with a block clears only that block', async () => {
+  const javascript = await translate('Cls 2,10,20 To 100,200');
 
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('const clearColor = colorMapping[2];');
-  expect(normalizedJS).toContain('const clearX1 = 10;');
-  expect(normalizedJS).toContain('const clearY1 = 20;');
-  expect(normalizedJS).toContain('const clearX2 = 100;');
-  expect(normalizedJS).toContain('const clearY2 = 200;');
-  expect(normalizedJS).toContain('fillDiv.style.backgroundColor = clearColor;');
+  expect(javascript).toContain('const clearColor = colorMapping[2];');
+  expect(javascript).toContain('const clearX1 = 10;');
+  expect(javascript).toContain('const clearY1 = 20;');
+  expect(javascript).toContain('const clearX2 = 100;');
+  expect(javascript).toContain('const clearY2 = 200;');
+  expect(javascript).toContain('fillDiv.style.backgroundColor = clearColor;');
 });

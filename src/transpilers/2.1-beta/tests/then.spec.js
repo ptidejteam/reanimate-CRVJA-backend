@@ -1,20 +1,13 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    code,
-  );
+// THEN: an If on one line. https://amospromanual.dev/05-04-control-structures.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-
-  return translatedCode.replace(/\s+/g, ' ').trim();
-}
-
-test('If ... Then runs the instruction on the same line', async () => {
-  const normalizedJS = await translate('If 1 > 0 Then Curs Off');
-
-  expect(normalizedJS).toContain(
+test.each([
+  [
+    'an instruction',
+    'If 1 > 0 Then Curs Off',
     "if (1 > 0) { document.getElementById('amos-screen').style.cursor = 'none'; }",
-  );
+  ],
+])('Then translates %s', async (name, amos, javascript) => {
+  expect(await translate(amos)).toContain(javascript);
 });

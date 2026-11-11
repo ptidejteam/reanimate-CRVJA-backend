@@ -1,28 +1,14 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const {
-    lexicalErrors: lexicalErrors,
-    syntaxErrors: syntaxErrors,
-    translatedCode: translatedCode,
-  } = await new AMOSTranspiler().transpile(code);
+// DO ... LOOP: repeats a block forever, waiting one frame on each pass.
+// https://amospromanual.dev/05-04-control-structures.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-
-  const normalizedJS = translatedCode.replace(/\s+/g, ' ').trim();
-  return normalizedJS;
-}
-
-test('do_loop', async () => {
-  const amosBasicCode = `
-  Do 
-
-  Loop 
-    `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  // Assert against current translator output containing loop guard and setInterval
-  expect(normalizedJS).toContain('while (true) { await new Promise((r) => setTimeout(r, 16)); }');
+test.each([
+  [
+    'an empty loop',
+    'Do\nLoop',
+    'loop1: while (true) { await new Promise((r) => setTimeout(r, 16)); }',
+  ],
+])('Do translates %s', async (name, amos, javascript) => {
+  expect(await translate(amos)).toContain(javascript);
 });

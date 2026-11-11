@@ -1,18 +1,9 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    code,
-  );
+// EXIT IF: leaves a loop when a condition is true. https://amospromanual.dev/05-04-control-structures.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-
-  return translatedCode.replace(/\s+/g, ' ').trim();
-}
-
-test('Exit If leaves the loop when the condition holds', async () => {
-  const normalizedJS = await translate('Do\nExit If X=1\nLoop');
-
-  expect(normalizedJS).toContain('loop1: while (true) { if (X == 1) { break loop1; }');
+test.each([
+  ['leaving a Do', 'Do\nExit If X=1\nLoop', 'loop1: while (true) { if (X == 1) { break loop1; }'],
+])('Exit If translates %s', async (name, amos, javascript) => {
+  expect(await translate(amos)).toContain(javascript);
 });

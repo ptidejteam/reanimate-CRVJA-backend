@@ -1,28 +1,20 @@
-import AMOSTranspiler from '../amos-transpiler.js';
-import { run } from './helpers/runtime.js';
+import { translate } from './helpers/translate.js';
+import { evaluate } from './helpers/evaluate.js';
+
+// TRUE: the value -1. https://amospromanual.dev/05-04-control-structures.html
 
 test.each([
   ['an assignment', 'X = True', 'X = -1'],
   ['an operation on the result', 'X = True + 1', 'X = -1 + 1'],
-  ['an operation on the result', 'X = 1 + Abs(True)', 'X = 1 + Math.abs(-1)'],
-])('transpiles test case: %s', async (_name, input, expected) => {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    input,
-  );
-
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-  expect(translatedCode).toContain(expected);
+  ['a function argument', 'X = 1 + Abs(True)', 'X = 1 + Math.abs(-1)'],
+])('True translates %s', async (name, amos, javascript) => {
+  expect(await translate(amos)).toContain(javascript);
 });
 
-// Runtime: the translated program gives the AMOS result.
-// True is -1 (https://amospromanual.dev/05-04-control-structures.html)
 test.each([
-  ['X = True', 'X', -1],
-  ['X = True + 1', 'X', 0],
-  ['X = 1 + Abs(True)', 'X', 2],
-])('true runtime: %s', async (source, name, expected) => {
-  const values = await run(source, [name]);
-
-  expect(values[name]).toBe(expected);
+  ['True', -1],
+  ['True + 1', 0],
+  ['1 + Abs(True)', 2],
+])('%s returns %p', async (amos, value) => {
+  expect(await evaluate(amos)).toBe(value);
 });

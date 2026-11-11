@@ -1,23 +1,19 @@
-import AMOSTranspiler from '../amos-transpiler.js';
-import { run } from './helpers/runtime.js';
+import { translate } from './helpers/translate.js';
+import { evaluate } from './helpers/evaluate.js';
 
-test('Flip$ reverses a string', async () => {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    'RESULT$=Flip$("AbC")',
-  );
+// FLIP$: a string written backwards. https://amospromanual.dev/05-02-string-functions.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-  expect(translatedCode).toContain("RESULT$ = 'AbC'.split('').reverse().join('');");
-});
+test.each([['a string', 'RESULT$=Flip$("AbC")', "RESULT$ = 'AbC'.split('').reverse().join('');"]])(
+  'Flip$ translates %s',
+  async (name, amos, javascript) => {
+    expect(await translate(amos)).toContain(javascript);
+  },
+);
 
-// Runtime: the translated program gives the AMOS result.
-// Manual example: Print Flip$("SOMA gnippilf") (https://amospromanual.dev/05-02-string-functions.html)
+// Manual example: Print Flip$("SOMA gnippilf")
 test.each([
-  ['RESULT$=Flip$("SOMA gnippilf")', 'RESULT$', 'flipping AMOS'],
-  ['RESULT$=Flip$("AbC")', 'RESULT$', 'CbA'],
-])('flip runtime: %s', async (source, name, expected) => {
-  const values = await run(source, [name]);
-
-  expect(values[name]).toBe(expected);
+  ['Flip$("SOMA gnippilf")', 'flipping AMOS'],
+  ['Flip$("AbC")', 'CbA'],
+])('%s returns %p', async (amos, value) => {
+  expect(await evaluate(amos)).toBe(value);
 });

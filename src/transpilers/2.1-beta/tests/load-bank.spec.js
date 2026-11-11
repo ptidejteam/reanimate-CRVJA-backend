@@ -1,50 +1,26 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const {
-    lexicalErrors: lexicalErrors,
-    syntaxErrors: syntaxErrors,
-    translatedCode: translatedCode,
-  } = await new AMOSTranspiler().transpile(code);
+// Loading a sprite bank, and the runtime code that draws its sprites.
+// https://amospromanual.dev/05-09-memory-banks.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
-
-  const normalizedJS = translatedCode.replace(/\s+/g, ' ').trim();
-  return normalizedJS;
-}
-
-test('load_banks without bank id', async () => {
-  const amosBasicCode = `
-    Load "assets/icons.abk"
-  `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('loadBank(\'"assets/icons.abk"\', 1);');
+test.each([
+  ['without a bank number', 'Load "assets/icons.abk"', 'loadBank(\'"assets/icons.abk"\', 1);'],
+  ['with a bank number', 'Load "assets/icons.abk", 2', 'loadBank(\'"assets/icons.abk"\', 2);'],
+])('Load translates %s', async (name, amos, javascript) => {
+  expect(await translate(amos)).toContain(javascript);
 });
 
-test('load_banks with bank id', async () => {
-  const amosBasicCode = `Load "assets/icons.abk", 2`;
+test('Sprite draws the bank image on a canvas', async () => {
+  const javascript = await translate('Sprite 1, 100, 200, 3');
 
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('loadBank(\'"assets/icons.abk"\', 2);');
+  expect(javascript).toContain('renderSprite(1, 100, 200, 3);');
+  expect(javascript).toContain("document.createElement('canvas')");
+  expect(javascript).toContain('createImageData');
 });
 
-test('render sprite translates to renderSprite with canvas runtime', async () => {
-  const amosBasicCode = `Sprite 1, 100, 200, 3`;
+test('the bank colours use the shared Amiga colour converter', async () => {
+  const javascript = await translate('Load "assets/icons.abk"');
 
-  const normalizedJS = await translate(amosBasicCode);
-
-  expect(normalizedJS).toContain('renderSprite(1, 100, 200, 3);');
-  expect(normalizedJS).toContain("document.createElement('canvas')");
-  expect(normalizedJS).toContain('createImageData');
-});
-
-test('generated runtime uses the shared Amiga color converter', async () => {
-  const normalizedJS = await translate('Load "assets/icons.abk"');
-
-  expect(normalizedJS).toContain('function amiga12BitToHex');
-  expect(normalizedJS).toContain('colorPalette.push(amiga12BitToHex(color1));');
+  expect(javascript).toContain('function amiga12BitToHex');
+  expect(javascript).toContain('colorPalette.push(amiga12BitToHex(color1));');
 });

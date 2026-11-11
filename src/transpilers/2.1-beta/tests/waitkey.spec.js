@@ -1,20 +1,11 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const { lexicalErrors, syntaxErrors, translatedCode } = await new AMOSTranspiler().transpile(
-    code,
-  );
+// WAIT KEY: waits until a key is pressed. https://amospromanual.dev/10-01-using-the-keyboard.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
+test('Wait Key waits for one keydown', async () => {
+  const javascript = await translate('Wait Key');
 
-  return translatedCode.replace(/\s+/g, ' ').trim();
-}
-
-test('Wait Key adds a one-time keydown listener', async () => {
-  const normalizedJS = await translate('Wait Key');
-
-  expect(normalizedJS).toContain(
+  expect(javascript).toContain(
     "await new Promise((resolve) => { document.addEventListener('keydown', resolve, { once: true }); });",
   );
 });

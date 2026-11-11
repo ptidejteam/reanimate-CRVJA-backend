@@ -1,68 +1,39 @@
-import AMOSTranspiler from '../amos-transpiler.js';
+import { translate } from './helpers/translate.js';
 
-async function translate(code) {
-  const {
-    lexicalErrors: lexicalErrors,
-    syntaxErrors: syntaxErrors,
-    translatedCode: translatedCode,
-  } = await new AMOSTranspiler().transpile(code);
+// TEXT: writes text at a position on the screen. https://amospromanual.dev/11-01-fonts.html
 
-  expect(lexicalErrors.errors).toEqual([]);
-  expect(syntaxErrors.errors).toEqual([]);
+test('Text writes at x, y in the current Ink and Paper', async () => {
+  const javascript = await translate('Text 10,10,"Hello, World!"');
 
-  const normalizedJS = translatedCode.replace(/\s+/g, ' ').trim();
-  return normalizedJS;
-}
-
-test('Text', async () => {
-  const amosBasicCode = `
-        Text 10,10,"Hello, World!"
-    `;
-
-  const normalizedJS = await translate(amosBasicCode);
-
-  const expectedJsCode = `
-    const textId = 'textDiv_' + 10 + '_' + 10;
-    let textEl = document.getElementById(textId);
-    if (!textEl) {
-        textEl = document.createElement('div');
-        textEl.id = textId;
-        textEl.style.position = 'absolute';
-        textEl.style.left = '10px';
-        textEl.style.top = '10px';
-        textEl.style.fontSize = '14px';
-        textEl.style.zIndex = 99;
-        document.getElementById('amos-screen').appendChild(textEl);
-    }
-    textEl.innerText = 'Hello, World!';
-    textEl.style.color = getColour(Ink);
-    textEl.style.backgroundColor = getColour(Paper);
-  `;
-
-  const normalizedExpectedJsCode = expectedJsCode.replace(/\s+/g, ' ').trim();
-  expect(normalizedJS).toContain(normalizedExpectedJsCode);
+  expect(javascript).toContain("const textId = 'textDiv_' + 10 + '_' + 10;");
+  expect(javascript).toContain('let textEl = document.getElementById(textId);');
+  expect(javascript).toContain("textEl = document.createElement('div');");
+  expect(javascript).toContain('textEl.id = textId;');
+  expect(javascript).toContain("textEl.style.position = 'absolute';");
+  expect(javascript).toContain("textEl.style.left = '10px';");
+  expect(javascript).toContain("textEl.style.top = '10px';");
+  expect(javascript).toContain("textEl.style.fontSize = '14px';");
+  expect(javascript).toContain('textEl.style.zIndex = 99;');
+  expect(javascript).toContain("document.getElementById('amos-screen').appendChild(textEl);");
+  expect(javascript).toContain("textEl.innerText = 'Hello, World!';");
+  expect(javascript).toContain('textEl.style.color = getColour(Ink);');
+  expect(javascript).toContain('textEl.style.backgroundColor = getColour(Paper);');
 });
 
-test('Text inside If/Else has no scoping issue', async () => {
-  const amosBasicCode = `
-Screen Open 1,500,500,8,Hires
-If 2 < 1
-    Text 10,10,"True"
-Else
-    Text 10,10,"False"
-End If
-  `;
+// Both branches find the text element by its id, so the Else branch does not refer to a
+// variable declared in the If branch.
+test('Text inside If and Else', async () => {
+  const javascript = await translate(`
+    Screen Open 1,500,500,8,Hires
+    If 2 < 1
+      Text 10,10,"True"
+    Else
+      Text 10,10,"False"
+    End If
+  `);
 
-  const normalizedJS = await translate(amosBasicCode);
-
-  // Both branches should use getElementById (DOM lookup), not a JS variable reference
-  // This ensures the else branch can access the same element without a ReferenceError
-  expect(normalizedJS).toContain("'True'");
-  expect(normalizedJS).toContain("'False'");
-
-  // The generated code should use document.getElementById for the text element
-  expect(normalizedJS).toContain('document.getElementById(textId)');
-
-  // There should be no const textDiv declarations (the old broken pattern)
-  expect(normalizedJS).not.toMatch(/const textDiv\d+/);
+  expect(javascript).toContain("'True'");
+  expect(javascript).toContain("'False'");
+  expect(javascript).toContain('document.getElementById(textId)');
+  expect(javascript).not.toContain('const textDiv');
 });
