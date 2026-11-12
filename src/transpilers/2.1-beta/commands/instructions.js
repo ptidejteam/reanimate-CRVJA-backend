@@ -21,10 +21,20 @@ export default class Instructions {
       valueStarter = this.expressions.translate(ctx.expression(1));
       valueEndIteration = this.expressions.translate(ctx.expression(2));
 
+      // As in the manual: V=V+A : If V<BASE Then V=TOP : If V>TOP Then V=BASE
+      // https://amospromanual.dev/05-03-maths.html#i-add
+      // Base and Top are evaluated once, so Add V,1,0 To Rnd(9) draws one random number.
       this.context.emit(`
-${variable} = (${variable} + ${valueExpression}) % ${valueEndIteration};
-if (${variable} < ${valueStarter}) {
-    ${variable} += ${valueEndIteration};
+{
+const addBase = ${valueStarter};
+const addTop = ${valueEndIteration};
+${variable} = ${variable} + ${valueExpression};
+if (${variable} < addBase) {
+    ${variable} = addTop;
+}
+if (${variable} > addTop) {
+    ${variable} = addBase;
+}
 }`);
     } else {
       this.context.emit(`${variable} = ${variable} + ${valueExpression};`);

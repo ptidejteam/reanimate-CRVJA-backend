@@ -48,10 +48,11 @@ describe('expression operands', () => {
 
     expect(normalizedJS).toContain('I = A[Math.trunc((1 + 2) * 3)];');
     expect(normalizedJS).toContain('I <= Math.floor(Math.random() * (A[Math.trunc(2 + 1)] + 1));');
+    expect(normalizedJS).toContain('const addBase = A[Math.trunc(2 + 1)];');
     expect(normalizedJS).toContain(
-      '(X + A[Math.trunc(1 + 2)]) % Math.floor(Math.random() * (A[Math.trunc(3)] + 1));',
+      'const addTop = Math.floor(Math.random() * (A[Math.trunc(3)] + 1));',
     );
-    expect(normalizedJS).toContain('if (X < A[Math.trunc(2 + 1)]) {');
+    expect(normalizedJS).toContain('X = X + A[Math.trunc(1 + 2)];');
     expect(normalizedJS).toContain('P(A[Math.trunc(1 + 2)], Math.sin(A[Math.trunc(2 + 1)]));');
     expect(normalizedJS).toContain(
       'if (currentPressedKey === keyMapping[16 + A[Math.trunc(1 + 2)]]) {',

@@ -1,6 +1,6 @@
 import { translate } from './helpers/translate.js';
 
-// READ: reads the next Data values into variables. https://amospromanual.dev/05-01-the-bare-bones.html
+// READ: reads the next Data values into variables. https://amospromanual.dev/05-04-control-structures.html
 // An integer variable stores the value truncated toward zero; checked on creepycat:
 // Data 3.7,-3.7,2.5 : Read X,Y,K(1) gives 3, -3, 2.
 
