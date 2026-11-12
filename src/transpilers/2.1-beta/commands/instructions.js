@@ -228,9 +228,8 @@ if (amosScreen) {
   // DEC
   enterDec(ctx) {
     const variable = ctx.IDENTIFIER().getText();
-    const expression = `${variable} = ${variable} - 1`;
-    this.context.emit(expression);
-    //console.log('To be implemented...');
+    this.context.declareVariable(variable);
+    this.context.emit(`${variable} = ${variable} - 1;`);
   }
 
   // DEGREE
@@ -337,9 +336,8 @@ graphicCursorY = drawY2;
   // INC
   enterInc(ctx) {
     const variable = ctx.IDENTIFIER().getText();
-    const expression = `${variable} = ${variable} + 1`;
-    this.context.emit(expression);
-    //console.log('To be implemented...');
+    this.context.declareVariable(variable);
+    this.context.emit(`${variable} = ${variable} + 1;`);
   }
 
   // INK
@@ -588,10 +586,10 @@ textEl.style.backgroundColor = getColour(Paper);
 
   // WAIT
   enterWait(ctx) {
-    const waitTicks = ctx.NUMBER().getText();
-    const ms = parseInt(waitTicks) * 20; // AMOS = ~50fps
+    // The value is in 50ths of a second, so each one is 20 milliseconds.
+    const ticks = this.expressions.translate(ctx.expression());
 
-    this.context.emit(`await new Promise(r => setTimeout(r, ${ms}));`);
+    this.context.emit(`await new Promise(r => setTimeout(r, (${ticks}) * 20));`);
   }
 
   // WAIT KEY

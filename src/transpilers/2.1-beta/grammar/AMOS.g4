@@ -412,7 +412,7 @@ text:
 
 // WAIT
 wait:
-    WAIT NUMBER
+    WAIT expression
     ;
 
 // WAIT KEY
@@ -574,7 +574,9 @@ popProc:
 
 // PROC (procedure call)
 procedureCall:
-    IDENTIFIER SQUARE_BRACKET_OPEN expression (COMMA expression)* SQUARE_BRACKET_CLOSE
+    // PROC: the optional keyword before a Procedure call (Proc NAME or Proc NAME[...]).
+    PROC IDENTIFIER (SQUARE_BRACKET_OPEN expression (COMMA expression)* SQUARE_BRACKET_CLOSE)?
+    | IDENTIFIER SQUARE_BRACKET_OPEN expression (COMMA expression)* SQUARE_BRACKET_CLOSE
     // A following colon belongs to a label, rather than a bare call + separator.
     | { this._input.LA(2) !== this.constructor.COLON }? IDENTIFIER
     ;
